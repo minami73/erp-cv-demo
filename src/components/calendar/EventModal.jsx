@@ -9,6 +9,12 @@ const EventModal = ({ event, onClose, onSave, onDelete, isNew }) => {
       : [...draft.sections, id]);
   };
 
+  useEffect(() => {
+    const handler = (e) => { if (e.key === 'Escape') onClose(); };
+    window.addEventListener('keydown', handler);
+    return () => window.removeEventListener('keydown', handler);
+  }, [onClose]);
+
   const sectionObjects = SECTIONS.filter(s => draft.sections.includes(s.id));
   const primary = sectionObjects[0] || SECTIONS[0];
 
@@ -100,23 +106,6 @@ const EventModal = ({ event, onClose, onSave, onDelete, isNew }) => {
               placeholder="Añade notas, responsables, lugar..." />
           </Field>
 
-          <div style={{
-            display: 'flex', alignItems: 'center', gap: 12,
-            padding: '12px 14px', background: 'var(--surface-2)',
-            border: '1px solid var(--line)', borderRadius: 'var(--radius)',
-          }}>
-            <div style={{
-              width: 28, height: 28, borderRadius: 7, background: primary.color,
-              boxShadow: 'inset 0 0 0 1px rgba(0,0,0,.06)',
-            }} />
-            <div style={{ flex: 1 }}>
-              <div style={{ fontSize: 13, fontWeight: 500 }}>Color del evento</div>
-              <div style={{ fontSize: 12, color: 'var(--ink-4)', marginTop: 1 }}>
-                Heredado de <strong style={{ color: 'var(--ink-2)', fontWeight: 500 }}>{primary.label}</strong>
-              </div>
-            </div>
-            <Button variant="ghost" size="sm">Personalizar</Button>
-          </div>
         </div>
 
         <div style={{

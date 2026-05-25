@@ -1,7 +1,17 @@
 const Header = ({ title, subtitle, breadcrumbs = [], user, onLogout, right }) => {
   const [menuOpen, setMenuOpen] = useState(false);
   const [clock, setClock]     = useState(new Date());
+  const [loggingOut, setLoggingOut] = useState(false);
   const menuRef = useRef(null);
+
+  const handleLogout = () => {
+    if (loggingOut) return;
+    setLoggingOut(true);
+    setTimeout(() => {
+      setMenuOpen(false);
+      onLogout();
+    }, 1200);
+  };
 
   useEffect(() => {
     const handler = (e) => {
@@ -110,7 +120,7 @@ const Header = ({ title, subtitle, breadcrumbs = [], user, onLogout, right }) =>
               <MenuItem icon="settings" label="Preferencias" />
               <MenuItem icon="shield"   label="Privacidad y accesos" />
               <div style={{ height: 1, background: 'var(--line)', margin: '4px 0' }} />
-              <MenuItem icon="logout" label="Cerrar sesión" danger onClick={onLogout} />
+              <MenuItem icon={loggingOut ? "spinner" : "logout"} label={loggingOut ? "Cerrando sesión..." : "Cerrar sesión"} disabled={loggingOut} danger onClick={handleLogout} />
             </div>
           )}
         </div>
@@ -119,17 +129,18 @@ const Header = ({ title, subtitle, breadcrumbs = [], user, onLogout, right }) =>
   );
 };
 
-const MenuItem = ({ icon, label, danger, onClick }) => (
-  <button onClick={onClick}
+const MenuItem = ({ icon, label, danger, disabled, onClick }) => (
+  <button onClick={disabled ? undefined : onClick}
     style={{
       width: '100%', textAlign: 'left',
       display: 'flex', alignItems: 'center', gap: 10,
       padding: '8px 10px', borderRadius: 8,
-      background: 'transparent', border: 0, cursor: 'pointer',
-      fontSize: 13, color: danger ? '#b3261e' : 'var(--ink-2)',
+      background: 'transparent', border: 0, cursor: disabled ? 'not-allowed' : 'pointer',
+      fontSize: 13, color: danger ? (disabled ? '#e89a94' : '#b3261e') : 'var(--ink-2)',
+      opacity: disabled ? 0.6 : 1,
     }}
-    onMouseEnter={e => e.currentTarget.style.background = 'var(--bg-sunk)'}
-    onMouseLeave={e => e.currentTarget.style.background = 'transparent'}
+    onMouseEnter={e => { if (!disabled) e.currentTarget.style.background = 'var(--bg-sunk)'; }}
+    onMouseLeave={e => { if (!disabled) e.currentTarget.style.background = 'transparent'; }}
   >
     <Icon name={icon} size={15} />
     {label}

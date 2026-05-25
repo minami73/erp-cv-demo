@@ -65,6 +65,20 @@ const Calendar = ({ openEvent, openNew, events }) => {
   const sectionOf = (id) => SECTIONS.find(s => s.id === id);
   const primarySection = (ev) => sectionOf(ev.sections[0]) || sectionOf('general');
 
+  const exportPDF = async () => {
+    const { jsPDF } = window.jspdf;
+    if (!jsPDF) return;
+    const el = document.querySelector('[data-screen-label="03 Calendario"]');
+    if (!el) return;
+    const canvas = await html2canvas(el, { scale: 2, useCORS: true });
+    const imgData = canvas.toDataURL('image/png');
+    const pdf = new jsPDF('l', 'mm', 'a4');
+    const pw = pdf.internal.pageSize.getWidth();
+    const ph = (canvas.height * pw) / canvas.width;
+    pdf.addImage(imgData, 'PNG', 0, 0, pw, ph);
+    pdf.save(`calendario-${window.MONTHS[month]}-${year}.pdf`);
+  };
+
   const toggleSection = (id) => setFilterSections(prev =>
     prev.includes(id) ? prev.filter(s => s !== id) : [...prev, id]);
 
@@ -94,7 +108,7 @@ const Calendar = ({ openEvent, openNew, events }) => {
           <Segmented value={view} onChange={setView}
             options={[{value:'mes',label:'Mes'},{value:'semana',label:'Semana'},{value:'dia',label:'Día'}]} />
 
-          <Button variant="secondary" size="md" icon="download">Exportar PDF</Button>
+          <Button variant="secondary" size="md" icon="download" onClick={exportPDF}>Exportar PDF</Button>
           <Button variant="primary" size="md" icon="plus" onClick={openNew}>Nuevo evento</Button>
         </div>
 

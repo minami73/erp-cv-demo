@@ -3,6 +3,16 @@ const Login = ({ onLogin }) => {
   const [password, setPassword] = useState("colegio2026");
   const [remember, setRemember] = useState(true);
   const [showPw, setShowPw] = useState(false);
+  const [loading, setLoading] = useState(false);
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    if (loading) return;
+    setLoading(true);
+    setTimeout(() => {
+      onLogin();
+    }, 1800);
+  };
 
   return (
     <div
@@ -128,10 +138,7 @@ const Login = ({ onLogin }) => {
           </div>
 
           <form
-            onSubmit={(e) => {
-              e.preventDefault();
-              onLogin();
-            }}
+            onSubmit={handleSubmit}
             style={{ display: "flex", flexDirection: "column", gap: 16 }}
           >
             <Field label="Correo institucional">
@@ -242,13 +249,16 @@ const Login = ({ onLogin }) => {
               variant="primary"
               size="lg"
               type="submit"
+              disabled={loading}
               style={{
                 marginTop: 4,
                 justifyContent: "center",
                 width: "100%",
+                opacity: loading ? 0.7 : 1,
+                cursor: loading ? "not-allowed" : "pointer",
               }}
             >
-              Iniciar sesión
+              {loading ? <><Icon name="spinner" size={16} /> Iniciando sesión...</> : "Iniciar sesión"}
             </Button>
 
             <div

@@ -141,3 +141,8 @@ select {
     transform: none;
   }
 }
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
