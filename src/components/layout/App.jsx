@@ -2,6 +2,9 @@ const App = () => {
   const [loggedIn, setLoggedIn] = useState(
     () => localStorage.getItem("cv_logged_in") === "1",
   );
+  const [sidebarCollapsed, setSidebarCollapsed] = useState(
+    () => localStorage.getItem("cv_sidebar_collapsed") === "1",
+  );
   const [current, setCurrent] = useState("calendario");
   const [modules, setModules] = useState(() => {
     const saved = localStorage.getItem("cv_modules");
@@ -104,6 +107,7 @@ const App = () => {
         onNavigate={setCurrent}
         modules={modules}
         setModules={setModules}
+        collapsed={sidebarCollapsed}
       />
 
       <main
@@ -121,6 +125,11 @@ const App = () => {
           subtitle={subtitle}
           breadcrumbs={breadcrumbs}
           user={user}
+          onToggleSidebar={() => {
+            const next = !sidebarCollapsed;
+            setSidebarCollapsed(next);
+            localStorage.setItem("cv_sidebar_collapsed", next ? "1" : "0");
+          }}
           onLogout={() => {
             localStorage.removeItem("cv_logged_in");
             setLoggedIn(false);
