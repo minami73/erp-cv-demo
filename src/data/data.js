@@ -1,0 +1,83 @@
+window.CV_DATA = (function () {
+  const SECTIONS = [
+    { id: 'general',    label: 'General',     short: 'GEN', color: 'var(--sec-general)',    soft: 'var(--sec-general-soft)' },
+    { id: 'maternal',   label: 'Maternal',    short: 'MAT', color: 'var(--sec-maternal)',   soft: 'var(--sec-maternal-soft)' },
+    { id: 'preescolar', label: 'Preescolar',  short: 'PRE', color: 'var(--sec-preescolar)', soft: 'var(--sec-preescolar-soft)' },
+    { id: 'primaria',   label: 'Primaria',    short: 'PRI', color: 'var(--sec-primaria)',   soft: 'var(--sec-primaria-soft)' },
+    { id: 'secundaria', label: 'Secundaria',  short: 'SEC', color: 'var(--sec-secundaria)', soft: 'var(--sec-secundaria-soft)' },
+    { id: 'bachi',      label: 'Bachillerato',short: 'BAC', color: 'var(--sec-bachi)',      soft: 'var(--sec-bachi-soft)' },
+  ];
+
+  const EVENT_TYPES = [
+    { id: 'academico',    label: 'Académico' },
+    { id: 'civico',       label: 'Cívico' },
+    { id: 'administrativo', label: 'Administrativo' },
+    { id: 'capacitacion', label: 'Capacitación' },
+    { id: 'reunion',      label: 'Reunión' },
+    { id: 'festivo',      label: 'Día festivo' },
+  ];
+
+  const EVENTS = [
+    { id: 1,  title: 'Reunión de Consejo Técnico',     type: 'reunion',        sections: ['general'],                  start: '2026-05-04', end: '2026-05-04', time: '08:30 – 10:30', desc: 'Sesión mensual de consejo. Asisten directores de sección y desarrollo académico.' },
+    { id: 2,  title: 'Ceremonia cívica del mes',       type: 'civico',         sections: ['primaria','secundaria','bachi'], start: '2026-05-04', end: '2026-05-04', time: '07:30 – 08:15', desc: 'Honores a la bandera. Escolta a cargo de 3°B Secundaria.' },
+    { id: 3,  title: 'Curso de primeros auxilios',     type: 'capacitacion',   sections: ['general'],                  start: '2026-05-05', end: '2026-05-06', time: '15:00 – 18:00', desc: 'Capacitación obligatoria para personal docente y administrativo. Imparte Cruz Roja Mexicana.' },
+    { id: 4,  title: 'Día del Maestro',                type: 'festivo',        sections: ['general'],                  start: '2026-05-15', end: '2026-05-15', time: 'Todo el día', desc: 'Suspensión de labores. Comida de reconocimiento al personal docente.' },
+    { id: 5,  title: 'Entrega de boletas — 4º bim.',   type: 'academico',      sections: ['primaria'],                 start: '2026-05-08', end: '2026-05-08', time: '13:00 – 15:00', desc: 'Entrega de boletas a padres de familia de primaria.' },
+    { id: 6,  title: 'Festival de primavera',          type: 'academico',      sections: ['maternal','preescolar'],    start: '2026-05-12', end: '2026-05-12', time: '09:00 – 12:00', desc: 'Presentación artística. Padres invitados en patio central.' },
+    { id: 7,  title: 'Junta de academia — Matemáticas',type: 'reunion',        sections: ['secundaria','bachi'],       start: '2026-05-13', end: '2026-05-13', time: '14:00 – 15:30', desc: 'Revisión de avance programático del 4º bimestre.' },
+    { id: 8,  title: 'Examen diagnóstico PLANEA',      type: 'academico',      sections: ['bachi'],                    start: '2026-05-19', end: '2026-05-20', time: '08:00 – 13:00', desc: 'Aplicación a 3° de bachillerato. Coordina vinculación académica.' },
+    { id: 9,  title: 'Visita guiada — Museo Soumaya',  type: 'academico',      sections: ['primaria'],                 start: '2026-05-21', end: '2026-05-21', time: '09:00 – 14:00', desc: 'Salida pedagógica de 5° y 6° de primaria.' },
+    { id: 10, title: 'Simulacro de sismo',             type: 'administrativo', sections: ['general'],                  start: '2026-05-19', end: '2026-05-19', time: '11:00 – 11:30', desc: 'Macrosimulacro nacional. Participan todas las secciones.' },
+    { id: 11, title: 'Inscripciones ciclo 2026–2027',  type: 'administrativo', sections: ['general'],                  start: '2026-05-25', end: '2026-05-29', time: '09:00 – 14:00', desc: 'Período de inscripciones de alumnos de nuevo ingreso.' },
+    { id: 12, title: 'Graduación — Bachillerato',      type: 'civico',         sections: ['bachi'],                    start: '2026-05-29', end: '2026-05-29', time: '18:00 – 22:00', desc: 'Ceremonia formal en auditorio. Generación 2023–2026.' },
+    { id: 13, title: 'Junta de padres — Preescolar',   type: 'reunion',        sections: ['preescolar'],               start: '2026-05-07', end: '2026-05-07', time: '17:00 – 18:30', desc: 'Avance de proyecto integrador.' },
+    { id: 14, title: 'Aplicación de vacunas',          type: 'administrativo', sections: ['maternal','preescolar'],    start: '2026-05-14', end: '2026-05-14', time: '08:30 – 12:00', desc: 'Jornada de salud — Sector Salud Estatal.' },
+    { id: 15, title: 'Olimpiada de Química',           type: 'academico',      sections: ['secundaria'],               start: '2026-05-22', end: '2026-05-22', time: '09:00 – 13:00', desc: 'Etapa interna. Sede: Laboratorio 2.' },
+    { id: 16, title: 'Capacitación SEP — Nueva ENM',   type: 'capacitacion',   sections: ['bachi'],                    start: '2026-05-27', end: '2026-05-28', time: '15:00 – 19:00', desc: 'Implementación de Nueva Escuela Mexicana en Bachillerato.' },
+    { id: 17, title: 'Reunión Vinculación CDMX',       type: 'reunion',        sections: ['general'],                  start: '2026-05-11', end: '2026-05-11', time: '10:00 – 11:30', desc: 'Coordinación con autoridades educativas locales.' },
+    { id: 18, title: 'Cierre administrativo — abril',  type: 'administrativo', sections: ['general'],                  start: '2026-05-01', end: '2026-05-01', time: '16:00 – 18:00', desc: 'Conciliación contable mensual.' },
+    { id: 33, title: 'Feria de la Ciencia',            type: 'academico',      sections: ['bachi'],                    start: '2026-05-11', end: '2026-05-11', time: '09:00 – 14:00', desc: 'Proyectos finales de física, química y biología. Exposición abierta a toda la comunidad.' },
+    { id: 34, title: 'Olimpiada de Matemáticas',       type: 'academico',      sections: ['primaria'],                 start: '2026-05-18', end: '2026-05-18', time: '09:00 – 12:00', desc: 'Concurso interno de resolución de problemas. Participan 4°, 5° y 6° de primaria.' },
+    { id: 37, title: 'Conmemoración de la Batalla de Puebla', type: 'civico',  sections: ['primaria','secundaria'],    start: '2026-05-05', end: '2026-05-05', time: '07:30 – 08:15', desc: 'Rememoración cívica del 5 de mayo. Programa alusivo a cargo de 5° de primaria.' },
+    { id: 38, title: 'Izamiento de bandera — Día de la Marina', type: 'civico', sections: ['general'],               start: '2026-06-01', end: '2026-06-01', time: '07:30 – 08:00', desc: 'Conmemoración del Día de la Marina Nacional. Participa escolta de secundaria.' },
+    { id: 35, title: 'Concurso de Ortografía',         type: 'academico',      sections: ['secundaria'],               start: '2026-05-25', end: '2026-05-25', time: '10:00 – 12:00', desc: 'Concurso intergrupal. Sede: Auditorio. Finalistas por grado.' },
+    { id: 36, title: 'Muestra de Proyectos Integradores', type: 'academico',   sections: ['preescolar','maternal'],    start: '2026-05-26', end: '2026-05-26', time: '09:00 – 11:30', desc: 'Exposición de proyectos del ciclo escolar. Padres invitados por grupo.' },
+    { id: 19, title: 'Inscripciones — 2da vuelta',     type: 'administrativo', sections: ['general'],                  start: '2026-06-01', end: '2026-06-05', time: '09:00 – 14:00', desc: 'Segunda vuelta de inscripciones para alumnos rezagados. Cupos limitados.' },
+    { id: 20, title: 'Consejo Técnico — junio',        type: 'reunion',        sections: ['general'],                  start: '2026-06-01', end: '2026-06-01', time: '08:30 – 10:30', desc: 'Evaluación del cierre de ciclo y preparación de planeación 2026–2027.' },
+    { id: 21, title: 'Ceremonia cívica — junio',       type: 'civico',         sections: ['primaria','secundaria','bachi'], start: '2026-06-05', end: '2026-06-05', time: '07:30 – 08:15', desc: 'Honores a la bandera. Escolta a cargo de 2°A Secundaria.' },
+    { id: 22, title: 'Exámenes finales — Secundaria',  type: 'academico',      sections: ['secundaria'],               start: '2026-06-08', end: '2026-06-12', time: '08:00 – 13:00', desc: 'Aplicación de exámenes del 5º bimestre y evaluaciones finales.' },
+    { id: 23, title: 'Exámenes finales — Bachillerato',type: 'academico',      sections: ['bachi'],                    start: '2026-06-08', end: '2026-06-12', time: '08:00 – 14:00', desc: 'Exámenes finales del semestre. Coordina academia de bachillerato.' },
+    { id: 24, title: 'Análisis resultados PLANEA',     type: 'reunion',        sections: ['bachi'],                    start: '2026-06-09', end: '2026-06-09', time: '14:00 – 16:00', desc: 'Revisión de resultados del examen PLANEA aplicado en mayo. Definición de estrategias de mejora.' },
+    { id: 25, title: 'Junta de padres — Boletas finales (Primaria)', type: 'reunion', sections: ['primaria'], start: '2026-06-10', end: '2026-06-10', time: '13:00 – 15:00', desc: 'Entrega de boletas finales y firma de compromisos para el próximo ciclo.' },
+    { id: 26, title: 'Festival de fin de cursos',      type: 'academico',      sections: ['maternal','preescolar'],    start: '2026-06-12', end: '2026-06-12', time: '09:00 – 12:00', desc: 'Presentación de fin de ciclo. Padres invitados. Patio central.' },
+    { id: 27, title: 'Ensayo general — Graduación Secundaria', type: 'civico', sections: ['secundaria'],               start: '2026-06-18', end: '2026-06-18', time: '16:00 – 18:00', desc: 'Ensayo general en auditorio. Asistencia obligatoria para graduandos.' },
+    { id: 28, title: 'Graduación — Secundaria',        type: 'civico',         sections: ['secundaria'],               start: '2026-06-19', end: '2026-06-19', time: '18:00 – 21:00', desc: 'Ceremonia de graduación. Generación 2023–2026. Auditorio principal.' },
+    { id: 29, title: 'Descarga administrativa — cierre de ciclo', type: 'administrativo', sections: ['general'], start: '2026-06-22', end: '2026-06-26', time: '09:00 – 15:00', desc: 'Cierre de calificaciones, reportes finales y entrega de documentación a dirección.' },
+    { id: 30, title: 'Capacitación docente — Planeación 2026–2027', type: 'capacitacion', sections: ['general'], start: '2026-06-23', end: '2026-06-25', time: '09:00 – 14:00', desc: 'Taller de planeación didáctica para el próximo ciclo escolar. Imparte Desarrollo Académico.' },
+    { id: 31, title: 'Junta de academia — Evaluación anual', type: 'reunion',  sections: ['secundaria','bachi'],       start: '2026-06-24', end: '2026-06-24', time: '14:00 – 16:30', desc: 'Evaluación de resultados por academia. Propuestas para el plan de mejora continua.' },
+    { id: 32, title: 'Convivencia de fin de cursos',   type: 'academico',      sections: ['general'],                  start: '2026-06-26', end: '2026-06-26', time: '12:00 – 15:00', desc: 'Comida de confraternidad del personal. Patio de la institución.' },
+  ];
+
+  const MODULES = [
+    { id: 'calendario',    label: 'Calendario',     icon: 'calendar',   active: true,  desc: 'Eventos institucionales por sección, con exportación y filtros.' },
+    { id: 'horarios',      label: 'Horarios',       icon: 'clock',      active: true,  desc: 'Carga horaria, asignación de docentes y aulas por grupo.' },
+    { id: 'planeaciones',  label: 'Planeaciones',   icon: 'doc',        active: true,  desc: 'Planeaciones didácticas, revisión y aprobación por jefe de academia.' },
+    { id: 'personal',      label: 'Personal',       icon: 'users',      active: true,  desc: 'Directorio del personal, contratos, incidencias y desempeño.' },
+    { id: 'estacionamiento', label: 'Estacionamiento', icon: 'car',     active: true,  desc: 'Control de accesos, lugares asignados y permisos temporales.' },
+    { id: 'biblioteca',    label: 'Biblioteca',     icon: 'book',       active: false, desc: 'Catálogo, préstamos y reservaciones del acervo escolar.' },
+    { id: 'comedor',       label: 'Comedor',        icon: 'utensils',   active: false, desc: 'Menús semanales, asistencia y cargos al estado de cuenta.' },
+  ];
+
+  const USERS = [
+    { id: 1, name: 'Lic. María Fernanda Valdés', email: 'mfvaldes@colegiovictoria.mx', role: 'Director General',     sections: ['general'], active: true,  initials: 'MV' },
+    { id: 2, name: 'Mtro. Roberto Cárdenas',     email: 'rcardenas@colegiovictoria.mx', role: 'Director de Sección',  sections: ['bachi'], active: true,  initials: 'RC' },
+    { id: 3, name: 'Lic. Adriana Solís',         email: 'asolis@colegiovictoria.mx',    role: 'Director de Sección',  sections: ['primaria'], active: true,  initials: 'AS' },
+    { id: 4, name: 'Profa. Itzel Mendoza',       email: 'imendoza@colegiovictoria.mx',  role: 'Director de Sección',  sections: ['preescolar','maternal'], active: true,  initials: 'IM' },
+    { id: 5, name: 'Mtro. Jorge Linares',        email: 'jlinares@colegiovictoria.mx',  role: 'Director de Sección',  sections: ['secundaria'], active: true,  initials: 'JL' },
+    { id: 6, name: 'Lic. Paulina Ortega',        email: 'portega@colegiovictoria.mx',   role: 'Desarrollo Académico', sections: ['primaria','secundaria','bachi'], active: true,  initials: 'PO' },
+    { id: 7, name: 'Lic. Gerardo Téllez',        email: 'gtellez@colegiovictoria.mx',   role: 'Vinculación',          sections: ['general'], active: true,  initials: 'GT' },
+    { id: 8, name: 'C.P. Norma Aguilar',         email: 'naguilar@colegiovictoria.mx',  role: 'Administración',       sections: ['general'], active: false, initials: 'NA' },
+  ];
+
+  return { SECTIONS, EVENT_TYPES, EVENTS, MODULES, USERS };
+})();
