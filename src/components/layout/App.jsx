@@ -2,13 +2,15 @@ const App = () => {
   const [loggedIn, setLoggedIn] = useState(false);
   const [current, setCurrent] = useState("calendario");
   const [modules, setModules] = useState(() => {
-    const saved = localStorage.getItem('cv_modules');
+    const saved = localStorage.getItem("cv_modules");
     return saved ? JSON.parse(saved) : window.CV_DATA.MODULES;
   });
   const [events, setEvents] = useState(window.CV_DATA.EVENTS);
   const [modal, setModal] = useState(null);
 
-  useEffect(() => { localStorage.setItem('cv_modules', JSON.stringify(modules)); }, [modules]);
+  useEffect(() => {
+    localStorage.setItem("cv_modules", JSON.stringify(modules));
+  }, [modules]);
 
   const user = {
     initials: "FM",
@@ -80,7 +82,14 @@ const App = () => {
     body = <Construction module={currentModule} />;
   }
 
-  if (!loggedIn) return <Login onLogin={() => setLoggedIn(true)} />;
+  if (!loggedIn)
+    return (
+      <Login
+        onLogin={() => {
+          window.location.href = "calendario.html";
+        }}
+      />
+    );
 
   return (
     <div
@@ -109,7 +118,9 @@ const App = () => {
           subtitle={subtitle}
           breadcrumbs={breadcrumbs}
           user={user}
-          onLogout={() => setLoggedIn(false)}
+          onLogout={() => {
+            window.location.href = "login.html";
+          }}
         />
         <div style={{ flex: 1, minHeight: 0, overflow: "auto" }}>{body}</div>
       </main>

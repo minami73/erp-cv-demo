@@ -15,6 +15,8 @@
 <script src="https://unpkg.com/react@18.3.1/umd/react.development.js" integrity="sha384-hD6/rw4ppMLGNu3tX5cjIb+uRZ7UkRJ6BPkLpg4hAu/6onKUg4lLsHAs9EBPT82L" crossorigin="anonymous"></script>
 <script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" integrity="sha384-u6aeetuaXnQ38mYT8rp6sbXaQe3NL9t+IBXmnYxwkUI2Hw4bsp2Wvmx4yRQF1uAm" crossorigin="anonymous"></script>
 <script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" integrity="sha384-m08KidiNqLdpJqLq95G/LEi8Qvjl/xUYll3QILypMoQ65QorJ9Lvtp2RXYGBFj1y" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 
 <script type="text/babel" data-presets="react">
 const { useState, useMemo, useEffect, useRef } = React;
@@ -363,6 +365,12 @@ const EventModal = ({ draft, isNew, onClose, onSave, onDelete }) => {
     d.sections.includes(id) ? d.sections.filter(s => s !== id) : [...d.sections, id]);
   const primary = sectionOf(d.sections[0]);
 
+  useEffect(() => {
+    const handler = (e) => { if (e.key === 'Escape') onClose(); };
+    window.addEventListener('keydown', handler);
+    return () => window.removeEventListener('keydown', handler);
+  }, [onClose]);
+
   return (
     <div onClick={onClose} style={{
       position:'fixed', inset:0, zIndex:100,
@@ -430,20 +438,6 @@ const EventModal = ({ draft, isNew, onClose, onSave, onDelete }) => {
             <Textarea value={d.desc} onChange={e=>set('desc', e.target.value)} rows={3} placeholder="Añade notas, responsables, materiales…"/>
           </Field>
 
-          <div style={{
-            display:'flex', alignItems:'center', gap:12,
-            padding:'12px 14px', background:'var(--surface-2)',
-            border:'1px solid var(--line)', borderRadius:'var(--radius)',
-          }}>
-            <div style={{ width:28, height:28, borderRadius:7, background: primary.color, boxShadow:'inset 0 0 0 1px rgba(0,0,0,.06)' }}/>
-            <div style={{ flex:1 }}>
-              <div style={{ fontSize:13, fontWeight:500 }}>Color del evento</div>
-              <div style={{ fontSize:12, color:'var(--ink-4)', marginTop:1 }}>
-                Heredado de <strong style={{ color:'var(--ink-2)', fontWeight:500 }}>{primary.label}</strong>
-              </div>
-            </div>
-            <Button variant="ghost" size="sm">Personalizar</Button>
-          </div>
         </div>
 
         <div style={{
@@ -923,6 +917,39 @@ const App = () => {
   const toggleSection = (id) => setSectionFilter(prev =>
     prev.includes(id) ? prev.filter(s => s !== id) : [...prev, id]);
 
+  const [exporting, setExporting] = React.useState(false);
+
+  const exportPDF = async () => {
+    const jsPDF = window.jspdf?.jsPDF;
+    if (!jsPDF) { alert('Error: librería jsPDF no disponible. Revisa tu conexión a internet.'); return; }
+    const main = document.querySelector('main');
+    if (!main) return;
+    setExporting(true);
+    try {
+      const canvas = await html2canvas(main, {
+        scale: 2,
+        useCORS: true,
+        backgroundColor: '#ffffff',
+        logging: false,
+      });
+      const imgData = canvas.toDataURL('image/png');
+      const pdf = new jsPDF('l', 'mm', 'a4');
+      const pw = pdf.internal.pageSize.getWidth();
+      const pageH = pdf.internal.pageSize.getHeight();
+      const ratio = canvas.width / canvas.height;
+      let imgW = pw;
+      let imgH = pw / ratio;
+      if (imgH > pageH) { imgH = pageH; imgW = pageH * ratio; }
+      pdf.addImage(imgData, 'PNG', (pw - imgW) / 2, (pageH - imgH) / 2, imgW, imgH);
+      pdf.save(`calendario-${MONTHS[month]}-${year}.pdf`);
+    } catch (err) {
+      console.error('Error exportando PDF:', err);
+      alert('Error al exportar PDF: ' + err.message);
+    } finally {
+      setExporting(false);
+    }
+  };
+
   return (
     <div style={{ display:'flex', minHeight:'100vh', background:'var(--bg)' }}>
       <Sidebar/>
@@ -959,7 +986,7 @@ const App = () => {
             <Segmented value={view} onChange={setView}
               options={[{value:'mes',label:'Mes'},{value:'semana',label:'Semana'},{value:'dia',label:'Día'}]}/>
 
-            <Button variant="secondary" icon="download">Exportar PDF</Button>
+            <Button variant="secondary" icon="download" onClick={exportPDF} disabled={exporting}>{exporting ? 'Exportando…' : 'Exportar PDF'}</Button>
             <Button variant="primary" icon="plus" onClick={()=>openNew()}>Nuevo evento</Button>
           </div>
 
