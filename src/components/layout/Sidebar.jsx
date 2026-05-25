@@ -123,36 +123,37 @@ const Sidebar = ({ current, onNavigate, modules, setModules }) => {
         transition: "width .2s ease, padding .2s ease",
       }}
     >
-      {/* Toggle button */}
-      <button
-        onClick={() => setCollapsed((c) => !c)}
-        title={collapsed ? "Expandir sidebar" : "Colapsar sidebar"}
-        style={{
-          position: "absolute",
-          top: 14,
-          right: 10,
-          width: 24,
-          height: 24,
-          display: "inline-flex",
-          alignItems: "center",
-          justifyContent: "center",
-          background: "rgba(255,255,255,.12)",
-          border: 0,
-          borderRadius: 6,
-          color: "rgba(255,255,255,.85)",
-          cursor: "pointer",
-          transition: "background .12s",
-          flexShrink: 0,
-        }}
-        onMouseEnter={(e) =>
-          (e.currentTarget.style.background = "rgba(255,255,255,.25)")
-        }
-        onMouseLeave={(e) =>
-          (e.currentTarget.style.background = "rgba(255,255,255,.12)")
-        }
+      {/* Toggle button row */}
+      <div
+        style={{ display: "flex", justifyContent: "flex-end", marginBottom: 8 }}
       >
-        <Icon name={collapsed ? "chevron-right" : "chevron-left"} size={13} />
-      </button>
+        <button
+          onClick={() => setCollapsed((c) => !c)}
+          title={collapsed ? "Expandir sidebar" : "Colapsar sidebar"}
+          style={{
+            width: 32,
+            height: 32,
+            display: "inline-flex",
+            alignItems: "center",
+            justifyContent: "center",
+            background: "rgba(255,255,255,.12)",
+            border: 0,
+            borderRadius: 8,
+            color: "rgba(255,255,255,.85)",
+            cursor: "pointer",
+            transition: "background .12s",
+            flexShrink: 0,
+          }}
+          onMouseEnter={(e) =>
+            (e.currentTarget.style.background = "rgba(255,255,255,.25)")
+          }
+          onMouseLeave={(e) =>
+            (e.currentTarget.style.background = "rgba(255,255,255,.12)")
+          }
+        >
+          <Icon name={collapsed ? "chevron-right" : "chevron-left"} size={17} />
+        </button>
+      </div>
 
       {/* Logo */}
       <div
