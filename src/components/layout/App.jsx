@@ -1,5 +1,7 @@
 const App = () => {
-  const [loggedIn, setLoggedIn] = useState(false);
+  const [loggedIn, setLoggedIn] = useState(
+    () => localStorage.getItem("cv_logged_in") === "1",
+  );
   const [current, setCurrent] = useState("calendario");
   const [modules, setModules] = useState(() => {
     const saved = localStorage.getItem("cv_modules");
@@ -86,7 +88,8 @@ const App = () => {
     return (
       <Login
         onLogin={() => {
-          window.location.href = "calendario.html";
+          localStorage.setItem("cv_logged_in", "1");
+          setLoggedIn(true);
         }}
       />
     );
@@ -119,7 +122,8 @@ const App = () => {
           breadcrumbs={breadcrumbs}
           user={user}
           onLogout={() => {
-            window.location.href = "login.html";
+            localStorage.removeItem("cv_logged_in");
+            setLoggedIn(false);
           }}
         />
         <div style={{ flex: 1, minHeight: 0, overflow: "auto" }}>{body}</div>
