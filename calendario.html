@@ -55,7 +55,7 @@ const SECTIONS = [
   { id: 'preescolar', label: 'Preescolar',  color: 'var(--sec-preescolar)', soft: 'var(--sec-preescolar-soft)' },
   { id: 'primaria',   label: 'Primaria',    color: 'var(--sec-primaria)',   soft: 'var(--sec-primaria-soft)' },
   { id: 'secundaria', label: 'Secundaria',  color: 'var(--sec-secundaria)', soft: 'var(--sec-secundaria-soft)' },
-  { id: 'bachi',      label: 'Bachillerato',color: 'var(--sec-bachi)',      soft: 'var(--sec-bachi-soft)' },
+  { id: 'bachillerato', label: 'Bachillerato', color: 'var(--sec-bachillerato)', soft: 'var(--sec-bachillerato-soft)' },
 ];
 const sectionOf = (id) => SECTIONS.find(s => s.id === id) || SECTIONS[0];
 
@@ -71,22 +71,22 @@ const EVENT_TYPES = [
 const INITIAL_EVENTS = [
   { id: 1,  title: 'Cierre administrativo — abril',    type:'administrativo', sections:['general'],                     start:'2026-05-01', end:'2026-05-01', time:'16:00 – 18:00', place:'Sala de juntas',     desc:'Conciliación contable mensual y cierre de pagos a proveedores.' },
   { id: 2,  title: 'Reunión de Consejo Técnico',       type:'reunion',        sections:['general'],                     start:'2026-05-04', end:'2026-05-04', time:'08:30 – 10:30', place:'Auditorio',          desc:'Sesión mensual de consejo. Asisten directores de sección y desarrollo académico.' },
-  { id: 3,  title: 'Ceremonia cívica del mes',         type:'civico',         sections:['primaria','secundaria','bachi'],start:'2026-05-04', end:'2026-05-04', time:'07:30 – 08:15', place:'Patio central',      desc:'Honores a la bandera. Escolta a cargo de 3°B Secundaria.' },
+  { id: 3,  title: 'Ceremonia cívica del mes',         type:'civico',         sections:['primaria','secundaria','bachillerato'],start:'2026-05-04', end:'2026-05-04', time:'07:30 – 08:15', place:'Patio central',      desc:'Honores a la bandera. Escolta a cargo de 3°B Secundaria.' },
   { id: 4,  title: 'Curso de primeros auxilios',       type:'capacitacion',   sections:['general'],                     start:'2026-05-05', end:'2026-05-06', time:'15:00 – 18:00', place:'Aula multiusos',     desc:'Capacitación obligatoria para personal docente y administrativo. Imparte Cruz Roja Mexicana.' },
   { id: 5,  title: 'Junta de padres — Preescolar',     type:'reunion',        sections:['preescolar'],                  start:'2026-05-07', end:'2026-05-07', time:'17:00 – 18:30', place:'Aulas de Preescolar',desc:'Avance de proyecto integrador del bimestre.' },
   { id: 6,  title: 'Entrega de boletas — 4° bimestre', type:'academico',      sections:['primaria'],                    start:'2026-05-08', end:'2026-05-08', time:'13:00 – 15:00', place:'Aulas de Primaria',  desc:'Entrega de boletas a padres de familia.' },
   { id: 7,  title: 'Reunión Vinculación CDMX',         type:'reunion',        sections:['general'],                     start:'2026-05-11', end:'2026-05-11', time:'10:00 – 11:30', place:'Dirección General',  desc:'Coordinación con autoridades educativas locales.' },
   { id: 8,  title: 'Festival de primavera',            type:'academico',      sections:['maternal','preescolar'],       start:'2026-05-12', end:'2026-05-12', time:'09:00 – 12:00', place:'Patio central',      desc:'Presentación artística. Padres invitados.' },
-  { id: 9,  title: 'Junta de academia — Matemáticas',  type:'reunion',        sections:['secundaria','bachi'],          start:'2026-05-13', end:'2026-05-13', time:'14:00 – 15:30', place:'Sala docente',       desc:'Revisión de avance programático del 4° bimestre.' },
+  { id: 9,  title: 'Junta de academia — Matemáticas',  type:'reunion',        sections:['secundaria','bachillerato'],          start:'2026-05-13', end:'2026-05-13', time:'14:00 – 15:30', place:'Sala docente',       desc:'Revisión de avance programático del 4° bimestre.' },
   { id: 10, title: 'Aplicación de vacunas',            type:'administrativo', sections:['maternal','preescolar'],       start:'2026-05-14', end:'2026-05-14', time:'08:30 – 12:00', place:'Enfermería',         desc:'Jornada de salud — Sector Salud Estatal.' },
   { id: 11, title: 'Día del Maestro',                  type:'festivo',        sections:['general'],                     start:'2026-05-15', end:'2026-05-15', time:'Todo el día',   place:'—',                  desc:'Suspensión de labores. Comida de reconocimiento al personal docente.' },
-  { id: 12, title: 'Examen diagnóstico PLANEA',        type:'academico',      sections:['bachi'],                       start:'2026-05-19', end:'2026-05-20', time:'08:00 – 13:00', place:'Aulas de Bachillerato', desc:'Aplicación a 3° de bachillerato. Coordina vinculación académica.' },
+  { id: 12, title: 'Examen diagnóstico PLANEA',        type:'academico',      sections:['bachillerato'],                       start:'2026-05-19', end:'2026-05-20', time:'08:00 – 13:00', place:'Aulas de Bachillerato', desc:'Aplicación a 3° de bachillerato. Coordina vinculación académica.' },
   { id: 13, title: 'Simulacro de sismo',               type:'administrativo', sections:['general'],                     start:'2026-05-19', end:'2026-05-19', time:'11:00 – 11:30', place:'Todo el plantel',    desc:'Macrosimulacro nacional. Participan todas las secciones.' },
   { id: 14, title: 'Visita guiada — Museo Soumaya',    type:'academico',      sections:['primaria'],                    start:'2026-05-21', end:'2026-05-21', time:'09:00 – 14:00', place:'CDMX',               desc:'Salida pedagógica de 5° y 6° de primaria.' },
   { id: 15, title: 'Olimpiada de Química',             type:'academico',      sections:['secundaria'],                  start:'2026-05-22', end:'2026-05-22', time:'09:00 – 13:00', place:'Laboratorio 2',      desc:'Etapa interna del colegio.' },
   { id: 16, title: 'Inscripciones ciclo 2026–2027',    type:'administrativo', sections:['general'],                     start:'2026-05-25', end:'2026-05-29', time:'09:00 – 14:00', place:'Recepción',          desc:'Período de inscripciones de alumnos de nuevo ingreso.' },
-  { id: 17, title: 'Capacitación SEP — NEM',           type:'capacitacion',   sections:['bachi'],                       start:'2026-05-27', end:'2026-05-28', time:'15:00 – 19:00', place:'Sala docente',       desc:'Implementación de Nueva Escuela Mexicana en Bachillerato.' },
-  { id: 18, title: 'Graduación Bachillerato',          type:'civico',         sections:['bachi'],                       start:'2026-05-29', end:'2026-05-29', time:'18:00 – 22:00', place:'Auditorio',          desc:'Ceremonia formal. Generación 2023–2026.' },
+  { id: 17, title: 'Capacitación SEP — NEM',           type:'capacitacion',   sections:['bachillerato'],                       start:'2026-05-27', end:'2026-05-28', time:'15:00 – 19:00', place:'Sala docente',       desc:'Implementación de Nueva Escuela Mexicana en Bachillerato.' },
+  { id: 18, title: 'Graduación Bachillerato',          type:'civico',         sections:['bachillerato'],                       start:'2026-05-29', end:'2026-05-29', time:'18:00 – 22:00', place:'Auditorio',          desc:'Ceremonia formal. Generación 2023–2026.' },
 ];
 
 /* ─── Date helpers ──────────────────────────────────────────────────── */
