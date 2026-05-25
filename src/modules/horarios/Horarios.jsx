@@ -957,11 +957,12 @@ const CLASSES = [
 
 /* ─── Workshops ─────────────────────────────────────────────────────── */
 const WORK_START = 14;
-const WORK_END = 18;
+const WORK_END = 19;
 const WORK_HALF_PX = 60;
-const WORK_TOTAL = (WORK_END - WORK_START) * 2 * WORK_HALF_PX;
+const WORK_TOP = 16;
+const WORK_TOTAL = WORK_TOP + (WORK_END - WORK_START) * 2 * WORK_HALF_PX;
 const workY = (hhmm) =>
-  ((toMin(hhmm) - WORK_START * 60) / 60) * (WORK_HALF_PX * 2);
+  WORK_TOP + ((toMin(hhmm) - WORK_START * 60) / 60) * (WORK_HALF_PX * 2);
 const workH = (s, e) => ((toMin(e) - toMin(s)) / 60) * (WORK_HALF_PX * 2);
 
 const WORK_CATS = {
@@ -2206,7 +2207,7 @@ const WorkGrid = ({ items, onClick }) => {
                   key={i}
                   style={{
                     position: "absolute",
-                    top: i * WORK_HALF_PX - 8,
+                    top: WORK_TOP + i * WORK_HALF_PX - 8,
                     right: 8,
                     fontSize: isHour ? 11 : 10.5,
                     fontFamily: "var(--font-mono)",
@@ -2234,7 +2235,7 @@ const WorkGrid = ({ items, onClick }) => {
                   key={i}
                   style={{
                     position: "absolute",
-                    top: i * WORK_HALF_PX,
+                    top: WORK_TOP + i * WORK_HALF_PX,
                     left: 0,
                     right: 0,
                     height: 1,
@@ -3028,43 +3029,46 @@ const Horarios = () => {
               flexWrap: "wrap",
             }}
           >
-            <span
-              style={{
-                fontSize: 11,
-                fontWeight: 600,
-                color: "var(--ink-4)",
-                letterSpacing: ".07em",
-                textTransform: "uppercase",
-              }}
-            >
-              Agrupar por
-            </span>
-            <Segmented
-              value={workGroupBy}
-              onChange={setWorkGroupBy}
-              options={[
-                { value: "taller", label: "Por taller" },
-                { value: "profesor", label: "Por profesor" },
-                { value: "grupo", label: "Por grupo" },
-              ]}
-            />
+            <div style={{ display: "flex", alignItems: "center", gap: 6 }}>
+              <span
+                style={{
+                  fontSize: 11,
+                  fontWeight: 600,
+                  color: "var(--ink-4)",
+                  letterSpacing: ".07em",
+                  textTransform: "uppercase",
+                }}
+              >
+                Agrupar por
+              </span>
+              <Segmented
+                value={workGroupBy}
+                onChange={setWorkGroupBy}
+                options={[
+                  { value: "taller", label: "Por taller" },
+                  { value: "profesor", label: "Por profesor" },
+                  { value: "grupo", label: "Por grupo" },
+                ]}
+              />
+            </div>
             <div style={{ width: 1, height: 22, background: "var(--line)" }} />
-            <span
-              style={{
-                fontSize: 11,
-                fontWeight: 600,
-                color: "var(--ink-4)",
-                letterSpacing: ".07em",
-                textTransform: "uppercase",
-              }}
-            >
-              Tipo
-            </span>
-            <Select
-              value={typeFilter}
-              onChange={(e) => setTypeFilter(e.target.value)}
-              style={{ height: 32, fontSize: 12.5, width: 180 }}
-            >
+            <div style={{ display: "flex", alignItems: "center", gap: 6 }}>
+              <span
+                style={{
+                  fontSize: 11,
+                  fontWeight: 600,
+                  color: "var(--ink-4)",
+                  letterSpacing: ".07em",
+                  textTransform: "uppercase",
+                }}
+              >
+                Tipo
+              </span>
+              <Select
+                value={typeFilter}
+                onChange={(e) => setTypeFilter(e.target.value)}
+                style={{ height: 32, fontSize: 12.5, width: 180 }}
+              >
               <option value="todos">Todos los talleres</option>
               {Object.values(WORK_CATS).map((c) => (
                 <option key={c.id} value={c.id}>
@@ -3072,6 +3076,7 @@ const Horarios = () => {
                 </option>
               ))}
             </Select>
+            </div>
             <div style={{ flex: 1 }} />
             <div
               style={{
