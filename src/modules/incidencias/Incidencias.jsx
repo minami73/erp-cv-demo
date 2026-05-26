@@ -890,6 +890,28 @@ const NuevaIncidenciaModal = ({ alumno, onSave, onClose }) => {
 
 // ── Incidencias (componente principal) ───────────────────────────────────────
 
+const SortTh = ({ field, label, sortField, sortDir, onSort, center }) => {
+  const active = sortField === field;
+  return (
+    <div
+      onClick={() => onSort(field)}
+      style={{
+        textAlign: center ? "center" : "left",
+        cursor: "pointer",
+        display: "flex",
+        alignItems: "center",
+        gap: 3,
+        justifyContent: center ? "center" : "flex-start",
+        color: active ? "var(--ink)" : "var(--ink-4)",
+        userSelect: "none",
+      }}
+    >
+      {label}
+      {active && (sortDir === "asc" ? " ▲" : " ▼")}
+    </div>
+  );
+};
+
 const Incidencias = () => {
   const sections = window.CV_DATA.SECTIONS.filter((s) => s.id !== "general");
 
@@ -900,10 +922,31 @@ const Incidencias = () => {
   const [alumno, setAlumno] = useState(null);
   const [showModal, setShowModal] = useState(false);
   const [semaforoFilter, setSemaforoFilter] = useState(null);
+  const [sortField, setSortField] = useState(null);
+  const [sortDir, setSortDir] = useState("asc");
+
+  const toggleSort = (field) => {
+    setSortField((prev) => (prev === field ? prev : field));
+    setSortDir((prev) => (sortField === field ? (prev === "asc" ? "desc" : "asc") : "asc"));
+  };
 
   const toggleSemaforoFilter = (sem) => {
     setSemaforoFilter((prev) => (prev === sem ? null : sem));
     setAlumno(null);
+  };
+
+  const ordenar = (a, b) => {
+    const semOrd = { rojo: 0, amarillo: 1, verde: 2 };
+    if (!sortField) return semOrd[calcSemaforo(a.id, incidents)] - semOrd[calcSemaforo(b.id, incidents)];
+    let cmp = 0;
+    if (sortField === "nombre") cmp = (`${a.apellido}, ${a.nombre}`).localeCompare(`${b.apellido}, ${b.nombre}`);
+    else if (sortField === "seccion") cmp = a.seccion.localeCompare(b.seccion);
+    else if (sortField === "activas") {
+      const actA = incidents.filter((i) => i.alumnoId === a.id && i.estado === "activa").length;
+      const actB = incidents.filter((i) => i.alumnoId === b.id && i.estado === "activa").length;
+      cmp = actA - actB;
+    }
+    return sortDir === "asc" ? cmp : -cmp;
   };
 
   const lista = useMemo(() => {
@@ -917,12 +960,8 @@ const Incidencias = () => {
         (s.nombre + " " + s.apellido).toLowerCase().includes(q),
       );
     }
-    const ord = { rojo: 0, amarillo: 1, verde: 2 };
-    return [...list].sort(
-      (a, b) =>
-        ord[calcSemaforo(a.id, incidents)] - ord[calcSemaforo(b.id, incidents)],
-    );
-  }, [students, incidents, seccion, busqueda, semaforoFilter]);
+    return [...list].sort(ordenar);
+  }, [students, incidents, seccion, busqueda, semaforoFilter, sortField, sortDir]);
 
   const alumnoIncs = useMemo(() => {
     if (!alumno) return [];
@@ -1126,9 +1165,9 @@ const Incidencias = () => {
             }}
           >
             <div />
-            <div>Alumno</div>
-            <div>Sección</div>
-            <div style={{ textAlign: "center" }}>Activas</div>
+            <SortTh field="nombre" label="Alumno" sortField={sortField} sortDir={sortDir} onSort={toggleSort} />
+            <SortTh field="seccion" label="Sección" sortField={sortField} sortDir={sortDir} onSort={toggleSort} />
+            <SortTh field="activas" label="Activas" sortField={sortField} sortDir={sortDir} onSort={toggleSort} center />
           </div>
 
           {/* Filas */}
