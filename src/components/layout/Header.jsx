@@ -31,7 +31,7 @@ const Header = ({
   }, []);
 
   useEffect(() => {
-    const id = setInterval(() => setClock(new Date()), 30000);
+    const id = setInterval(() => setClock(new Date()), 1000);
     return () => clearInterval(id);
   }, []);
 
@@ -63,6 +63,7 @@ const Header = ({
   const num = clock.getDate();
   const hh = String(clock.getHours()).padStart(2, "0");
   const mm = String(clock.getMinutes()).padStart(2, "0");
+  const ss = String(clock.getSeconds()).padStart(2, "0");
 
   return (
     <header
@@ -179,7 +180,7 @@ const Header = ({
             fontVariantNumeric: "tabular-nums",
           }}
         >
-          {hh}:{mm}
+          {hh}:{mm}:{ss}
         </span>
       </div>
 
