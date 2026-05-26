@@ -466,6 +466,13 @@ window.CV_DATA = (function () {
       desc: "Directorio del personal, contratos, incidencias y desempeño.",
     },
     {
+      id: "incidencias",
+      label: "Incidencias",
+      icon: "alert-triangle",
+      active: true,
+      desc: "Seguimiento disciplinario de alumnos con semáforo de antecedentes.",
+    },
+    {
       id: "estacionamiento",
       label: "Estacionamiento",
       icon: "car",

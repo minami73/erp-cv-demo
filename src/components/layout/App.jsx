@@ -8,7 +8,13 @@ const App = () => {
   const [current, setCurrent] = useState("calendario");
   const [modules, setModules] = useState(() => {
     const saved = localStorage.getItem("cv_modules");
-    return saved ? JSON.parse(saved) : window.CV_DATA.MODULES;
+    if (!saved) return window.CV_DATA.MODULES;
+    const savedModules = JSON.parse(saved);
+    const savedIds = new Set(savedModules.map((m) => m.id));
+    const newModules = window.CV_DATA.MODULES.filter(
+      (m) => !savedIds.has(m.id),
+    );
+    return [...savedModules, ...newModules];
   });
   const [events, setEvents] = useState(window.CV_DATA.EVENTS);
   const [modal, setModal] = useState(null);
@@ -70,6 +76,11 @@ const App = () => {
       "Horario académico y talleres extraescolares · Semana 25–29 mayo";
     breadcrumbs = ["Módulos", "Horarios"];
     body = <Horarios />;
+  } else if (current === "incidencias") {
+    title = "Incidencias disciplinarias";
+    subtitle = "Seguimiento de antecedentes por alumno · Ciclo 2025–2026";
+    breadcrumbs = ["Módulos", "Incidencias"];
+    body = <Incidencias />;
   } else if (current === "modulos") {
     title = "Administración de módulos";
     subtitle = "Activa, desactiva y reordena los módulos del sistema";

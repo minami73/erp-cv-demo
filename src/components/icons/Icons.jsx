@@ -204,6 +204,14 @@ const Icon = ({ name, size = 18, stroke = 1.6, style }) => {
           <path d="M12 3l1.6 4.5L18 9l-4.4 1.5L12 15l-1.6-4.5L6 9l4.4-1.5z" />
         </svg>
       );
+    case "alert-triangle":
+      return (
+        <svg {...common}>
+          <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z" />
+          <path d="M12 9v4" />
+          <path d="M12 17h.01" strokeWidth={2.5} />
+        </svg>
+      );
     case "shield":
       return (
         <svg {...common}>
@@ -252,6 +260,12 @@ const Icon = ({ name, size = 18, stroke = 1.6, style }) => {
         <svg {...common}>
           <path d="M3 12V4h8l10 10-8 8z" />
           <circle cx="7" cy="8" r="1.4" fill="currentColor" stroke="none" />
+        </svg>
+      );
+    case "menu":
+      return (
+        <svg {...common}>
+          <path d="M4 6h16M4 12h16M4 18h16" />
         </svg>
       );
     case "spinner":
