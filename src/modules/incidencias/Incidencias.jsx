@@ -899,10 +899,18 @@ const Incidencias = () => {
   const [busqueda, setBusqueda] = useState("");
   const [alumno, setAlumno] = useState(null);
   const [showModal, setShowModal] = useState(false);
+  const [semaforoFilter, setSemaforoFilter] = useState(null);
+
+  const toggleSemaforoFilter = (sem) => {
+    setSemaforoFilter((prev) => (prev === sem ? null : sem));
+    setAlumno(null);
+  };
 
   const lista = useMemo(() => {
     let list = students;
     if (seccion) list = list.filter((s) => s.seccion === seccion);
+    if (semaforoFilter)
+      list = list.filter((s) => calcSemaforo(s.id, incidents) === semaforoFilter);
     if (busqueda.trim()) {
       const q = busqueda.toLowerCase();
       list = list.filter((s) =>
@@ -914,7 +922,7 @@ const Incidencias = () => {
       (a, b) =>
         ord[calcSemaforo(a.id, incidents)] - ord[calcSemaforo(b.id, incidents)],
     );
-  }, [students, incidents, seccion, busqueda]);
+  }, [students, incidents, seccion, busqueda, semaforoFilter]);
 
   const alumnoIncs = useMemo(() => {
     if (!alumno) return [];
@@ -985,14 +993,16 @@ const Incidencias = () => {
       >
         {stats.rojo > 0 && (
           <span
+            onClick={() => toggleSemaforoFilter("rojo")}
             style={{
               padding: "4px 10px",
               borderRadius: 20,
               fontSize: 12,
               fontWeight: 600,
-              background: "#fee2e2",
-              color: "#b91c1c",
-              border: "1px solid #fca5a5",
+              background: semaforoFilter === "rojo" ? "#b91c1c" : "#fee2e2",
+              color: semaforoFilter === "rojo" ? "#fff" : "#b91c1c",
+              border: `1px solid ${semaforoFilter === "rojo" ? "#b91c1c" : "#fca5a5"}`,
+              cursor: "pointer",
             }}
           >
             {stats.rojo} requiere{stats.rojo > 1 ? "n" : ""} atención
@@ -1000,14 +1010,16 @@ const Incidencias = () => {
         )}
         {stats.amarillo > 0 && (
           <span
+            onClick={() => toggleSemaforoFilter("amarillo")}
             style={{
               padding: "4px 10px",
               borderRadius: 20,
               fontSize: 12,
               fontWeight: 600,
-              background: "#fef9c3",
-              color: "#b45309",
-              border: "1px solid #fde047",
+              background: semaforoFilter === "amarillo" ? "#b45309" : "#fef9c3",
+              color: semaforoFilter === "amarillo" ? "#fff" : "#b45309",
+              border: `1px solid ${semaforoFilter === "amarillo" ? "#b45309" : "#fde047"}`,
+              cursor: "pointer",
             }}
           >
             {stats.amarillo} en observación
