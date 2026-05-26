@@ -957,11 +957,12 @@ const CLASSES = [
 
 /* ─── Workshops ─────────────────────────────────────────────────────── */
 const WORK_START = 14;
-const WORK_END = 18;
+const WORK_END = 19;
 const WORK_HALF_PX = 60;
-const WORK_TOTAL = (WORK_END - WORK_START) * 2 * WORK_HALF_PX;
+const WORK_TOP = 16;
+const WORK_TOTAL = WORK_TOP + (WORK_END - WORK_START) * 2 * WORK_HALF_PX;
 const workY = (hhmm) =>
-  ((toMin(hhmm) - WORK_START * 60) / 60) * (WORK_HALF_PX * 2);
+  WORK_TOP + ((toMin(hhmm) - WORK_START * 60) / 60) * (WORK_HALF_PX * 2);
 const workH = (s, e) => ((toMin(e) - toMin(s)) / 60) * (WORK_HALF_PX * 2);
 
 const WORK_CATS = {
@@ -2124,21 +2125,29 @@ const ClassModal = ({ data, isNew, onClose }) => {
 };
 
 /* ─── Workshop grid ─────────────────────────────────────────────────── */
+const CARD_H = 84;
+const CARD_GAP = 6;
+const SLOT_PAD = 8;
+
 const WorkGrid = ({ items, onClick }) => {
-  const byDay = useMemo(() => {
-    const m = DAYS.map(() => []);
-    items.forEach((it) => m[it.day].push(it));
-    return m.map((di) =>
-      placeLanes(
-        di,
-        (it) => toMin(it.start),
-        (it) => toMin(it.end),
-      ),
-    );
-  }, [items]);
+  const timeSlots = useMemo(
+    () => [...new Set(items.map((it) => it.start))].sort(),
+    [items],
+  );
+
+  const slotDayMap = useMemo(() => {
+    const map = {};
+    timeSlots.forEach((t) => {
+      map[t] = DAYS.map((_, di) =>
+        items
+          .filter((it) => it.day === di && it.start === t)
+          .sort((a, b) => toMin(a.end) - toMin(b.end)),
+      );
+    });
+    return map;
+  }, [items, timeSlots]);
 
   const TIME_COL = 72;
-  const halfSteps = (WORK_END - WORK_START) * 2;
 
   return (
     <div
@@ -2154,6 +2163,7 @@ const WorkGrid = ({ items, onClick }) => {
       }}
     >
       <div style={{ overflowY: "auto", flex: 1, minHeight: 0 }}>
+        {/* Header */}
         <div
           style={{
             display: "grid",
@@ -2166,7 +2176,7 @@ const WorkGrid = ({ items, onClick }) => {
           }}
         >
           <div />
-          {DAYS.map((d, i) => (
+          {DAYS.map((d) => (
             <div
               key={d}
               style={{
@@ -2175,180 +2185,150 @@ const WorkGrid = ({ items, onClick }) => {
                 display: "flex",
                 alignItems: "center",
                 justifyContent: "center",
-                textAlign: "center",
               }}
             >
               <div style={{ fontSize: 13, fontWeight: 600 }}>{d}</div>
             </div>
           ))}
         </div>
-        <div
-          style={{
-            display: "grid",
-            gridTemplateColumns: `${TIME_COL}px repeat(5, 1fr)`,
-            position: "relative",
-          }}
-        >
-          <div
-            style={{
-              position: "relative",
-              height: WORK_TOTAL,
-              borderRight: "1px solid var(--line)",
-            }}
-          >
-            {Array.from({ length: halfSteps + 1 }, (_, i) => {
-              const totalMin = i * 30;
-              const h = WORK_START + Math.floor(totalMin / 60);
-              const m = totalMin % 60;
-              const isHour = m === 0;
-              return (
-                <div
-                  key={i}
-                  style={{
-                    position: "absolute",
-                    top: i * WORK_HALF_PX - 8,
-                    right: 8,
-                    fontSize: isHour ? 11 : 10.5,
-                    fontFamily: "var(--font-mono)",
-                    color: isHour ? "var(--ink-3)" : "var(--ink-5)",
-                    fontWeight: isHour ? 600 : 400,
-                  }}
-                >
-                  {String(h).padStart(2, "0")}:{String(m).padStart(2, "0")}
-                </div>
-              );
-            })}
-          </div>
-          {DAYS.map((day, di) => (
+
+        {/* One row per start-time slot */}
+        {timeSlots.map((time) => {
+          const dayItems = slotDayMap[time];
+          const maxCards = Math.max(...dayItems.map((d) => d.length), 1);
+          const rowMinH =
+            maxCards * CARD_H + (maxCards - 1) * CARD_GAP + SLOT_PAD * 2;
+          return (
             <div
-              key={day}
+              key={time}
               style={{
-                position: "relative",
-                height: WORK_TOTAL,
-                borderLeft: "1px solid var(--line)",
-                background: "var(--surface)",
+                display: "grid",
+                gridTemplateColumns: `${TIME_COL}px repeat(5, 1fr)`,
+                minHeight: rowMinH,
+                borderBottom: "1px solid var(--line)",
               }}
             >
-              {Array.from({ length: halfSteps + 1 }, (_, i) => (
-                <div
-                  key={i}
+              {/* Time label */}
+              <div
+                style={{
+                  borderRight: "1px solid var(--line)",
+                  padding: `${SLOT_PAD}px 8px 0`,
+                  display: "flex",
+                  justifyContent: "flex-end",
+                  alignItems: "flex-start",
+                }}
+              >
+                <span
                   style={{
-                    position: "absolute",
-                    top: i * WORK_HALF_PX,
-                    left: 0,
-                    right: 0,
-                    height: 1,
-                    background: "var(--line)",
-                    opacity: i % 2 === 0 ? 1 : 0.5,
+                    fontSize: 11,
+                    fontFamily: "var(--font-mono)",
+                    fontWeight: 600,
+                    color: "var(--ink-3)",
                   }}
-                />
+                >
+                  {time}
+                </span>
+              </div>
+
+              {/* Day columns */}
+              {dayItems.map((workshops, di) => (
+                <div
+                  key={di}
+                  style={{
+                    borderLeft: "1px solid var(--line)",
+                    padding: SLOT_PAD,
+                    display: "flex",
+                    flexDirection: "column",
+                    gap: CARD_GAP,
+                  }}
+                >
+                  {workshops.map((item) => {
+                    const cat = WORK_CATS[item.cat];
+                    return (
+                      <button
+                        key={item.id}
+                        onClick={() => onClick(item)}
+                        style={{
+                          height: CARD_H,
+                          flexShrink: 0,
+                          background: cat.color,
+                          color: cat.ink,
+                          border: 0,
+                          borderRadius: 10,
+                          padding: "9px 12px",
+                          textAlign: "left",
+                          cursor: "pointer",
+                          display: "flex",
+                          flexDirection: "column",
+                          gap: 3,
+                          overflow: "hidden",
+                          boxShadow:
+                            "0 1px 0 rgba(0,0,0,.06), 0 4px 12px -6px rgba(0,0,0,.18)",
+                        }}
+                        onMouseEnter={(e) => {
+                          e.currentTarget.style.filter = "brightness(1.06)";
+                          e.currentTarget.style.transform = "translateY(-1px)";
+                        }}
+                        onMouseLeave={(e) => {
+                          e.currentTarget.style.filter = "none";
+                          e.currentTarget.style.transform = "none";
+                        }}
+                      >
+                        <span
+                          style={{
+                            fontSize: 10.5,
+                            fontFamily: "var(--font-mono)",
+                            fontWeight: 500,
+                            opacity: 0.88,
+                            whiteSpace: "nowrap",
+                          }}
+                        >
+                          {item.start} – {item.end}
+                        </span>
+                        <span
+                          style={{
+                            fontSize: 13,
+                            fontWeight: 700,
+                            lineHeight: 1.2,
+                            overflow: "hidden",
+                            textOverflow: "ellipsis",
+                            whiteSpace: "nowrap",
+                          }}
+                        >
+                          {cat.label}
+                        </span>
+                        <span
+                          style={{
+                            fontSize: 11,
+                            fontWeight: 500,
+                            opacity: 0.85,
+                            overflow: "hidden",
+                            textOverflow: "ellipsis",
+                            whiteSpace: "nowrap",
+                          }}
+                        >
+                          {item.group}
+                        </span>
+                        <span
+                          style={{
+                            fontSize: 10.5,
+                            opacity: 0.72,
+                            marginTop: "auto",
+                            overflow: "hidden",
+                            textOverflow: "ellipsis",
+                            whiteSpace: "nowrap",
+                          }}
+                        >
+                          {item.teacher}
+                        </span>
+                      </button>
+                    );
+                  })}
+                </div>
               ))}
-              {byDay[di].map(({ item, lane, totalLanes }) => {
-                const cat = WORK_CATS[item.cat];
-                const top = workY(item.start);
-                const height = workH(item.start, item.end);
-                const widthPct = 100 / totalLanes;
-                const leftPct = lane * widthPct;
-                const dense = totalLanes >= 3;
-                const veryDense = totalLanes >= 4;
-                return (
-                  <button
-                    key={item.id}
-                    onClick={() => onClick(item)}
-                    style={{
-                      position: "absolute",
-                      top,
-                      height: Math.max(height - 3, 28),
-                      left: `calc(${leftPct}% + ${lane === 0 ? 4 : 2}px)`,
-                      width: `calc(${widthPct}% - ${lane === totalLanes - 1 ? 8 : 4}px)`,
-                      background: cat.color,
-                      color: cat.ink,
-                      border: 0,
-                      borderRadius: 8,
-                      boxShadow:
-                        "0 1px 0 rgba(0,0,0,.06), 0 4px 12px -6px rgba(0,0,0,.18)",
-                      padding: veryDense ? "5px 7px" : "7px 9px",
-                      textAlign: "left",
-                      cursor: "pointer",
-                      display: "flex",
-                      flexDirection: "column",
-                      gap: veryDense ? 1 : 3,
-                      overflow: "hidden",
-                      zIndex: 2,
-                    }}
-                    onMouseEnter={(e) => {
-                      e.currentTarget.style.zIndex = "3";
-                      e.currentTarget.style.filter = "brightness(1.06)";
-                      e.currentTarget.style.transform = "translateY(-1px)";
-                    }}
-                    onMouseLeave={(e) => {
-                      e.currentTarget.style.zIndex = "2";
-                      e.currentTarget.style.filter = "none";
-                      e.currentTarget.style.transform = "none";
-                    }}
-                  >
-                    <span
-                      style={{
-                        fontSize: veryDense ? 10 : 10.5,
-                        fontFamily: "var(--font-mono)",
-                        fontWeight: 500,
-                        opacity: 0.88,
-                        whiteSpace: "nowrap",
-                      }}
-                    >
-                      {item.start} – {item.end}
-                    </span>
-                    <span
-                      style={{
-                        fontSize: dense ? 12 : 13,
-                        fontWeight: 700,
-                        lineHeight: 1.15,
-                        overflow: "hidden",
-                        textOverflow: "ellipsis",
-                        display: "-webkit-box",
-                        WebkitLineClamp: 1,
-                        WebkitBoxOrient: "vertical",
-                      }}
-                    >
-                      {cat.label}
-                    </span>
-                    {!veryDense && (
-                      <span
-                        style={{
-                          fontSize: dense ? 10.5 : 11,
-                          fontWeight: 500,
-                          opacity: 0.85,
-                          overflow: "hidden",
-                          textOverflow: "ellipsis",
-                          display: "-webkit-box",
-                          WebkitLineClamp: 1,
-                          WebkitBoxOrient: "vertical",
-                        }}
-                      >
-                        {item.group}
-                      </span>
-                    )}
-                    {height >= 70 && (
-                      <span
-                        style={{
-                          fontSize: 10.5,
-                          fontWeight: 400,
-                          opacity: 0.75,
-                          marginTop: "auto",
-                          overflow: "hidden",
-                          textOverflow: "ellipsis",
-                          whiteSpace: "nowrap",
-                        }}
-                      >
-                        {item.teacher}
-                      </span>
-                    )}
-                  </button>
-                );
-              })}
             </div>
-          ))}
-        </div>
+          );
+        })}
       </div>
     </div>
   );
@@ -3028,50 +3008,54 @@ const Horarios = () => {
               flexWrap: "wrap",
             }}
           >
-            <span
-              style={{
-                fontSize: 11,
-                fontWeight: 600,
-                color: "var(--ink-4)",
-                letterSpacing: ".07em",
-                textTransform: "uppercase",
-              }}
-            >
-              Agrupar por
-            </span>
-            <Segmented
-              value={workGroupBy}
-              onChange={setWorkGroupBy}
-              options={[
-                { value: "taller", label: "Por taller" },
-                { value: "profesor", label: "Por profesor" },
-                { value: "grupo", label: "Por grupo" },
-              ]}
-            />
+            <div style={{ display: "flex", alignItems: "center", gap: 6 }}>
+              <span
+                style={{
+                  fontSize: 11,
+                  fontWeight: 600,
+                  color: "var(--ink-4)",
+                  letterSpacing: ".07em",
+                  textTransform: "uppercase",
+                }}
+              >
+                Agrupar por
+              </span>
+              <Segmented
+                value={workGroupBy}
+                onChange={setWorkGroupBy}
+                options={[
+                  { value: "taller", label: "Por taller" },
+                  { value: "profesor", label: "Por profesor" },
+                  { value: "grupo", label: "Por grupo" },
+                ]}
+              />
+            </div>
             <div style={{ width: 1, height: 22, background: "var(--line)" }} />
-            <span
-              style={{
-                fontSize: 11,
-                fontWeight: 600,
-                color: "var(--ink-4)",
-                letterSpacing: ".07em",
-                textTransform: "uppercase",
-              }}
-            >
-              Tipo
-            </span>
-            <Select
-              value={typeFilter}
-              onChange={(e) => setTypeFilter(e.target.value)}
-              style={{ height: 32, fontSize: 12.5, width: 180 }}
-            >
-              <option value="todos">Todos los talleres</option>
-              {Object.values(WORK_CATS).map((c) => (
-                <option key={c.id} value={c.id}>
-                  {c.label}
-                </option>
-              ))}
-            </Select>
+            <div style={{ display: "flex", alignItems: "center", gap: 6 }}>
+              <span
+                style={{
+                  fontSize: 11,
+                  fontWeight: 600,
+                  color: "var(--ink-4)",
+                  letterSpacing: ".07em",
+                  textTransform: "uppercase",
+                }}
+              >
+                Tipo
+              </span>
+              <Select
+                value={typeFilter}
+                onChange={(e) => setTypeFilter(e.target.value)}
+                style={{ height: 32, fontSize: 12.5, width: 180 }}
+              >
+                <option value="todos">Todos los talleres</option>
+                {Object.values(WORK_CATS).map((c) => (
+                  <option key={c.id} value={c.id}>
+                    {c.label}
+                  </option>
+                ))}
+              </Select>
+            </div>
             <div style={{ flex: 1 }} />
             <div
               style={{

@@ -1,7 +1,13 @@
-const Sidebar = ({ current, onNavigate, modules, setModules }) => {
+const Sidebar = ({
+  current,
+  onNavigate,
+  modules,
+  setModules,
+  collapsed,
+  onToggle,
+}) => {
   const [dragId, setDragId] = useState(null);
   const [overId, setOverId] = useState(null);
-  const [collapsed, setCollapsed] = useState(false);
 
   const activeModules = modules.filter((m) => m.active);
 
@@ -35,7 +41,7 @@ const Sidebar = ({ current, onNavigate, modules, setModules }) => {
         draggable={!collapsed}
         onDragStart={() => !collapsed && handleDragStart(mod.id)}
         onDragOver={(e) => !collapsed && handleDragOver(e, mod.id)}
-        onDrop={handleDrop}
+        onDrop={() => !collapsed && handleDrop()}
         onDragEnd={() => {
           setDragId(null);
           setOverId(null);
@@ -59,7 +65,7 @@ const Sidebar = ({ current, onNavigate, modules, setModules }) => {
           borderTop: over
             ? "2px solid rgba(255,255,255,.5)"
             : "2px solid transparent",
-          transition: "background .12s, color .12s, padding .2s",
+          transition: "background .12s, color .12s, padding .25s",
         }}
         onMouseEnter={(e) => {
           if (!active)
@@ -73,18 +79,19 @@ const Sidebar = ({ current, onNavigate, modules, setModules }) => {
           <span
             style={{
               position: "absolute",
-              left: collapsed ? -8 : -16,
+              left: collapsed ? 0 : -16,
               top: 8,
               bottom: 8,
               width: 3,
               background: "#fff",
               borderRadius: "0 3px 3px 0",
-              transition: "left .2s",
+              transition: "left .25s",
             }}
           />
         )}
         {!collapsed && (
           <span
+            className="grip"
             style={{
               color: "rgba(255,255,255,.35)",
               display: "inline-flex",
@@ -108,7 +115,7 @@ const Sidebar = ({ current, onNavigate, modules, setModules }) => {
   return (
     <aside
       style={{
-        width: collapsed ? 64 : 240,
+        width: collapsed ? 0 : 240,
         flexShrink: 0,
         height: "100vh",
         background:
@@ -116,45 +123,14 @@ const Sidebar = ({ current, onNavigate, modules, setModules }) => {
         color: "var(--brand-ink)",
         display: "flex",
         flexDirection: "column",
-        padding: collapsed ? "24px 8px" : "24px 16px",
+        padding: collapsed ? 0 : "24px 16px",
         position: "sticky",
         top: 0,
         overflow: "hidden",
-        transition: "width .2s ease, padding .2s ease",
+        transition:
+          "width .3s cubic-bezier(.4,0,.2,1), padding .3s cubic-bezier(.4,0,.2,1)",
       }}
     >
-      {/* Toggle button row */}
-      <div
-        style={{ display: "flex", justifyContent: "flex-end", marginBottom: 8 }}
-      >
-        <button
-          onClick={() => setCollapsed((c) => !c)}
-          title={collapsed ? "Expandir sidebar" : "Colapsar sidebar"}
-          style={{
-            width: 32,
-            height: 32,
-            display: "inline-flex",
-            alignItems: "center",
-            justifyContent: "center",
-            background: "rgba(255,255,255,.12)",
-            border: 0,
-            borderRadius: 8,
-            color: "rgba(255,255,255,.85)",
-            cursor: "pointer",
-            transition: "background .12s",
-            flexShrink: 0,
-          }}
-          onMouseEnter={(e) =>
-            (e.currentTarget.style.background = "rgba(255,255,255,.25)")
-          }
-          onMouseLeave={(e) =>
-            (e.currentTarget.style.background = "rgba(255,255,255,.12)")
-          }
-        >
-          <Icon name={collapsed ? "chevron-right" : "chevron-left"} size={17} />
-        </button>
-      </div>
-
       {/* Logo */}
       <div
         style={{
@@ -162,18 +138,18 @@ const Sidebar = ({ current, onNavigate, modules, setModules }) => {
           flexDirection: "column",
           alignItems: "center",
           gap: collapsed ? 0 : 10,
-          padding: collapsed ? "8px 0 16px" : "4px 8px 22px",
-          transition: "padding .2s, gap .2s",
+          padding: collapsed ? "0 0 18px" : "4px 8px 22px",
+          transition: "padding .25s, gap .25s",
         }}
       >
         <img
           src="img/logo-cv.png"
           alt="Colegio Victoria"
           style={{
-            height: collapsed ? 32 : 72,
+            height: collapsed ? 40 : 72,
             width: "auto",
             objectFit: "contain",
-            transition: "height .2s",
+            transition: "height .25s",
           }}
         />
         {!collapsed && (
@@ -186,7 +162,7 @@ const Sidebar = ({ current, onNavigate, modules, setModules }) => {
         )}
       </div>
 
-      {/* Módulos label */}
+      {/* Section label */}
       {!collapsed && (
         <div
           style={{
@@ -211,9 +187,6 @@ const Sidebar = ({ current, onNavigate, modules, setModules }) => {
         </div>
       )}
 
-      {collapsed && <div style={{ height: 4 }} />}
-
-      {/* Nav items */}
       <nav
         style={{
           display: "flex",
@@ -228,7 +201,6 @@ const Sidebar = ({ current, onNavigate, modules, setModules }) => {
         ))}
       </nav>
 
-      {/* Bottom section */}
       <div
         style={{
           borderTop: "1px solid rgba(255,255,255,.08)",
@@ -262,7 +234,7 @@ const Sidebar = ({ current, onNavigate, modules, setModules }) => {
                 color: active ? "#fff" : "rgba(244,245,250,.65)",
                 fontSize: 13,
                 fontWeight: active ? 500 : 400,
-                transition: "background .12s, color .12s, padding .2s",
+                transition: "background .12s, color .12s, padding .25s",
               }}
               onMouseEnter={(e) => {
                 if (!active)
@@ -276,13 +248,13 @@ const Sidebar = ({ current, onNavigate, modules, setModules }) => {
                 <span
                   style={{
                     position: "absolute",
-                    left: collapsed ? -8 : -16,
+                    left: collapsed ? 0 : -16,
                     top: 8,
                     bottom: 8,
                     width: 3,
                     background: "#fff",
                     borderRadius: "0 3px 3px 0",
-                    transition: "left .2s",
+                    transition: "left .25s",
                   }}
                 />
               )}
