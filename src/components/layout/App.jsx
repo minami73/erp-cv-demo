@@ -6,16 +6,7 @@ const App = () => {
     () => localStorage.getItem("cv_sidebar_collapsed") === "1",
   );
   const [current, setCurrent] = useState("calendario");
-  const [modules, setModules] = useState(() => {
-    const saved = localStorage.getItem("cv_modules");
-    if (!saved) return window.CV_DATA.MODULES;
-    const savedModules = JSON.parse(saved);
-    const savedIds = new Set(savedModules.map((m) => m.id));
-    const newModules = window.CV_DATA.MODULES.filter(
-      (m) => !savedIds.has(m.id),
-    );
-    return [...savedModules, ...newModules];
-  });
+  const [modules, setModules] = useState(window.CV_DATA.MODULES);
   const [events, setEvents] = useState(window.CV_DATA.EVENTS);
   const [modal, setModal] = useState(null);
 

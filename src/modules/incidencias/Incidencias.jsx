@@ -136,7 +136,7 @@ const MOCK_INCIDENTS = [
     categoria: "asistencia",
     gravedad: "leve",
     fecha: "2026-05-06",
-    registradoPor: "Lic. Adriana Solís",
+    registradoPor: "Miss Lila Meza",
     seccion: "primaria",
     estado: "activa",
     resolucion: null,
@@ -150,7 +150,7 @@ const MOCK_INCIDENTS = [
     categoria: "dano",
     gravedad: "leve",
     fecha: "2026-04-28",
-    registradoPor: "Lic. Adriana Solís",
+    registradoPor: "Miss Lila Meza",
     seccion: "primaria",
     estado: "activa",
     resolucion: null,
@@ -163,7 +163,7 @@ const MOCK_INCIDENTS = [
     categoria: "uniforme",
     gravedad: "leve",
     fecha: "2026-05-12",
-    registradoPor: "Lic. Adriana Solís",
+    registradoPor: "Miss Lila Meza",
     seccion: "primaria",
     estado: "activa",
     resolucion: null,
@@ -178,7 +178,7 @@ const MOCK_INCIDENTS = [
     categoria: "agresion",
     gravedad: "grave",
     fecha: "2026-05-14",
-    registradoPor: "Mtro. Jorge Linares",
+    registradoPor: "Ing. Jared Camacho",
     seccion: "secundaria",
     estado: "activa",
     resolucion: null,
@@ -192,7 +192,7 @@ const MOCK_INCIDENTS = [
     categoria: "lenguaje",
     gravedad: "media",
     fecha: "2026-05-08",
-    registradoPor: "Mtro. Jorge Linares",
+    registradoPor: "Ing. Jared Camacho",
     seccion: "secundaria",
     estado: "activa",
     resolucion: null,
@@ -207,7 +207,7 @@ const MOCK_INCIDENTS = [
     categoria: "agresion",
     gravedad: "grave",
     fecha: "2026-05-20",
-    registradoPor: "Mtro. Jorge Linares",
+    registradoPor: "Miss Erika Castro",
     seccion: "secundaria",
     estado: "activa",
     resolucion: null,
@@ -221,7 +221,7 @@ const MOCK_INCIDENTS = [
     categoria: "conducta",
     gravedad: "leve",
     fecha: "2026-05-05",
-    registradoPor: "Mtro. Jorge Linares",
+    registradoPor: "Miss Erika Castro",
     seccion: "secundaria",
     estado: "activa",
     resolucion: null,
@@ -235,7 +235,7 @@ const MOCK_INCIDENTS = [
     categoria: "lenguaje",
     gravedad: "media",
     fecha: "2026-04-22",
-    registradoPor: "Mtro. Jorge Linares",
+    registradoPor: "Miss Erika Castro",
     seccion: "secundaria",
     estado: "activa",
     resolucion: null,
@@ -249,7 +249,7 @@ const MOCK_INCIDENTS = [
     categoria: "asistencia",
     gravedad: "leve",
     fecha: "2026-03-10",
-    registradoPor: "Mtro. Jorge Linares",
+    registradoPor: "Prof. Fernando Paulino",
     seccion: "secundaria",
     estado: "resuelta",
     resolucion: "Habló con los padres. Se comprometieron a llegar temprano.",
@@ -263,7 +263,7 @@ const MOCK_INCIDENTS = [
     categoria: "conducta",
     gravedad: "leve",
     fecha: "2026-04-15",
-    registradoPor: "Mtro. Jorge Linares",
+    registradoPor: "Prof. Fernando Paulino",
     seccion: "secundaria",
     estado: "resuelta",
     resolucion: "Firmó compromiso junto con sus padres.",
@@ -277,7 +277,7 @@ const MOCK_INCIDENTS = [
     categoria: "conducta",
     gravedad: "media",
     fecha: "2026-05-18",
-    registradoPor: "Mtro. Jorge Linares",
+    registradoPor: "Prof. Fernando Paulino",
     seccion: "secundaria",
     estado: "activa",
     resolucion: null,
@@ -291,7 +291,7 @@ const MOCK_INCIDENTS = [
     categoria: "asistencia",
     gravedad: "leve",
     fecha: "2026-03-22",
-    registradoPor: "Mtro. Jorge Linares",
+    registradoPor: "Miss Lila Meza",
     seccion: "secundaria",
     estado: "resuelta",
     resolucion: "Presentó justificante médico al día siguiente.",
@@ -306,7 +306,7 @@ const MOCK_INCIDENTS = [
     categoria: "dano",
     gravedad: "grave",
     fecha: "2026-05-15",
-    registradoPor: "Mtro. Jorge Linares",
+    registradoPor: "Ing. Jared Camacho",
     seccion: "secundaria",
     estado: "activa",
     resolucion: null,
@@ -320,7 +320,7 @@ const MOCK_INCIDENTS = [
     categoria: "lenguaje",
     gravedad: "media",
     fecha: "2026-05-09",
-    registradoPor: "Mtro. Jorge Linares",
+    registradoPor: "Ing. Jared Camacho",
     seccion: "secundaria",
     estado: "activa",
     resolucion: null,
@@ -335,7 +335,7 @@ const MOCK_INCIDENTS = [
     categoria: "conducta",
     gravedad: "media",
     fecha: "2026-05-19",
-    registradoPor: "Mtro. Roberto Cárdenas",
+    registradoPor: "Ing. Eduardo Torbellin",
     seccion: "bachillerato",
     estado: "activa",
     resolucion: null,
@@ -349,7 +349,7 @@ const MOCK_INCIDENTS = [
     categoria: "asistencia",
     gravedad: "leve",
     fecha: "2026-05-12",
-    registradoPor: "Mtro. Roberto Cárdenas",
+    registradoPor: "Ing. Eduardo Torbellin",
     seccion: "bachillerato",
     estado: "activa",
     resolucion: null,
@@ -653,14 +653,14 @@ const IncidenciaItem = ({ inc, onResolver }) => {
 // ── NuevaIncidenciaModal ──────────────────────────────────────────────────────
 
 const NuevaIncidenciaModal = ({ alumno, onSave, onClose }) => {
-  const users = window.CV_DATA.USERS.filter((u) => u.active);
+  const docentes = window.CV_DATA.TEACHERS;
   const [form, setForm] = useState({
     titulo: "",
     descripcion: "",
     categoria: "",
     gravedad: "leve",
     fecha: new Date().toISOString().slice(0, 10),
-    registradoPor: users[0]?.name || "",
+    registradoPor: docentes[0]?.name || "",
   });
   const [errors, setErrors] = useState({});
 
@@ -824,9 +824,9 @@ const NuevaIncidenciaModal = ({ alumno, onSave, onClose }) => {
                 onChange={(e) => set("registradoPor", e.target.value)}
                 style={inp(false)}
               >
-                {users.map((u) => (
-                  <option key={u.id} value={u.name}>
-                    {u.name}
+                {docentes.map((d) => (
+                  <option key={d.id} value={d.name}>
+                    {d.name}
                   </option>
                 ))}
               </select>
