@@ -459,6 +459,13 @@ window.CV_DATA = (function () {
       desc: "Seguimiento disciplinario de alumnos con semáforo de antecedentes.",
     },
     {
+      id: "incidencias-docentes",
+      label: "Incidencias docentes",
+      icon: "shield",
+      active: true,
+      desc: "Registro y seguimiento de conflictos entre docentes con flujo de dos versiones.",
+    },
+    {
       id: "planeaciones",
       label: "Planeaciones",
       icon: "doc",
@@ -571,11 +578,31 @@ window.CV_DATA = (function () {
   ];
 
   const TEACHERS = [
-    { id: "jared",    name: "Ing. Jared Camacho",      role: "Tecnología",       initials: "JC" },
-    { id: "erika",    name: "Miss Erika Castro",        role: "Matemáticas",      initials: "EC" },
-    { id: "eduardo",  name: "Ing. Eduardo Torbellin",   role: "Matemáticas",      initials: "ET" },
-    { id: "lila",     name: "Miss Lila Meza",           role: "Titular 5B",       initials: "LM" },
-    { id: "fernando", name: "Prof. Fernando Paulino",   role: "Educación Física", initials: "FP" },
+    {
+      id: "jared",
+      name: "Ing. Jared Camacho",
+      role: "Tecnología",
+      initials: "JC",
+    },
+    {
+      id: "erika",
+      name: "Miss Erika Castro",
+      role: "Matemáticas",
+      initials: "EC",
+    },
+    {
+      id: "eduardo",
+      name: "Ing. Eduardo Torbellin",
+      role: "Matemáticas",
+      initials: "ET",
+    },
+    { id: "lila", name: "Miss Lila Meza", role: "Titular 5B", initials: "LM" },
+    {
+      id: "fernando",
+      name: "Prof. Fernando Paulino",
+      role: "Educación Física",
+      initials: "FP",
+    },
   ];
 
   return { SECTIONS, EVENT_TYPES, EVENTS, MODULES, USERS, TEACHERS };

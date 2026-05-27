@@ -72,6 +72,11 @@ const App = () => {
     subtitle = "Seguimiento de antecedentes por alumno · Ciclo 2025–2026";
     breadcrumbs = ["Módulos", "Incidencias"];
     body = <Incidencias />;
+  } else if (current === "incidencias-docentes") {
+    title = "Incidencias entre docentes";
+    subtitle = "Conflictos en el aula e interpersonales · Ciclo 2025–2026";
+    breadcrumbs = ["Módulos", "Incidencias docentes"];
+    body = <IncidenciasDocentes />;
   } else if (current === "modulos") {
     title = "Administración de módulos";
     subtitle = "Activa, desactiva y reordena los módulos del sistema";
