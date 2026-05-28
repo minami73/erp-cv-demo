@@ -505,12 +505,12 @@ window.CV_DATA = (function () {
   const USERS = [
     {
       id: 1,
-      name: "Lic. María Fernanda Valdés",
-      email: "mfvaldes@colegiovictoria.mx",
+      name: "Ing. Andrés Federico Mendoza Olvera",
+      email: "fmendoza@colegiovictoria.com",
       role: "Director General",
       sections: ["general"],
       active: true,
-      initials: "MV",
+      initials: "FM",
     },
     {
       id: 2,
@@ -541,12 +541,13 @@ window.CV_DATA = (function () {
     },
     {
       id: 5,
-      name: "Mtro. Jorge Linares",
-      email: "jlinares@colegiovictoria.mx",
+      name: "Mtro. Felipe Camacho Tejeda",
+      email: "fcamacho@colegiovictoria.com",
       role: "Director de Sección",
       sections: ["secundaria"],
       active: true,
-      initials: "JL",
+      initials: "FC",
+      restrictedModules: ["incidencias-docentes"],
     },
     {
       id: 6,
@@ -605,5 +606,26 @@ window.CV_DATA = (function () {
     },
   ];
 
-  return { SECTIONS, EVENT_TYPES, EVENTS, MODULES, USERS, TEACHERS };
+  const DEMO_CREDENTIALS = [
+    {
+      userId: 1,
+      email: "fmendoza@colegiovictoria.com",
+      password: "director2026",
+    },
+    {
+      userId: 5,
+      email: "fcamacho@colegiovictoria.com",
+      password: "secundaria2026",
+    },
+  ];
+
+  return {
+    SECTIONS,
+    EVENT_TYPES,
+    EVENTS,
+    MODULES,
+    USERS,
+    TEACHERS,
+    DEMO_CREDENTIALS,
+  };
 })();

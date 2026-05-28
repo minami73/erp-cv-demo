@@ -1,16 +1,27 @@
 const Login = ({ onLogin }) => {
-  const [email, setEmail] = useState("federicomendoza@colegiovictoria.mx");
-  const [password, setPassword] = useState("colegio2026");
+  const [email, setEmail] = useState("fmendoza@colegiovictoria.com");
+  const [password, setPassword] = useState("director2026");
   const [remember, setRemember] = useState(true);
   const [showPw, setShowPw] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(null);
 
   const handleSubmit = (e) => {
     e.preventDefault();
     if (loading) return;
+    setError(null);
     setLoading(true);
     setTimeout(() => {
-      onLogin();
+      const creds = window.CV_DATA.DEMO_CREDENTIALS;
+      const match = creds.find(
+        (c) => c.email === email && c.password === password,
+      );
+      if (match) {
+        onLogin(match.userId);
+      } else {
+        setLoading(false);
+        setError("Correo o contraseña incorrectos.");
+      }
     }, 1800);
   };
 
@@ -28,7 +39,8 @@ const Login = ({ onLogin }) => {
         style={{
           position: "relative",
           overflow: "hidden",
-          background: "linear-gradient(180deg, var(--brand) 0%, var(--brand-2) 100%)",
+          background:
+            "linear-gradient(180deg, var(--brand) 0%, var(--brand-2) 100%)",
           color: "var(--brand-ink)",
           padding: "48px 56px",
           display: "flex",
@@ -258,8 +270,33 @@ const Login = ({ onLogin }) => {
                 cursor: loading ? "not-allowed" : "pointer",
               }}
             >
-              {loading ? <><Icon name="spinner" size={16} /> Iniciando sesión...</> : "Iniciar sesión"}
+              {loading ? (
+                <>
+                  <Icon name="spinner" size={16} /> Iniciando sesión...
+                </>
+              ) : (
+                "Iniciar sesión"
+              )}
             </Button>
+
+            {error && (
+              <div
+                style={{
+                  display: "flex",
+                  alignItems: "center",
+                  gap: 8,
+                  padding: "10px 14px",
+                  borderRadius: "var(--radius)",
+                  background: "#fef2f2",
+                  border: "1px solid #fca5a5",
+                  color: "#b91c1c",
+                  fontSize: 13,
+                }}
+              >
+                <Icon name="alert-triangle" size={14} />
+                {error}
+              </div>
+            )}
 
             <div
               style={{

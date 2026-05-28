@@ -14,12 +14,22 @@ const App = () => {
     localStorage.setItem("cv_modules", JSON.stringify(modules));
   }, [modules]);
 
-  const user = {
-    initials: "FM",
-    name: "Ing. Andrés Federico Mendoza Olvera",
-    email: "federicomendoza@colegiovictoria.mx",
-    role: "Director General",
-  };
+  const currentUser = (() => {
+    const id = Number(localStorage.getItem("cv_user_id")) || 1;
+    return (
+      window.CV_DATA.USERS.find((u) => u.id === id) || window.CV_DATA.USERS[0]
+    );
+  })();
+
+  const visibleModules = modules.filter(
+    (m) => !currentUser.restrictedModules?.includes(m.id),
+  );
+
+  useEffect(() => {
+    if (currentUser.restrictedModules?.includes(current)) {
+      setCurrent("calendario");
+    }
+  }, [current, loggedIn]);
 
   const openEvent = (event) => setModal({ event, isNew: false });
   const openNew = (start) => {
@@ -33,7 +43,9 @@ const App = () => {
         end: today,
         time: "09:00 – 10:00",
         type: "reunion",
-        sections: ["general"],
+        sections: currentUser.sections.includes("general")
+          ? ["general"]
+          : [currentUser.sections[0]],
       },
       isNew: true,
     });
@@ -97,8 +109,9 @@ const App = () => {
   if (!loggedIn)
     return (
       <Login
-        onLogin={() => {
+        onLogin={(userId) => {
           localStorage.setItem("cv_logged_in", "1");
+          localStorage.setItem("cv_user_id", String(userId));
           setLoggedIn(true);
         }}
       />
@@ -112,7 +125,7 @@ const App = () => {
       <Sidebar
         current={current}
         onNavigate={setCurrent}
-        modules={modules}
+        modules={visibleModules}
         setModules={setModules}
         collapsed={sidebarCollapsed}
       />
@@ -131,7 +144,7 @@ const App = () => {
           title={title}
           subtitle={subtitle}
           breadcrumbs={breadcrumbs}
-          user={user}
+          user={currentUser}
           onToggleSidebar={() => {
             const next = !sidebarCollapsed;
             setSidebarCollapsed(next);
@@ -139,6 +152,7 @@ const App = () => {
           }}
           onLogout={() => {
             localStorage.removeItem("cv_logged_in");
+            localStorage.removeItem("cv_user_id");
             setLoggedIn(false);
           }}
         />
@@ -152,6 +166,7 @@ const App = () => {
           onClose={closeModal}
           onSave={saveEvent}
           onDelete={deleteEvent}
+          currentUser={currentUser}
         />
       )}
     </div>
