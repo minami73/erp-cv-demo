@@ -33,7 +33,7 @@ const App = () => {
 
   const openEvent = (event) => setModal({ event, isNew: false });
   const openNew = (start) => {
-    const today = start || "2026-05-24";
+    const today = start || window.fmtDate(new Date());
     setModal({
       event: {
         id: Date.now(),
