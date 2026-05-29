@@ -1,1281 +1,16 @@
 // ─────────────────────────────────────────────────────────────────────────────
 //  INCIDENCIAS — Módulo de seguimiento disciplinario de alumnos
+//  Componentes extraídos: SemaforoDot, SemaforoBadge, GravedadBadge,
+//  IncidenciaItem, NuevoAlumnoModal, NuevaIncidenciaModal, SortTh
 // ─────────────────────────────────────────────────────────────────────────────
 
-const MOCK_STUDENTS = [
-  {
-    id: "st1",
-    nombre: "Sebastián",
-    apellido: "Torres Ríos",
-    seccion: "primaria",
-    grado: "4°",
-    grupo: "A",
-  },
-  {
-    id: "st2",
-    nombre: "Daniela",
-    apellido: "Guzmán Pérez",
-    seccion: "primaria",
-    grado: "5°",
-    grupo: "B",
-  },
-  {
-    id: "st3",
-    nombre: "Mateo",
-    apellido: "Herrera Campos",
-    seccion: "primaria",
-    grado: "6°",
-    grupo: "A",
-  },
-  {
-    id: "st4",
-    nombre: "Valeria",
-    apellido: "Morales Soto",
-    seccion: "primaria",
-    grado: "3°",
-    grupo: "A",
-  },
-  {
-    id: "st5",
-    nombre: "Diego",
-    apellido: "Ramírez Luna",
-    seccion: "secundaria",
-    grado: "1°",
-    grupo: "B",
-  },
-  {
-    id: "st6",
-    nombre: "Sofía",
-    apellido: "Mendoza Vega",
-    seccion: "secundaria",
-    grado: "2°",
-    grupo: "A",
-  },
-  {
-    id: "st7",
-    nombre: "Emilio",
-    apellido: "Castro Flores",
-    seccion: "secundaria",
-    grado: "3°",
-    grupo: "B",
-  },
-  {
-    id: "st8",
-    nombre: "Andrea",
-    apellido: "Jiménez Ruiz",
-    seccion: "secundaria",
-    grado: "1°",
-    grupo: "A",
-  },
-  {
-    id: "st9",
-    nombre: "Carlos",
-    apellido: "Vargas Ortiz",
-    seccion: "secundaria",
-    grado: "2°",
-    grupo: "C",
-  },
-  {
-    id: "st10",
-    nombre: "Camila",
-    apellido: "Reyes Navarro",
-    seccion: "bachillerato",
-    grado: "1°",
-    grupo: "A",
-  },
-  {
-    id: "st11",
-    nombre: "Rodrigo",
-    apellido: "Salinas Díaz",
-    seccion: "bachillerato",
-    grado: "2°",
-    grupo: "B",
-  },
-  {
-    id: "st12",
-    nombre: "Isabella",
-    apellido: "Peña Romero",
-    seccion: "bachillerato",
-    grado: "3°",
-    grupo: "A",
-  },
-  {
-    id: "st13",
-    nombre: "Luna",
-    apellido: "Carrillo Santos",
-    seccion: "preescolar",
-    grado: "2°",
-    grupo: "A",
-  },
-  {
-    id: "st14",
-    nombre: "Matías",
-    apellido: "López Rojas",
-    seccion: "preescolar",
-    grado: "3°",
-    grupo: "B",
-  },
-  {
-    id: "st15",
-    nombre: "Valentina",
-    apellido: "Núñez Espinoza",
-    seccion: "maternal",
-    grado: "Lactantes",
-    grupo: "A",
-  },
-];
-
-const MOCK_INCIDENTS = [
-  // Daniela — amarillo (1 activa leve)
-  {
-    id: "i1",
-    alumnoId: "st2",
-    titulo: "Tardanza reiterada",
-    descripcion:
-      "Llegó tarde en 3 ocasiones durante la semana sin justificante.",
-    categoria: "asistencia",
-    gravedad: "leve",
-    fecha: "2026-05-06",
-    registradoPor: "Miss Lila Meza",
-    seccion: "primaria",
-    estado: "activa",
-    resolucion: null,
-  },
-  // Mateo — amarillo (2 activas)
-  {
-    id: "i2",
-    alumnoId: "st3",
-    titulo: "Daño a silla del salón",
-    descripcion: "Rayó la silla con un compás causando daño al mobiliario.",
-    categoria: "dano",
-    gravedad: "leve",
-    fecha: "2026-04-28",
-    registradoPor: "Miss Lila Meza",
-    seccion: "primaria",
-    estado: "activa",
-    resolucion: null,
-  },
-  {
-    id: "i3",
-    alumnoId: "st3",
-    titulo: "Incumplimiento de uniforme",
-    descripcion: "Asistió tres días consecutivos sin el suéter reglamentario.",
-    categoria: "uniforme",
-    gravedad: "leve",
-    fecha: "2026-05-12",
-    registradoPor: "Miss Lila Meza",
-    seccion: "primaria",
-    estado: "activa",
-    resolucion: null,
-  },
-  // Diego — ROJO (1 grave activa + 1 media)
-  {
-    id: "i4",
-    alumnoId: "st5",
-    titulo: "Agresión física a compañero",
-    descripcion:
-      "Agredió físicamente a un compañero durante el receso. Intervino el prefecto de guardia.",
-    categoria: "agresion",
-    gravedad: "grave",
-    fecha: "2026-05-14",
-    registradoPor: "Ing. Jared Camacho",
-    seccion: "secundaria",
-    estado: "activa",
-    resolucion: null,
-  },
-  {
-    id: "i5",
-    alumnoId: "st5",
-    titulo: "Falta de respeto a docente",
-    descripcion:
-      "Respondió de forma grosera a la maestra de español frente al grupo.",
-    categoria: "lenguaje",
-    gravedad: "media",
-    fecha: "2026-05-08",
-    registradoPor: "Ing. Jared Camacho",
-    seccion: "secundaria",
-    estado: "activa",
-    resolucion: null,
-  },
-  // Sofía — ROJO (3 activas, incluye grave)
-  {
-    id: "i6",
-    alumnoId: "st6",
-    titulo: "Cortó el cabello a compañera",
-    descripcion:
-      "Durante clase de educación artística cortó un mechón de cabello a su compañera de banca con las tijeras del material.",
-    categoria: "agresion",
-    gravedad: "grave",
-    fecha: "2026-05-20",
-    registradoPor: "Miss Erika Castro",
-    seccion: "secundaria",
-    estado: "activa",
-    resolucion: null,
-  },
-  {
-    id: "i7",
-    alumnoId: "st6",
-    titulo: "Conducta disruptiva en clase",
-    descripcion:
-      "Interrumpió la clase en varias ocasiones burlándose de respuestas de compañeros.",
-    categoria: "conducta",
-    gravedad: "leve",
-    fecha: "2026-05-05",
-    registradoPor: "Miss Erika Castro",
-    seccion: "secundaria",
-    estado: "activa",
-    resolucion: null,
-  },
-  {
-    id: "i8",
-    alumnoId: "st6",
-    titulo: "Lenguaje soez en clase",
-    descripcion:
-      "Uso reiterado de vocabulario ofensivo en el salón durante las sesiones.",
-    categoria: "lenguaje",
-    gravedad: "media",
-    fecha: "2026-04-22",
-    registradoPor: "Miss Erika Castro",
-    seccion: "secundaria",
-    estado: "activa",
-    resolucion: null,
-  },
-  // Emilio — amarillo (1 activa + 2 resueltas)
-  {
-    id: "i9",
-    alumnoId: "st7",
-    titulo: "Tardanza reiterada",
-    descripcion: "Llegó tarde los primeros días del periodo sin justificación.",
-    categoria: "asistencia",
-    gravedad: "leve",
-    fecha: "2026-03-10",
-    registradoPor: "Prof. Fernando Paulino",
-    seccion: "secundaria",
-    estado: "resuelta",
-    resolucion: "Habló con los padres. Se comprometieron a llegar temprano.",
-  },
-  {
-    id: "i10",
-    alumnoId: "st7",
-    titulo: "Incumplimiento de tareas",
-    descripcion:
-      "No entregó tareas de matemáticas en dos semanas consecutivas.",
-    categoria: "conducta",
-    gravedad: "leve",
-    fecha: "2026-04-15",
-    registradoPor: "Prof. Fernando Paulino",
-    seccion: "secundaria",
-    estado: "resuelta",
-    resolucion: "Firmó compromiso junto con sus padres.",
-  },
-  {
-    id: "i11",
-    alumnoId: "st7",
-    titulo: "Uso de celular en examen",
-    descripcion:
-      "Se le encontró usando el celular durante el examen de biología.",
-    categoria: "conducta",
-    gravedad: "media",
-    fecha: "2026-05-18",
-    registradoPor: "Prof. Fernando Paulino",
-    seccion: "secundaria",
-    estado: "activa",
-    resolucion: null,
-  },
-  // Andrea — verde (1 resuelta, 0 activas)
-  {
-    id: "i12",
-    alumnoId: "st8",
-    titulo: "Inasistencia sin justificante",
-    descripcion: "Faltó un día sin avisar previamente a la institución.",
-    categoria: "asistencia",
-    gravedad: "leve",
-    fecha: "2026-03-22",
-    registradoPor: "Miss Lila Meza",
-    seccion: "secundaria",
-    estado: "resuelta",
-    resolucion: "Presentó justificante médico al día siguiente.",
-  },
-  // Carlos — ROJO (1 grave activa + 1 media)
-  {
-    id: "i13",
-    alumnoId: "st9",
-    titulo: "Daño a propiedad escolar",
-    descripcion:
-      "Rayó y dañó una mesa del laboratorio de química con un instrumento punzante.",
-    categoria: "dano",
-    gravedad: "grave",
-    fecha: "2026-05-15",
-    registradoPor: "Ing. Jared Camacho",
-    seccion: "secundaria",
-    estado: "activa",
-    resolucion: null,
-  },
-  {
-    id: "i14",
-    alumnoId: "st9",
-    titulo: "Insultos a compañero",
-    descripcion:
-      "Se dirigió de manera ofensiva y discriminatoria hacia un compañero frente al grupo.",
-    categoria: "lenguaje",
-    gravedad: "media",
-    fecha: "2026-05-09",
-    registradoPor: "Ing. Jared Camacho",
-    seccion: "secundaria",
-    estado: "activa",
-    resolucion: null,
-  },
-  // Rodrigo — amarillo (2 activas)
-  {
-    id: "i15",
-    alumnoId: "st11",
-    titulo: "Falta de respeto a docente",
-    descripcion:
-      "Cuestionó de manera agresiva la calificación de su examen frente al grupo.",
-    categoria: "conducta",
-    gravedad: "media",
-    fecha: "2026-05-19",
-    registradoPor: "Ing. Eduardo Torbellin",
-    seccion: "bachillerato",
-    estado: "activa",
-    resolucion: null,
-  },
-  {
-    id: "i16",
-    alumnoId: "st11",
-    titulo: "Ausencia en examen final",
-    descripcion:
-      "No se presentó al examen final de física sin justificación previa.",
-    categoria: "asistencia",
-    gravedad: "leve",
-    fecha: "2026-05-12",
-    registradoPor: "Ing. Eduardo Torbellin",
-    seccion: "bachillerato",
-    estado: "activa",
-    resolucion: null,
-  },
-];
-
-const CATEGORIES = [
-  { id: "conducta", label: "Conducta inapropiada" },
-  { id: "agresion", label: "Agresión física" },
-  { id: "lenguaje", label: "Lenguaje ofensivo" },
-  { id: "dano", label: "Daño a propiedad" },
-  { id: "asistencia", label: "Inasistencia / Tardanza" },
-  { id: "uniforme", label: "Incumplimiento de uniforme" },
-  { id: "otro", label: "Otro" },
-];
-
-const CAT_LABEL = Object.fromEntries(CATEGORIES.map((c) => [c.id, c.label]));
-
-const SEMAFORO = {
-  verde: {
-    color: "#15803d",
-    bg: "#dcfce7",
-    border: "#86efac",
-    label: "Sin antecedentes",
-  },
-  amarillo: {
-    color: "#b45309",
-    bg: "#fef9c3",
-    border: "#fde047",
-    label: "En observación",
-  },
-  rojo: {
-    color: "#b91c1c",
-    bg: "#fee2e2",
-    border: "#fca5a5",
-    label: "Requiere atención",
-  },
-};
-
-const GRAVEDAD = {
-  leve: { label: "Leve", color: "#15803d", bg: "#dcfce7" },
-  media: { label: "Media", color: "#b45309", bg: "#fef9c3" },
-  grave: { label: "Grave", color: "#b91c1c", bg: "#fee2e2" },
-};
-
-const MONTHS = [
-  "ene",
-  "feb",
-  "mar",
-  "abr",
-  "may",
-  "jun",
-  "jul",
-  "ago",
-  "sep",
-  "oct",
-  "nov",
-  "dic",
-];
-
-// ── Utilidades ────────────────────────────────────────────────────────────────
-
-function calcSemaforo(alumnoId, incidents) {
-  const mine = incidents.filter((i) => i.alumnoId === alumnoId);
-  const active = mine.filter((i) => i.estado === "activa");
-  if (active.some((i) => i.gravedad === "grave") || active.length >= 3)
-    return "rojo";
-  if (active.length >= 1 || mine.length >= 3) return "amarillo";
-  return "verde";
-}
-
-function fmtFecha(str) {
-  const [y, m, d] = str.split("-");
-  return `${+d} ${MONTHS[+m - 1]} ${y}`;
-}
-
-// ── SemaforoDot ───────────────────────────────────────────────────────────────
-
-const SemaforoDot = ({ estado, size = 10 }) => (
-  <span
-    style={{
-      display: "inline-block",
-      width: size,
-      height: size,
-      borderRadius: "50%",
-      background: SEMAFORO[estado].color,
-      flexShrink: 0,
-      boxShadow: `0 0 0 2px ${SEMAFORO[estado].bg}`,
-    }}
-  />
-);
-
-// ── SemaforoBadge ─────────────────────────────────────────────────────────────
-
-const SemaforoBadge = ({ estado }) => {
-  const cfg = SEMAFORO[estado];
-  return (
-    <span
-      style={{
-        display: "inline-flex",
-        alignItems: "center",
-        gap: 5,
-        padding: "3px 10px",
-        borderRadius: 20,
-        background: cfg.bg,
-        border: `1px solid ${cfg.border}`,
-        color: cfg.color,
-        fontSize: 12,
-        fontWeight: 600,
-        whiteSpace: "nowrap",
-      }}
-    >
-      <SemaforoDot estado={estado} size={7} />
-      {cfg.label}
-    </span>
-  );
-};
-
-// ── GravedadBadge ─────────────────────────────────────────────────────────────
-
-const GravedadBadge = ({ gravedad }) => {
-  const cfg = GRAVEDAD[gravedad];
-  return (
-    <span
-      style={{
-        display: "inline-block",
-        padding: "2px 8px",
-        borderRadius: 10,
-        background: cfg.bg,
-        color: cfg.color,
-        fontSize: 11,
-        fontWeight: 600,
-      }}
-    >
-      {cfg.label}
-    </span>
-  );
-};
-
-// ── IncidenciaItem ────────────────────────────────────────────────────────────
-
-const IncidenciaItem = ({ inc, onResolver }) => {
-  const [expandResolv, setExpandResolv] = useState(false);
-  const [texto, setTexto] = useState("");
-  const activa = inc.estado === "activa";
-
-  return (
-    <div
-      style={{
-        border: "1px solid var(--line)",
-        borderLeft: `3px solid ${GRAVEDAD[inc.gravedad].color}`,
-        borderRadius: 8,
-        padding: 14,
-        background: "var(--surface)",
-      }}
-    >
-      <div
-        style={{
-          display: "flex",
-          alignItems: "flex-start",
-          gap: 8,
-          flexWrap: "wrap",
-          marginBottom: 4,
-        }}
-      >
-        <span
-          style={{
-            fontSize: 13,
-            fontWeight: 600,
-            color: "var(--ink)",
-            flex: 1,
-            minWidth: 0,
-          }}
-        >
-          {inc.titulo}
-        </span>
-        <GravedadBadge gravedad={inc.gravedad} />
-        {!activa && (
-          <span
-            style={{
-              fontSize: 11,
-              color: "#15803d",
-              background: "#dcfce7",
-              padding: "2px 8px",
-              borderRadius: 10,
-              fontWeight: 500,
-            }}
-          >
-            Resuelta
-          </span>
-        )}
-      </div>
-      <div style={{ fontSize: 11, color: "var(--ink-4)", marginBottom: 6 }}>
-        {fmtFecha(inc.fecha)} · {CAT_LABEL[inc.categoria] || inc.categoria} ·{" "}
-        {inc.registradoPor}
-      </div>
-      {inc.descripcion && (
-        <div style={{ fontSize: 12, color: "var(--ink-2)", lineHeight: 1.55 }}>
-          {inc.descripcion}
-        </div>
-      )}
-      {!activa && inc.resolucion && (
-        <div
-          style={{
-            marginTop: 8,
-            padding: "8px 10px",
-            background: "var(--surface-2)",
-            borderRadius: 6,
-            fontSize: 12,
-            color: "var(--ink-3)",
-          }}
-        >
-          <span style={{ fontWeight: 500, color: "var(--ink-2)" }}>
-            Resolución:{" "}
-          </span>
-          {inc.resolucion}
-        </div>
-      )}
-
-      {activa && !expandResolv && (
-        <button
-          onClick={() => setExpandResolv(true)}
-          style={{
-            marginTop: 10,
-            fontSize: 12,
-            color: "var(--ink-3)",
-            background: "none",
-            border: "1px solid var(--line)",
-            borderRadius: 5,
-            padding: "4px 10px",
-            cursor: "pointer",
-          }}
-        >
-          Marcar como resuelta
-        </button>
-      )}
-
-      {activa && expandResolv && (
-        <div style={{ marginTop: 10 }}>
-          <textarea
-            placeholder="¿Cómo se resolvió? (opcional)"
-            value={texto}
-            onChange={(e) => setTexto(e.target.value)}
-            rows={2}
-            style={{
-              width: "100%",
-              padding: "7px 10px",
-              border: "1px solid var(--line)",
-              borderRadius: 6,
-              background: "var(--surface)",
-              color: "var(--ink)",
-              fontSize: 12,
-              resize: "vertical",
-              fontFamily: "inherit",
-              boxSizing: "border-box",
-              outline: "none",
-            }}
-          />
-          <div style={{ display: "flex", gap: 6, marginTop: 6 }}>
-            <button
-              onClick={() => {
-                setExpandResolv(false);
-                setTexto("");
-              }}
-              style={{
-                fontSize: 12,
-                color: "var(--ink-3)",
-                background: "none",
-                border: "1px solid var(--line)",
-                borderRadius: 5,
-                padding: "4px 10px",
-                cursor: "pointer",
-              }}
-            >
-              Cancelar
-            </button>
-            <button
-              onClick={() =>
-                onResolver(inc.id, texto || "Resuelta sin comentarios.")
-              }
-              style={{
-                fontSize: 12,
-                color: "#15803d",
-                background: "#dcfce7",
-                border: "1px solid #86efac",
-                borderRadius: 5,
-                padding: "4px 10px",
-                cursor: "pointer",
-                fontWeight: 500,
-              }}
-            >
-              Confirmar
-            </button>
-          </div>
-        </div>
-      )}
-    </div>
-  );
-};
-
-// ── NuevoAlumnoModal ──────────────────────────────────────────────────────────
-
-const NuevoAlumnoModal = ({ onSave, onClose }) => {
-  const sections = window.CV_DATA.SECTIONS.filter((s) => s.id !== "general");
-  const users = window.CV_DATA.USERS.filter((u) => u.active);
-
-  const [alumnoForm, setAlumnoForm] = useState({
-    nombre: "",
-    apellido: "",
-    seccion: "",
-    grado: "",
-    grupo: "",
-  });
-  const [incForm, setIncForm] = useState({
-    titulo: "",
-    descripcion: "",
-    categoria: "",
-    gravedad: "leve",
-    fecha: new Date().toISOString().slice(0, 10),
-    registradoPor: users[0]?.name || "",
-  });
-  const [errors, setErrors] = useState({});
-
-  const setA = (k, v) => {
-    setAlumnoForm((f) => ({ ...f, [k]: v }));
-    setErrors((e) => ({ ...e, [k]: null }));
-  };
-  const setI = (k, v) => {
-    setIncForm((f) => ({ ...f, [k]: v }));
-    setErrors((e) => ({ ...e, [k]: null }));
-  };
-
-  const handleSave = () => {
-    const e = {};
-    if (!alumnoForm.nombre.trim()) e.nombre = "Requerido";
-    if (!alumnoForm.apellido.trim()) e.apellido = "Requerido";
-    if (!alumnoForm.seccion) e.seccion = "Requerido";
-    if (!alumnoForm.grado.trim()) e.grado = "Requerido";
-    if (!alumnoForm.grupo.trim()) e.grupo = "Requerido";
-    if (!incForm.titulo.trim()) e.titulo = "Requerido";
-    if (!incForm.categoria) e.categoria = "Selecciona una categoría";
-    if (Object.keys(e).length) {
-      setErrors(e);
-      return;
-    }
-    onSave({ alumnoData: alumnoForm, incData: incForm });
-  };
-
-  const inp = (hasErr) => ({
-    width: "100%",
-    padding: "7px 10px",
-    border: `1px solid ${hasErr ? "#fca5a5" : "var(--line)"}`,
-    borderRadius: 6,
-    background: "var(--surface)",
-    color: "var(--ink)",
-    fontSize: 13,
-    outline: "none",
-    boxSizing: "border-box",
-    fontFamily: "inherit",
-  });
-  const lbl = {
-    fontSize: 12,
-    fontWeight: 500,
-    color: "var(--ink-2)",
-    display: "block",
-    marginBottom: 4,
-  };
-  const err = { fontSize: 11, color: "#b91c1c", marginTop: 2 };
-
-  return (
-    <div
-      style={{
-        position: "fixed",
-        inset: 0,
-        background: "rgba(0,0,0,.45)",
-        display: "flex",
-        alignItems: "center",
-        justifyContent: "center",
-        zIndex: 1000,
-      }}
-      onClick={(e) => e.target === e.currentTarget && onClose()}
-    >
-      <div
-        style={{
-          background: "var(--surface)",
-          borderRadius: 12,
-          width: 580,
-          maxWidth: "calc(100vw - 32px)",
-          maxHeight: "calc(100vh - 64px)",
-          overflow: "auto",
-          boxShadow: "0 20px 60px rgba(0,0,0,.25)",
-          padding: 24,
-        }}
-      >
-        <div
-          style={{
-            display: "flex",
-            justifyContent: "space-between",
-            alignItems: "center",
-            marginBottom: 20,
-          }}
-        >
-          <div style={{ fontSize: 16, fontWeight: 600, color: "var(--ink)" }}>
-            Nuevo alumno + incidencia
-          </div>
-          <button
-            onClick={onClose}
-            style={{
-              background: "none",
-              border: "none",
-              cursor: "pointer",
-              color: "var(--ink-3)",
-              padding: 4,
-            }}
-          >
-            <Icon name="close" size={18} />
-          </button>
-        </div>
-
-        {/* Datos del alumno */}
-        <div
-          style={{
-            fontSize: 11,
-            fontWeight: 700,
-            color: "var(--ink-4)",
-            letterSpacing: ".05em",
-            textTransform: "uppercase",
-            marginBottom: 12,
-          }}
-        >
-          Datos del alumno
-        </div>
-        <div
-          style={{
-            display: "flex",
-            flexDirection: "column",
-            gap: 12,
-            marginBottom: 20,
-          }}
-        >
-          <div
-            style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 12 }}
-          >
-            <div>
-              <label style={lbl}>Nombre *</label>
-              <input
-                type="text"
-                placeholder="Ej. Diego"
-                value={alumnoForm.nombre}
-                onChange={(e) => setA("nombre", e.target.value)}
-                style={inp(errors.nombre)}
-              />
-              {errors.nombre && <div style={err}>{errors.nombre}</div>}
-            </div>
-            <div>
-              <label style={lbl}>Apellido(s) *</label>
-              <input
-                type="text"
-                placeholder="Ej. Ramírez Luna"
-                value={alumnoForm.apellido}
-                onChange={(e) => setA("apellido", e.target.value)}
-                style={inp(errors.apellido)}
-              />
-              {errors.apellido && <div style={err}>{errors.apellido}</div>}
-            </div>
-          </div>
-          <div
-            style={{
-              display: "grid",
-              gridTemplateColumns: "1fr 1fr 1fr",
-              gap: 12,
-            }}
-          >
-            <div>
-              <label style={lbl}>Sección *</label>
-              <select
-                value={alumnoForm.seccion}
-                onChange={(e) => setA("seccion", e.target.value)}
-                style={inp(errors.seccion)}
-              >
-                <option value="">Seleccionar…</option>
-                {sections.map((s) => (
-                  <option key={s.id} value={s.id}>
-                    {s.label}
-                  </option>
-                ))}
-              </select>
-              {errors.seccion && <div style={err}>{errors.seccion}</div>}
-            </div>
-            <div>
-              <label style={lbl}>Grado *</label>
-              <input
-                type="text"
-                placeholder="Ej. 2°"
-                value={alumnoForm.grado}
-                onChange={(e) => setA("grado", e.target.value)}
-                style={inp(errors.grado)}
-              />
-              {errors.grado && <div style={err}>{errors.grado}</div>}
-            </div>
-            <div>
-              <label style={lbl}>Grupo *</label>
-              <input
-                type="text"
-                placeholder="Ej. A"
-                value={alumnoForm.grupo}
-                onChange={(e) => setA("grupo", e.target.value)}
-                style={inp(errors.grupo)}
-                maxLength={3}
-              />
-              {errors.grupo && <div style={err}>{errors.grupo}</div>}
-            </div>
-          </div>
-        </div>
-
-        {/* Divider */}
-        <div
-          style={{ borderTop: "1px solid var(--line)", margin: "0 0 16px" }}
-        />
-
-        {/* Primera incidencia */}
-        <div
-          style={{
-            fontSize: 11,
-            fontWeight: 700,
-            color: "var(--ink-4)",
-            letterSpacing: ".05em",
-            textTransform: "uppercase",
-            marginBottom: 12,
-          }}
-        >
-          Primera incidencia
-        </div>
-        <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
-          <div>
-            <label style={lbl}>Título *</label>
-            <input
-              type="text"
-              placeholder="Ej. Falta de respeto a docente"
-              value={incForm.titulo}
-              onChange={(e) => setI("titulo", e.target.value)}
-              style={inp(errors.titulo)}
-            />
-            {errors.titulo && <div style={err}>{errors.titulo}</div>}
-          </div>
-          <div
-            style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 12 }}
-          >
-            <div>
-              <label style={lbl}>Categoría *</label>
-              <select
-                value={incForm.categoria}
-                onChange={(e) => setI("categoria", e.target.value)}
-                style={inp(errors.categoria)}
-              >
-                <option value="">Seleccionar…</option>
-                {CATEGORIES.map((c) => (
-                  <option key={c.id} value={c.id}>
-                    {c.label}
-                  </option>
-                ))}
-              </select>
-              {errors.categoria && <div style={err}>{errors.categoria}</div>}
-            </div>
-            <div>
-              <label style={lbl}>Gravedad</label>
-              <select
-                value={incForm.gravedad}
-                onChange={(e) => setI("gravedad", e.target.value)}
-                style={inp(false)}
-              >
-                <option value="leve">Leve</option>
-                <option value="media">Media</option>
-                <option value="grave">Grave</option>
-              </select>
-            </div>
-          </div>
-          <div
-            style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 12 }}
-          >
-            <div>
-              <label style={lbl}>Fecha del incidente</label>
-              <input
-                type="date"
-                value={incForm.fecha}
-                onChange={(e) => setI("fecha", e.target.value)}
-                style={inp(false)}
-              />
-            </div>
-            <div>
-              <label style={lbl}>Registrado por</label>
-              <select
-                value={incForm.registradoPor}
-                onChange={(e) => setI("registradoPor", e.target.value)}
-                style={inp(false)}
-              >
-                {users.map((u) => (
-                  <option key={u.id} value={u.name}>
-                    {u.name}
-                  </option>
-                ))}
-              </select>
-            </div>
-          </div>
-          <div>
-            <label style={lbl}>Descripción</label>
-            <textarea
-              placeholder="Detalles del incidente…"
-              value={incForm.descripcion}
-              onChange={(e) => setI("descripcion", e.target.value)}
-              rows={2}
-              style={{ ...inp(false), resize: "vertical" }}
-            />
-          </div>
-        </div>
-
-        <div
-          style={{
-            display: "flex",
-            justifyContent: "flex-end",
-            gap: 8,
-            marginTop: 20,
-          }}
-        >
-          <button
-            onClick={onClose}
-            style={{
-              padding: "8px 16px",
-              borderRadius: 7,
-              border: "1px solid var(--line)",
-              background: "var(--surface)",
-              color: "var(--ink-2)",
-              cursor: "pointer",
-              fontSize: 13,
-            }}
-          >
-            Cancelar
-          </button>
-          <button
-            onClick={handleSave}
-            style={{
-              padding: "8px 16px",
-              borderRadius: 7,
-              border: "none",
-              background: "var(--brand)",
-              color: "var(--brand-ink)",
-              cursor: "pointer",
-              fontSize: 13,
-              fontWeight: 500,
-            }}
-          >
-            Guardar
-          </button>
-        </div>
-      </div>
-    </div>
-  );
-};
-
-// ── NuevaIncidenciaModal ──────────────────────────────────────────────────────
-
-const NuevaIncidenciaModal = ({ alumno, onSave, onClose }) => {
-  const docentes = window.CV_DATA.TEACHERS;
-  const [form, setForm] = useState({
-    titulo: "",
-    descripcion: "",
-    categoria: "",
-    gravedad: "leve",
-    fecha: new Date().toISOString().slice(0, 10),
-    registradoPor: docentes[0]?.name || "",
-  });
-  const [errors, setErrors] = useState({});
-
-  const set = (k, v) => {
-    setForm((f) => ({ ...f, [k]: v }));
-    setErrors((e) => ({ ...e, [k]: null }));
-  };
-
-  const handleSave = () => {
-    const e = {};
-    if (!form.titulo.trim()) e.titulo = "Campo requerido";
-    if (!form.categoria) e.categoria = "Selecciona una categoría";
-    if (!form.fecha) e.fecha = "Campo requerido";
-    if (Object.keys(e).length) {
-      setErrors(e);
-      return;
-    }
-    onSave(form);
-  };
-
-  const inp = (hasErr) => ({
-    width: "100%",
-    padding: "7px 10px",
-    border: `1px solid ${hasErr ? "#fca5a5" : "var(--line)"}`,
-    borderRadius: 6,
-    background: "var(--surface)",
-    color: "var(--ink)",
-    fontSize: 13,
-    outline: "none",
-    boxSizing: "border-box",
-    fontFamily: "inherit",
-  });
-
-  const lbl = {
-    fontSize: 12,
-    fontWeight: 500,
-    color: "var(--ink-2)",
-    display: "block",
-    marginBottom: 4,
-  };
-  const err = { fontSize: 11, color: "#b91c1c", marginTop: 2 };
-
-  return (
-    <div
-      style={{
-        position: "fixed",
-        inset: 0,
-        background: "rgba(0,0,0,.45)",
-        display: "flex",
-        alignItems: "center",
-        justifyContent: "center",
-        zIndex: 1000,
-      }}
-      onClick={(e) => e.target === e.currentTarget && onClose()}
-    >
-      <div
-        style={{
-          background: "var(--surface)",
-          borderRadius: 12,
-          width: 520,
-          maxWidth: "calc(100vw - 32px)",
-          maxHeight: "calc(100vh - 64px)",
-          overflow: "auto",
-          boxShadow: "0 20px 60px rgba(0,0,0,.25)",
-          padding: 24,
-        }}
-      >
-        <div
-          style={{
-            display: "flex",
-            justifyContent: "space-between",
-            alignItems: "flex-start",
-            marginBottom: 20,
-          }}
-        >
-          <div>
-            <div style={{ fontSize: 16, fontWeight: 600, color: "var(--ink)" }}>
-              Registrar incidencia
-            </div>
-            <div style={{ fontSize: 13, color: "var(--ink-3)", marginTop: 2 }}>
-              {alumno.nombre} {alumno.apellido} · {alumno.grado} {alumno.grupo}
-            </div>
-          </div>
-          <button
-            onClick={onClose}
-            style={{
-              background: "none",
-              border: "none",
-              cursor: "pointer",
-              color: "var(--ink-3)",
-              padding: 4,
-            }}
-          >
-            <Icon name="close" size={18} />
-          </button>
-        </div>
-
-        <div style={{ display: "flex", flexDirection: "column", gap: 14 }}>
-          <div>
-            <label style={lbl}>Título *</label>
-            <input
-              type="text"
-              placeholder="Ej. Falta de respeto a docente"
-              value={form.titulo}
-              onChange={(e) => set("titulo", e.target.value)}
-              style={inp(errors.titulo)}
-            />
-            {errors.titulo && <div style={err}>{errors.titulo}</div>}
-          </div>
-
-          <div
-            style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 12 }}
-          >
-            <div>
-              <label style={lbl}>Categoría *</label>
-              <select
-                value={form.categoria}
-                onChange={(e) => set("categoria", e.target.value)}
-                style={inp(errors.categoria)}
-              >
-                <option value="">Seleccionar…</option>
-                {CATEGORIES.map((c) => (
-                  <option key={c.id} value={c.id}>
-                    {c.label}
-                  </option>
-                ))}
-              </select>
-              {errors.categoria && <div style={err}>{errors.categoria}</div>}
-            </div>
-            <div>
-              <label style={lbl}>Gravedad</label>
-              <select
-                value={form.gravedad}
-                onChange={(e) => set("gravedad", e.target.value)}
-                style={inp(false)}
-              >
-                <option value="leve">Leve</option>
-                <option value="media">Media</option>
-                <option value="grave">Grave</option>
-              </select>
-            </div>
-          </div>
-
-          <div
-            style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 12 }}
-          >
-            <div>
-              <label style={lbl}>Fecha del incidente *</label>
-              <input
-                type="date"
-                value={form.fecha}
-                onChange={(e) => set("fecha", e.target.value)}
-                style={inp(errors.fecha)}
-              />
-              {errors.fecha && <div style={err}>{errors.fecha}</div>}
-            </div>
-            <div>
-              <label style={lbl}>Registrado por</label>
-              <select
-                value={form.registradoPor}
-                onChange={(e) => set("registradoPor", e.target.value)}
-                style={inp(false)}
-              >
-                {docentes.map((d) => (
-                  <option key={d.id} value={d.name}>
-                    {d.name}
-                  </option>
-                ))}
-              </select>
-            </div>
-          </div>
-
-          <div>
-            <label style={lbl}>Descripción</label>
-            <textarea
-              placeholder="Detalles del incidente…"
-              value={form.descripcion}
-              onChange={(e) => set("descripcion", e.target.value)}
-              rows={3}
-              style={{ ...inp(false), resize: "vertical" }}
-            />
-          </div>
-        </div>
-
-        <div
-          style={{
-            display: "flex",
-            justifyContent: "flex-end",
-            gap: 8,
-            marginTop: 20,
-          }}
-        >
-          <button
-            onClick={onClose}
-            style={{
-              padding: "8px 16px",
-              borderRadius: 7,
-              border: "1px solid var(--line)",
-              background: "var(--surface)",
-              color: "var(--ink-2)",
-              cursor: "pointer",
-              fontSize: 13,
-            }}
-          >
-            Cancelar
-          </button>
-          <button
-            onClick={handleSave}
-            style={{
-              padding: "8px 16px",
-              borderRadius: 7,
-              border: "none",
-              background: "var(--brand)",
-              color: "var(--brand-ink)",
-              cursor: "pointer",
-              fontSize: 13,
-              fontWeight: 500,
-            }}
-          >
-            Registrar
-          </button>
-        </div>
-      </div>
-    </div>
-  );
-};
-
-// ── Incidencias (componente principal) ───────────────────────────────────────
-
-const SortTh = ({ field, label, sortField, sortDir, onSort, center }) => {
-  const active = sortField === field;
-  return (
-    <div
-      onClick={() => onSort(field)}
-      style={{
-        textAlign: center ? "center" : "left",
-        cursor: "pointer",
-        display: "flex",
-        alignItems: "center",
-        gap: 3,
-        justifyContent: center ? "center" : "flex-start",
-        color: active ? "var(--ink)" : "var(--ink-4)",
-        userSelect: "none",
-      }}
-    >
-      {label}
-      {active && (sortDir === "asc" ? " ▲" : " ▼")}
-    </div>
-  );
-};
+const { useState, useMemo } = React;
 
 const Incidencias = () => {
   const sections = window.CV_DATA.SECTIONS.filter((s) => s.id !== "general");
 
-  const [students, setStudents] = useState(MOCK_STUDENTS);
-  const [incidents, setIncidents] = useState(MOCK_INCIDENTS);
+  const [students, setStudents] = useState(window.MOCK_STUDENTS);
+  const [incidents, setIncidents] = useState(window.MOCK_INCIDENTS);
   const [seccion, setSeccion] = useState(null);
   const [busqueda, setBusqueda] = useState("");
   const [alumno, setAlumno] = useState(null);
@@ -1301,8 +36,8 @@ const Incidencias = () => {
     const semOrd = { rojo: 0, amarillo: 1, verde: 2 };
     if (!sortField)
       return (
-        semOrd[calcSemaforo(a.id, incidents)] -
-        semOrd[calcSemaforo(b.id, incidents)]
+        semOrd[window.calcSemaforo(a.id, incidents)] -
+        semOrd[window.calcSemaforo(b.id, incidents)]
       );
     let cmp = 0;
     if (sortField === "nombre")
@@ -1327,7 +62,7 @@ const Incidencias = () => {
     if (seccion) list = list.filter((s) => s.seccion === seccion);
     if (semaforoFilter)
       list = list.filter(
-        (s) => calcSemaforo(s.id, incidents) === semaforoFilter,
+        (s) => window.calcSemaforo(s.id, incidents) === semaforoFilter,
       );
     if (busqueda.trim()) {
       const q = busqueda.toLowerCase();
@@ -1355,10 +90,10 @@ const Incidencias = () => {
 
   const stats = useMemo(
     () => ({
-      rojo: students.filter((s) => calcSemaforo(s.id, incidents) === "rojo")
+      rojo: students.filter((s) => window.calcSemaforo(s.id, incidents) === "rojo")
         .length,
       amarillo: students.filter(
-        (s) => calcSemaforo(s.id, incidents) === "amarillo",
+        (s) => window.calcSemaforo(s.id, incidents) === "amarillo",
       ).length,
     }),
     [students, incidents],
@@ -1404,7 +139,7 @@ const Incidencias = () => {
   };
 
   const seccionInfo = sections.find((s) => s.id === alumno?.seccion);
-  const alumnoSemaforo = alumno ? calcSemaforo(alumno.id, incidents) : null;
+  const alumnoSemaforo = alumno ? window.calcSemaforo(alumno.id, incidents) : null;
   const alumnoActivas = alumnoIncs.filter((i) => i.estado === "activa").length;
 
   return (
@@ -1464,7 +199,7 @@ const Incidencias = () => {
               cursor: "pointer",
             }}
           >
-            {stats.rojo} requiere{stats.rojo > 1 ? "n" : ""} atención
+            {stats.rojo} requiere{stats.rojo > 1 ? "n" : ""} atenci&oacute;n
           </span>
         )}
         {stats.amarillo > 0 && (
@@ -1481,7 +216,7 @@ const Incidencias = () => {
               cursor: "pointer",
             }}
           >
-            {stats.amarillo} en observación
+            {stats.amarillo} en observaci&oacute;n
           </span>
         )}
         <div style={{ flex: 1 }} />
@@ -1551,7 +286,7 @@ const Incidencias = () => {
               </span>
               <input
                 type="text"
-                placeholder="Buscar alumno…"
+                placeholder="Buscar alumno&hellip;"
                 value={busqueda}
                 onChange={(e) => setBusqueda(e.target.value)}
                 style={{
@@ -1585,21 +320,21 @@ const Incidencias = () => {
             }}
           >
             <div />
-            <SortTh
+            <window.SortTh
               field="nombre"
               label="Alumno"
               sortField={sortField}
               sortDir={sortDir}
               onSort={toggleSort}
             />
-            <SortTh
+            <window.SortTh
               field="seccion"
-              label="Sección"
+              label="Secci&oacute;n"
               sortField={sortField}
               sortDir={sortDir}
               onSort={toggleSort}
             />
-            <SortTh
+            <window.SortTh
               field="activas"
               label="Activas"
               sortField={sortField}
@@ -1624,7 +359,7 @@ const Incidencias = () => {
               </div>
             ) : (
               lista.map((st) => {
-                const sem = calcSemaforo(st.id, incidents);
+                const sem = window.calcSemaforo(st.id, incidents);
                 const activas = incidents.filter(
                   (i) => i.alumnoId === st.id && i.estado === "activa",
                 ).length;
@@ -1653,7 +388,7 @@ const Incidencias = () => {
                     }}
                   >
                     <div style={{ display: "flex", alignItems: "center" }}>
-                      <SemaforoDot estado={sem} size={10} />
+                      <window.SemaforoDot estado={sem} size={10} />
                     </div>
                     <div>
                       <div
@@ -1666,7 +401,7 @@ const Incidencias = () => {
                         {st.apellido}, {st.nombre}
                       </div>
                       <div style={{ fontSize: 11, color: "var(--ink-4)" }}>
-                        {st.grado} · Grupo {st.grupo}
+                        {st.grado} &middot; Grupo {st.grupo}
                       </div>
                     </div>
                     <div>
@@ -1691,14 +426,14 @@ const Incidencias = () => {
                           style={{
                             fontSize: 13,
                             fontWeight: 700,
-                            color: SEMAFORO[sem].color,
+                            color: window.SEMAFORO[sem].color,
                           }}
                         >
                           {activas}
                         </span>
                       ) : (
                         <span style={{ fontSize: 12, color: "var(--ink-5)" }}>
-                          —
+                          &mdash;
                         </span>
                       )}
                     </div>
@@ -1755,7 +490,7 @@ const Incidencias = () => {
                     >
                       {alumno.nombre} {alumno.apellido}
                     </span>
-                    <SemaforoBadge estado={alumnoSemaforo} />
+                    <window.SemaforoBadge estado={alumnoSemaforo} />
                   </div>
                   <div
                     style={{
@@ -1787,7 +522,7 @@ const Incidencias = () => {
                       </span>
                     )}
                     <span>
-                      {alumno.grado} · Grupo {alumno.grupo}
+                      {alumno.grado} &middot; Grupo {alumno.grupo}
                     </span>
                     <span
                       style={{
@@ -1883,7 +618,7 @@ const Incidencias = () => {
                   {alumnoIncs
                     .filter((i) => i.estado === "activa")
                     .map((inc) => (
-                      <IncidenciaItem
+                      <window.IncidenciaItem
                         key={inc.id}
                         inc={inc}
                         onResolver={resolverIncidencia}
@@ -1909,7 +644,7 @@ const Incidencias = () => {
                   {alumnoIncs
                     .filter((i) => i.estado === "resuelta")
                     .map((inc) => (
-                      <IncidenciaItem
+                      <window.IncidenciaItem
                         key={inc.id}
                         inc={inc}
                         onResolver={resolverIncidencia}
@@ -1924,7 +659,7 @@ const Incidencias = () => {
 
       {/* ── Modal nueva incidencia ───────────────────────────────────────── */}
       {showModal && alumno && (
-        <NuevaIncidenciaModal
+        <window.NuevaIncidenciaModal
           alumno={alumno}
           onSave={addIncident}
           onClose={() => setShowModal(false)}
@@ -1933,7 +668,7 @@ const Incidencias = () => {
 
       {/* ── Modal nuevo alumno ───────────────────────────────────────────── */}
       {showAlumnoModal && (
-        <NuevoAlumnoModal
+        <window.NuevoAlumnoModal
           onSave={addAlumnoConIncidencia}
           onClose={() => setShowAlumnoModal(false)}
         />
