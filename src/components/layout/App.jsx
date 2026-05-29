@@ -89,6 +89,11 @@ const App = () => {
     subtitle = "Conflictos en el aula e interpersonales · Ciclo 2025–2026";
     breadcrumbs = ["Módulos", "Incidencias docentes"];
     body = <IncidenciasDocentes />;
+  } else if (current === "organigrama") {
+    title = "Organigrama";
+    subtitle = "Estructura directiva · Ciclo escolar 2025–2026";
+    breadcrumbs = ["Módulos", "Organigrama"];
+    body = <Organigrama />;
   } else if (current === "modulos") {
     title = "Administración de módulos";
     subtitle = "Activa, desactiva y reordena los módulos del sistema";

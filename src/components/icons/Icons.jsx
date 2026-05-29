@@ -278,6 +278,20 @@ const Icon = ({ name, size = 18, stroke = 1.6, style }) => {
           <path d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83" />
         </svg>
       );
+    case "sitemap":
+      return (
+        <svg {...common}>
+          <rect x="9" y="2" width="6" height="5" rx="1" />
+          <path d="M12 7v3M5 10H19" />
+          <rect x="2" y="10" width="6" height="5" rx="1" />
+          <rect x="9" y="10" width="6" height="5" rx="1" />
+          <rect x="16" y="10" width="6" height="5" rx="1" />
+          <path d="M5 15v2M12 15v2M19 15v2" />
+          <rect x="2" y="17" width="6" height="5" rx="1" />
+          <rect x="9" y="17" width="6" height="5" rx="1" />
+          <rect x="16" y="17" width="6" height="5" rx="1" />
+        </svg>
+      );
     case "menu":
       return (
         <svg {...common}>
