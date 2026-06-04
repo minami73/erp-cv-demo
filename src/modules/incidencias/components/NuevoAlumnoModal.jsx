@@ -1,7 +1,5 @@
 /* ─── NuevoAlumnoModal ─────────────────────────────────────────────────────── */
 
-const { useState } = React;
-
 const NuevoAlumnoModal = ({ onSave, onClose }) => {
   const sections = window.CV_DATA.SECTIONS.filter((s) => s.id !== "general");
   const users = window.CV_DATA.USERS.filter((u) => u.active);

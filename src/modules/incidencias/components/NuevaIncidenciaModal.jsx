@@ -1,7 +1,5 @@
 /* ─── NuevaIncidenciaModal ─────────────────────────────────────────────────── */
 
-const { useState } = React;
-
 const NuevaIncidenciaModal = ({ alumno, onSave, onClose }) => {
   const docentes = window.CV_DATA.TEACHERS;
   const [form, setForm] = useState({
@@ -91,7 +89,8 @@ const NuevaIncidenciaModal = ({ alumno, onSave, onClose }) => {
               Registrar incidencia
             </div>
             <div style={{ fontSize: 13, color: "var(--ink-3)", marginTop: 2 }}>
-              {alumno.nombre} {alumno.apellido} &middot; {alumno.grado} {alumno.grupo}
+              {alumno.nombre} {alumno.apellido} &middot; {alumno.grado}{" "}
+              {alumno.grupo}
             </div>
           </div>
           <button

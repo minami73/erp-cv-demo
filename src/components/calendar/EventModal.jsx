@@ -184,14 +184,14 @@ const EventModal = ({
                     <button
                       key={s.id}
                       type="button"
-                      onClick={() => isGlobal && toggleSection(s.id)}
+                      onClick={() => toggleSection(s.id)}
                       style={{
                         display: "inline-flex",
                         alignItems: "center",
                         gap: 8,
                         padding: "7px 12px",
                         borderRadius: 999,
-                        cursor: isGlobal ? "pointer" : "default",
+                        cursor: "pointer",
                         border:
                           "1px solid " +
                           (selected ? "transparent" : "var(--line-strong)"),

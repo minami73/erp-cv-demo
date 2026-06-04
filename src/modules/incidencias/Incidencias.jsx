@@ -4,8 +4,6 @@
 //  IncidenciaItem, NuevoAlumnoModal, NuevaIncidenciaModal, SortTh
 // ─────────────────────────────────────────────────────────────────────────────
 
-const { useState, useMemo } = React;
-
 const Incidencias = () => {
   const sections = window.CV_DATA.SECTIONS.filter((s) => s.id !== "general");
 
@@ -90,8 +88,9 @@ const Incidencias = () => {
 
   const stats = useMemo(
     () => ({
-      rojo: students.filter((s) => window.calcSemaforo(s.id, incidents) === "rojo")
-        .length,
+      rojo: students.filter(
+        (s) => window.calcSemaforo(s.id, incidents) === "rojo",
+      ).length,
       amarillo: students.filter(
         (s) => window.calcSemaforo(s.id, incidents) === "amarillo",
       ).length,
@@ -139,7 +138,9 @@ const Incidencias = () => {
   };
 
   const seccionInfo = sections.find((s) => s.id === alumno?.seccion);
-  const alumnoSemaforo = alumno ? window.calcSemaforo(alumno.id, incidents) : null;
+  const alumnoSemaforo = alumno
+    ? window.calcSemaforo(alumno.id, incidents)
+    : null;
   const alumnoActivas = alumnoIncs.filter((i) => i.estado === "activa").length;
 
   return (

@@ -1,7 +1,5 @@
 /* ─── IncidenciaItem ───────────────────────────────────────────────────────── */
 
-const { useState } = React;
-
 const IncidenciaItem = ({ inc, onResolver }) => {
   const [expandResolv, setExpandResolv] = useState(false);
   const [texto, setTexto] = useState("");
@@ -59,8 +57,8 @@ const IncidenciaItem = ({ inc, onResolver }) => {
         )}
       </div>
       <div style={{ fontSize: 11, color: "var(--ink-4)", marginBottom: 6 }}>
-        {fmtFecha(inc.fecha)} &middot; {CAT_LABEL[inc.categoria] || inc.categoria} &middot;{" "}
-        {inc.registradoPor}
+        {fmtFecha(inc.fecha)} &middot;{" "}
+        {CAT_LABEL[inc.categoria] || inc.categoria} &middot; {inc.registradoPor}
       </div>
       {inc.descripcion && (
         <div style={{ fontSize: 12, color: "var(--ink-2)", lineHeight: 1.55 }}>
