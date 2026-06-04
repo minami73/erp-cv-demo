@@ -76,17 +76,147 @@ const Calendar = ({ openEvent, openNew, events }) => {
   const primarySection = (ev) =>
     sectionOf(ev.sections[0]) || sectionOf("general");
 
-  const exportPDF = async () => {
+  const exportPDF = () => {
+    if (!window.jspdf) return;
     const { jsPDF } = window.jspdf;
-    if (!jsPDF) return;
-    const el = document.querySelector('[data-screen-label="03 Calendario"]');
-    if (!el) return;
-    const canvas = await html2canvas(el, { scale: 2, useCORS: true });
-    const imgData = canvas.toDataURL("image/png");
-    const pdf = new jsPDF("l", "mm", "a4");
-    const pw = pdf.internal.pageSize.getWidth();
-    const ph = (canvas.height * pw) / canvas.width;
-    pdf.addImage(imgData, "PNG", 0, 0, pw, ph);
+
+    const SEC_RGB = {
+      general: [107, 114, 128],
+      maternal: [236, 72, 153],
+      preescolar: [139, 92, 246],
+      primaria: [59, 130, 246],
+      secundaria: [16, 185, 129],
+      bachillerato: [245, 158, 11],
+    };
+
+    const pdf = new jsPDF("l", "mm", "letter");
+    const PW = 279.4,
+      PH = 215.9;
+    const ML = 10,
+      MT = 8,
+      MR = 10,
+      MB = 12;
+    const AW = PW - ML - MR;
+    const COL = AW / 7;
+
+    // ── Header ──────────────────────────────────────────────
+    pdf.setFontSize(7.5);
+    pdf.setTextColor(150, 150, 150);
+    pdf.text("COLEGIO VICTORIA A.C.", ML, MT + 4);
+
+    const titleStr =
+      window.MONTHS[month].charAt(0).toUpperCase() +
+      window.MONTHS[month].slice(1) +
+      " " +
+      year;
+    pdf.setFontSize(15);
+    pdf.setTextColor(25, 25, 25);
+    pdf.setFont("helvetica", "bold");
+    pdf.text(titleStr, PW / 2, MT + 5.5, { align: "center" });
+
+    pdf.setFontSize(7);
+    pdf.setTextColor(150, 150, 150);
+    pdf.setFont("helvetica", "normal");
+    pdf.text("Sistema de Gestión Directiva", PW - MR, MT + 4, {
+      align: "right",
+    });
+
+    pdf.setDrawColor(210, 210, 210);
+    pdf.setLineWidth(0.3);
+    pdf.line(ML, MT + 8, PW - MR, MT + 8);
+
+    // ── DOW row ──────────────────────────────────────────────
+    const DOW_Y = MT + 8;
+    const DOW_H = 7;
+    const GRID_TOP = DOW_Y + DOW_H;
+    const GRID_H = PH - GRID_TOP - MB;
+    const ROW_H = GRID_H / 6;
+
+    const dows = ["Dom", "Lun", "Mar", "Mié", "Jue", "Vie", "Sáb"];
+    dows.forEach((d, i) => {
+      const x = ML + i * COL;
+      pdf.setFillColor(247, 248, 250);
+      pdf.rect(x, DOW_Y, COL, DOW_H, "F");
+      pdf.setFontSize(7);
+      pdf.setFont("helvetica", "bold");
+      pdf.setTextColor(100, 100, 100);
+      pdf.text(d, x + COL / 2, DOW_Y + 4.7, { align: "center" });
+    });
+
+    // ── Grid lines ───────────────────────────────────────────
+    pdf.setDrawColor(220, 220, 220);
+    pdf.setLineWidth(0.2);
+    for (let c = 0; c <= 7; c++) {
+      pdf.line(ML + c * COL, DOW_Y, ML + c * COL, PH - MB);
+    }
+    for (let r = 0; r <= 6; r++) {
+      pdf.line(ML, GRID_TOP + r * ROW_H, ML + AW, GRID_TOP + r * ROW_H);
+    }
+
+    // ── Cells ────────────────────────────────────────────────
+    cells.forEach((d, i) => {
+      const row = Math.floor(i / 7);
+      const col = i % 7;
+      const cx = ML + col * COL;
+      const cy = GRID_TOP + row * ROW_H;
+      const key = window.fmtDate(d);
+      const inMonth = d.getMonth() === month;
+
+      // Day number
+      const gray = inMonth ? 30 : 185;
+      pdf.setFontSize(8);
+      pdf.setFont("helvetica", inMonth ? "bold" : "normal");
+      pdf.setTextColor(gray, gray, gray);
+      pdf.text(String(d.getDate()), cx + COL - 3, cy + 5.5, {
+        align: "right",
+      });
+
+      // Events (max 3)
+      const evs = eventsByDate[key] || [];
+      evs.slice(0, 3).forEach((ev, ei) => {
+        const sec = ev.sections[0] || "general";
+        const rgb = SEC_RGB[sec] || [100, 100, 100];
+        const ey = cy + 10 + ei * 5.2;
+        pdf.setFillColor(...rgb);
+        pdf.circle(cx + 2.8, ey - 1.3, 1.3, "F");
+        pdf.setFontSize(5.8);
+        pdf.setFont("helvetica", "normal");
+        pdf.setTextColor(45, 45, 45);
+        const label =
+          ev.title.length > 26 ? ev.title.slice(0, 24) + "…" : ev.title;
+        pdf.text(label, cx + 5.5, ey);
+      });
+      if (evs.length > 3) {
+        const ey = cy + 10 + 3 * 5.2;
+        pdf.setFontSize(5.5);
+        pdf.setTextColor(130, 130, 130);
+        pdf.text(`+${evs.length - 3} más`, cx + 5.5, ey);
+      }
+    });
+
+    // ── Legend ───────────────────────────────────────────────
+    const LEG_Y = PH - MB + 5;
+    let lx = ML;
+    pdf.setFontSize(6);
+    pdf.setFont("helvetica", "normal");
+    window.CV_DATA.SECTIONS.forEach((s) => {
+      const rgb = SEC_RGB[s.id] || [120, 120, 120];
+      pdf.setFillColor(...rgb);
+      pdf.circle(lx + 1.5, LEG_Y - 0.8, 1.5, "F");
+      pdf.setTextColor(80, 80, 80);
+      pdf.text(s.label, lx + 4.5, LEG_Y);
+      lx += pdf.getTextWidth(s.label) + 9;
+    });
+
+    const now = new Date();
+    pdf.setTextColor(180, 180, 180);
+    pdf.text(
+      `Exportado el ${now.toLocaleDateString("es-MX", { day: "2-digit", month: "long", year: "numeric" })}`,
+      PW - MR,
+      LEG_Y,
+      { align: "right" },
+    );
+
     pdf.save(`calendario-${window.MONTHS[month]}-${year}.pdf`);
   };
 

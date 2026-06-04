@@ -94,6 +94,11 @@ const App = () => {
     subtitle = "Estructura directiva · Ciclo escolar 2025–2026";
     breadcrumbs = ["Módulos", "Organigrama"];
     body = <Organigrama />;
+  } else if (current === "alumnos-especiales") {
+    title = "Alumnos Especiales";
+    subtitle = "Expedientes y seguimiento · Acceso restringido";
+    breadcrumbs = ["Módulos", "Alumnos Especiales"];
+    body = <AlumnosEspeciales />;
   } else if (current === "modulos") {
     title = "Administración de módulos";
     subtitle = "Activa, desactiva y reordena los módulos del sistema";

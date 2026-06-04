@@ -473,6 +473,13 @@ window.CV_DATA = (function () {
       desc: "Estructura jerárquica del personal directivo y administrativo.",
     },
     {
+      id: "alumnos-especiales",
+      label: "Alumnos Especiales",
+      icon: "clipboard",
+      active: true,
+      desc: "Expedientes y seguimiento de alumnos con necesidades especiales o situaciones sensibles.",
+    },
+    {
       id: "planeaciones",
       label: "Planeaciones",
       icon: "doc",
@@ -527,6 +534,7 @@ window.CV_DATA = (function () {
       sections: ["bachillerato"],
       active: true,
       initials: "RT",
+      restrictedModules: ["alumnos-especiales"],
     },
     {
       id: 3,
@@ -536,6 +544,7 @@ window.CV_DATA = (function () {
       sections: ["primaria"],
       active: true,
       initials: "VP",
+      restrictedModules: ["alumnos-especiales"],
     },
     {
       id: 4,
@@ -554,7 +563,7 @@ window.CV_DATA = (function () {
       sections: ["secundaria"],
       active: true,
       initials: "FC",
-      restrictedModules: ["incidencias-docentes"],
+      restrictedModules: ["incidencias-docentes", "alumnos-especiales"],
     },
     {
       id: 6,
@@ -564,6 +573,7 @@ window.CV_DATA = (function () {
       sections: ["primaria", "secundaria", "bachillerato"],
       active: true,
       initials: "PO",
+      restrictedModules: ["alumnos-especiales"],
     },
     {
       id: 7,
@@ -573,6 +583,7 @@ window.CV_DATA = (function () {
       sections: ["general"],
       active: true,
       initials: "GT",
+      restrictedModules: ["alumnos-especiales"],
     },
     {
       id: 8,
