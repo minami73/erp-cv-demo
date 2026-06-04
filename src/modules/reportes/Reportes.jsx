@@ -158,6 +158,16 @@ const Reportes = () => {
   const [trimestre, setTrimestre] = useState("2");
   const [materia, setMateria] = useState("matematicas");
   const [grupo, setGrupo] = useState("todos");
+  const [sortCol, setSortCol] = useState(null);
+  const [sortDir, setSortDir] = useState("asc");
+
+  const toggleSort = (col) => {
+    if (sortCol === col) setSortDir((d) => (d === "asc" ? "desc" : "asc"));
+    else {
+      setSortCol(col);
+      setSortDir("asc");
+    }
+  };
 
   const rows = (REPORT_DATA[tipo][trimestre][materia] || [])
     .map((r) => {
@@ -166,7 +176,14 @@ const Reportes = () => {
       const pct = r.total > 0 ? Math.round((r.entregadas / r.total) * 100) : 0;
       return { ...r, alumno, pendientes, pct };
     })
-    .filter((r) => grupo === "todos" || r.alumno.grade === grupo);
+    .filter((r) => grupo === "todos" || r.alumno.grade === grupo)
+    .sort((a, b) => {
+      if (!sortCol) return 0;
+      const va = sortCol === "alumno" ? a.alumno.name : a[sortCol];
+      const vb = sortCol === "alumno" ? b.alumno.name : b[sortCol];
+      const cmp = typeof va === "string" ? va.localeCompare(vb, "es") : va - vb;
+      return sortDir === "asc" ? cmp : -cmp;
+    });
 
   const promedio = rows.length
     ? Math.round(rows.reduce((acc, r) => acc + r.pct, 0) / rows.length)
@@ -288,11 +305,63 @@ const Reportes = () => {
             textTransform: "uppercase",
           }}
         >
-          <span>Alumno</span>
-          <span style={{ textAlign: "center" }}>Total</span>
-          <span style={{ textAlign: "center" }}>Entregadas</span>
-          <span style={{ textAlign: "center" }}>Pendientes</span>
-          <span style={{ textAlign: "center" }}>Avance</span>
+          {["alumno", "entregadas", "pendientes"].includes("alumno") &&
+            (() => {
+              const SortBtn = ({ col, label, align }) => {
+                const active = sortCol === col;
+                const arrow = active ? (sortDir === "asc" ? " ↑" : " ↓") : " ↕";
+                return (
+                  <button
+                    onClick={() => toggleSort(col)}
+                    style={{
+                      background: "none",
+                      border: "none",
+                      cursor: "pointer",
+                      padding: 0,
+                      fontSize: 11.5,
+                      fontWeight: 600,
+                      color: active ? "var(--ink-2)" : "var(--ink-4)",
+                      letterSpacing: ".06em",
+                      textTransform: "uppercase",
+                      textAlign: align || "left",
+                      width: "100%",
+                    }}
+                  >
+                    {label}
+                    {arrow}
+                  </button>
+                );
+              };
+              return (
+                <>
+                  <SortBtn col="alumno" label="Alumno" />
+                  <span
+                    style={{
+                      textAlign: "center",
+                      fontSize: 11.5,
+                      fontWeight: 600,
+                      letterSpacing: ".06em",
+                      textTransform: "uppercase",
+                    }}
+                  >
+                    Total
+                  </span>
+                  <SortBtn col="entregadas" label="Entregadas" align="center" />
+                  <SortBtn col="pendientes" label="Pendientes" align="center" />
+                  <span
+                    style={{
+                      textAlign: "center",
+                      fontSize: 11.5,
+                      fontWeight: 600,
+                      letterSpacing: ".06em",
+                      textTransform: "uppercase",
+                    }}
+                  >
+                    Avance
+                  </span>
+                </>
+              );
+            })()}
         </div>
 
         {rows.map((r, i) => (
