@@ -844,6 +844,13 @@ window.CV_DATA = (function () {
       icon: "users",
       active: true,
       desc: "Directorio del personal, contratos, incidencias y desempeño.",
+      children: [
+        { id: "personal-maternal", label: "Personal Maternal" },
+        { id: "personal-preescolar", label: "Personal Preescolar" },
+        { id: "personal-primaria", label: "Personal Primaria" },
+        { id: "personal-secundaria", label: "Personal Secundaria" },
+        { id: "personal-bachillerato", label: "Personal Bachillerato" },
+      ],
     },
     {
       id: "estacionamiento",

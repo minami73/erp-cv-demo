@@ -109,6 +109,20 @@ const App = () => {
     subtitle = "Documentos oficiales del colegio";
     breadcrumbs = ["Módulos", "Formatos"];
     body = <Formatos />;
+  } else if (current.startsWith("personal-")) {
+    const labels = {
+      "personal-maternal": "Personal Maternal",
+      "personal-preescolar": "Personal Preescolar",
+      "personal-primaria": "Personal Primaria",
+      "personal-secundaria": "Personal Secundaria",
+      "personal-bachillerato": "Personal Bachillerato",
+    };
+    const seccion = labels[current] || "Personal";
+    const personalMod = modules.find((m) => m.id === "personal");
+    title = seccion;
+    subtitle = "Módulo en preparación · " + seccion;
+    breadcrumbs = ["Personal", seccion.replace("Personal ", "")];
+    body = <Construction module={{ ...personalMod, label: seccion }} />;
   } else if (current === "modulos") {
     title = "Administración de módulos";
     subtitle = "Activa, desactiva y reordena los módulos del sistema";

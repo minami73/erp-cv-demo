@@ -8,6 +8,11 @@ const Sidebar = ({
 }) => {
   const [dragId, setDragId] = useState(null);
   const [overId, setOverId] = useState(null);
+  const [expandedIds, setExpandedIds] = useState([]);
+  const toggleExpand = (id) =>
+    setExpandedIds((prev) =>
+      prev.includes(id) ? prev.filter((x) => x !== id) : [...prev, id],
+    );
 
   const activeModules = modules.filter((m) => m.active);
 
@@ -112,6 +117,140 @@ const Sidebar = ({
     );
   };
 
+  const AccordionItem = ({ mod }) => {
+    const expanded = expandedIds.includes(mod.id);
+    const childActive = mod.children.some((c) => c.id === current);
+    const highlighted = childActive || expanded;
+    return (
+      <div>
+        <div
+          onClick={() => !collapsed && toggleExpand(mod.id)}
+          title={collapsed ? mod.label : undefined}
+          style={{
+            position: "relative",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: collapsed ? "center" : "flex-start",
+            gap: collapsed ? 0 : 10,
+            padding: collapsed ? "9px 0" : "8px 10px 8px 8px",
+            borderRadius: 8,
+            cursor: "pointer",
+            background: highlighted ? "rgba(255,255,255,.10)" : "transparent",
+            color: highlighted ? "#fff" : "rgba(244,245,250,.78)",
+            fontSize: 13.5,
+            fontWeight: highlighted ? 500 : 400,
+            transition: "background .12s, color .12s",
+          }}
+          onMouseEnter={(e) => {
+            if (!highlighted)
+              e.currentTarget.style.background = "rgba(255,255,255,.05)";
+          }}
+          onMouseLeave={(e) => {
+            if (!highlighted) e.currentTarget.style.background = "transparent";
+          }}
+        >
+          {childActive && (
+            <span
+              style={{
+                position: "absolute",
+                left: collapsed ? 0 : -16,
+                top: 8,
+                bottom: 8,
+                width: 3,
+                background: "#fff",
+                borderRadius: "0 3px 3px 0",
+              }}
+            />
+          )}
+          {!collapsed && (
+            <span
+              style={{ color: "rgba(255,255,255,.35)", display: "inline-flex" }}
+            >
+              <Icon name="grip" size={14} />
+            </span>
+          )}
+          <Icon
+            name={mod.icon}
+            size={17}
+            stroke={1.6}
+            style={{ flexShrink: 0 }}
+          />
+          {!collapsed && (
+            <>
+              <span style={{ flex: 1 }}>{mod.label}</span>
+              <span
+                style={{
+                  fontSize: 10,
+                  opacity: 0.6,
+                  transition: "transform .2s",
+                  display: "inline-block",
+                  transform: expanded ? "rotate(90deg)" : "rotate(0deg)",
+                }}
+              >
+                ▶
+              </span>
+            </>
+          )}
+        </div>
+        {!collapsed && expanded && (
+          <div style={{ marginTop: 2, marginBottom: 2 }}>
+            {mod.children.map((child) => {
+              const childIsActive = current === child.id;
+              return (
+                <div
+                  key={child.id}
+                  onClick={() => onNavigate(child.id)}
+                  style={{
+                    position: "relative",
+                    display: "flex",
+                    alignItems: "center",
+                    padding: "6px 10px 6px 36px",
+                    borderRadius: 8,
+                    cursor: "pointer",
+                    background: childIsActive
+                      ? "rgba(255,255,255,.10)"
+                      : "transparent",
+                    color: childIsActive ? "#fff" : "rgba(244,245,250,.65)",
+                    fontSize: 12.5,
+                    fontWeight: childIsActive ? 500 : 400,
+                    transition: "background .12s, color .12s",
+                  }}
+                  onMouseEnter={(e) => {
+                    if (!childIsActive)
+                      e.currentTarget.style.background =
+                        "rgba(255,255,255,.05)";
+                  }}
+                  onMouseLeave={(e) => {
+                    if (!childIsActive)
+                      e.currentTarget.style.background = "transparent";
+                  }}
+                >
+                  {childIsActive && (
+                    <span
+                      style={{
+                        position: "absolute",
+                        left: -16,
+                        top: 6,
+                        bottom: 6,
+                        width: 3,
+                        background: "#fff",
+                        borderRadius: "0 3px 3px 0",
+                      }}
+                    />
+                  )}
+                  <span style={{ fontSize: 10, marginRight: 7, opacity: 0.45 }}>
+                    —
+                  </span>
+                  {child.label.replace("Personal ", "")}
+                </div>
+              );
+            })}
+          </div>
+        )}
+      </div>
+    );
+  };
+
   return (
     <aside
       style={{
@@ -196,9 +335,13 @@ const Sidebar = ({
           overflowY: "auto",
         }}
       >
-        {activeModules.map((mod) => (
-          <NavItem key={mod.id} mod={mod} />
-        ))}
+        {activeModules.map((mod) =>
+          mod.children ? (
+            <AccordionItem key={mod.id} mod={mod} />
+          ) : (
+            <NavItem key={mod.id} mod={mod} />
+          ),
+        )}
       </nav>
 
       <div
