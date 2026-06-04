@@ -1,414 +1,163 @@
+/* ─── Datos ──────────────────────────────────────────────────────────────── */
+
+const STUDENTS = [
+  // 1°A — niñas
+  { id: "1a01", name: "Sofía Reyes Torres", grade: "1°A" },
+  { id: "1a02", name: "Valentina Cruz Mendoza", grade: "1°A" },
+  { id: "1a03", name: "Isabella Martínez Rojas", grade: "1°A" },
+  { id: "1a04", name: "Camila Torres Vega", grade: "1°A" },
+  { id: "1a05", name: "Lucía Hernández López", grade: "1°A" },
+  { id: "1a06", name: "Fernanda López García", grade: "1°A" },
+  { id: "1a07", name: "Daniela García Sánchez", grade: "1°A" },
+  { id: "1a08", name: "Mariana Sánchez Ramírez", grade: "1°A" },
+  { id: "1a09", name: "Gabriela Ramírez Flores", grade: "1°A" },
+  { id: "1a10", name: "Andrea Flores Jiménez", grade: "1°A" },
+  { id: "1a11", name: "Paola Jiménez Morales", grade: "1°A" },
+  { id: "1a12", name: "Valeria Morales Castro", grade: "1°A" },
+  { id: "1a13", name: "Natalia Castro Vargas", grade: "1°A" },
+  { id: "1a14", name: "Carolina Vargas Ortiz", grade: "1°A" },
+  { id: "1a15", name: "Jimena Ortiz Herrera", grade: "1°A" },
+  // 1°B — niños
+  { id: "1b01", name: "Carlos Mendoza Díaz", grade: "1°B" },
+  { id: "1b02", name: "Diego Luna Reyes", grade: "1°B" },
+  { id: "1b03", name: "Mateo García Cruz", grade: "1°B" },
+  { id: "1b04", name: "Sebastián López Herrera", grade: "1°B" },
+  { id: "1b05", name: "Alejandro Díaz Torres", grade: "1°B" },
+  { id: "1b06", name: "Miguel Reyes Castro", grade: "1°B" },
+  { id: "1b07", name: "Emilio Herrera Flores", grade: "1°B" },
+  { id: "1b08", name: "Andrés Torres Morales", grade: "1°B" },
+  { id: "1b09", name: "Rodrigo Castro Vargas", grade: "1°B" },
+  { id: "1b10", name: "Pablo Flores Ortiz", grade: "1°B" },
+  { id: "1b11", name: "Eduardo Morales Jiménez", grade: "1°B" },
+  { id: "1b12", name: "Ricardo Vargas Sánchez", grade: "1°B" },
+  { id: "1b13", name: "Fernando Ortiz Ramírez", grade: "1°B" },
+  { id: "1b14", name: "Javier Jiménez Luna", grade: "1°B" },
+  { id: "1b15", name: "Antonio Sánchez García", grade: "1°B" },
+  // 2°A — niñas
+  { id: "2a01", name: "Regina Mendoza Paredes", grade: "2°A" },
+  { id: "2a02", name: "Alejandra Rojas Cabrera", grade: "2°A" },
+  { id: "2a03", name: "Constanza Vega Espinoza", grade: "2°A" },
+  { id: "2a04", name: "Diana Herrera Montes", grade: "2°A" },
+  { id: "2a05", name: "Paula Gutiérrez Sandoval", grade: "2°A" },
+  { id: "2a06", name: "Ximena Peña Campos", grade: "2°A" },
+  { id: "2a07", name: "Karla Álvarez Luna", grade: "2°A" },
+  { id: "2a08", name: "Rebeca Delgado Fuentes", grade: "2°A" },
+  { id: "2a09", name: "Ariana Ruiz Domínguez", grade: "2°A" },
+  { id: "2a10", name: "Sara Navarro Cervantes", grade: "2°A" },
+  { id: "2a11", name: "Michelle Salinas Maldonado", grade: "2°A" },
+  { id: "2a12", name: "Brenda Cortés Contreras", grade: "2°A" },
+  { id: "2a13", name: "Mónica Medina Serrano", grade: "2°A" },
+  { id: "2a14", name: "Liliana Aguilar Muñoz", grade: "2°A" },
+  { id: "2a15", name: "Claudia Ramos Peña", grade: "2°A" },
+  // 2°B — niños
+  { id: "2b01", name: "Marco Ramírez Vega", grade: "2°B" },
+  { id: "2b02", name: "David Cruz Gutiérrez", grade: "2°B" },
+  { id: "2b03", name: "Iván Gutiérrez Peña", grade: "2°B" },
+  { id: "2b04", name: "Héctor Vega Álvarez", grade: "2°B" },
+  { id: "2b05", name: "Adrián Ruiz Delgado", grade: "2°B" },
+  { id: "2b06", name: "Óscar Peña Navarro", grade: "2°B" },
+  { id: "2b07", name: "Roberto Álvarez Salinas", grade: "2°B" },
+  { id: "2b08", name: "Manuel Navarro Cortés", grade: "2°B" },
+  { id: "2b09", name: "Ernesto Delgado Medina", grade: "2°B" },
+  { id: "2b10", name: "Raúl Cortés Aguilar", grade: "2°B" },
+  { id: "2b11", name: "Enrique Medina Ramos", grade: "2°B" },
+  { id: "2b12", name: "Alfredo Aguilar Fuentes", grade: "2°B" },
+  { id: "2b13", name: "Jorge Ramos Domínguez", grade: "2°B" },
+  { id: "2b14", name: "Víctor Salinas Luna", grade: "2°B" },
+  { id: "2b15", name: "Mauricio Luna Paredes", grade: "2°B" },
+  // 3°A — niñas
+  { id: "3a01", name: "Verónica Muñoz Cabrera", grade: "3°A" },
+  { id: "3a02", name: "Patricia Serrano Espinoza", grade: "3°A" },
+  { id: "3a03", name: "Luciana Paredes Montes", grade: "3°A" },
+  { id: "3a04", name: "Renata Cabrera Sandoval", grade: "3°A" },
+  { id: "3a05", name: "Itzel Espinoza Campos", grade: "3°A" },
+  { id: "3a06", name: "Frida Montes Fuentes", grade: "3°A" },
+  { id: "3a07", name: "Yadira Sandoval Domínguez", grade: "3°A" },
+  { id: "3a08", name: "Anahí Torres Cervantes", grade: "3°A" },
+  { id: "3a09", name: "Dulce Campos Maldonado", grade: "3°A" },
+  { id: "3a10", name: "Estefanía Luna Contreras", grade: "3°A" },
+  { id: "3a11", name: "Yolanda Fuentes Serrano", grade: "3°A" },
+  { id: "3a12", name: "Rocío Domínguez Muñoz", grade: "3°A" },
+  { id: "3a13", name: "Nadia Cervantes Vega", grade: "3°A" },
+  { id: "3a14", name: "Alicia Maldonado Ruiz", grade: "3°A" },
+  { id: "3a15", name: "Beatriz Contreras Reyes", grade: "3°A" },
+  // 3°B — niños
+  { id: "3b01", name: "Daniel Paredes Gutiérrez", grade: "3°B" },
+  { id: "3b02", name: "Luis Cabrera Álvarez", grade: "3°B" },
+  { id: "3b03", name: "Arturo Espinoza Navarro", grade: "3°B" },
+  { id: "3b04", name: "Guillermo Montes Salinas", grade: "3°B" },
+  { id: "3b05", name: "Bernardo Sandoval Cortés", grade: "3°B" },
+  { id: "3b06", name: "Julio Campos Medina", grade: "3°B" },
+  { id: "3b07", name: "Ismael Fuentes Aguilar", grade: "3°B" },
+  { id: "3b08", name: "Gerardo Domínguez Ramos", grade: "3°B" },
+  { id: "3b09", name: "Horacio Cervantes López", grade: "3°B" },
+  { id: "3b10", name: "Joaquín Maldonado Cruz", grade: "3°B" },
+  { id: "3b11", name: "Leandro Contreras García", grade: "3°B" },
+  { id: "3b12", name: "Rubén Serrano Herrera", grade: "3°B" },
+  { id: "3b13", name: "Sergio Muñoz Torres", grade: "3°B" },
+  { id: "3b14", name: "Ignacio Vega Flores", grade: "3°B" },
+  { id: "3b15", name: "Tomás Herrera Jiménez", grade: "3°B" },
+];
+
+const MATERIAS = [
+  { id: "matematicas", label: "Matemáticas" },
+  { id: "espanol", label: "Español" },
+  { id: "ciencias", label: "Ciencias" },
+  { id: "historia", label: "Historia" },
+  { id: "ingles", label: "Inglés" },
+];
+
+// Totales base por tipo y trimestre
+const BASE_TOTALS = {
+  tareas: { 1: 10, 2: 8, 3: 3 },
+  actividades: { 1: 12, 2: 9, 3: 4 },
+};
+
+// Hash determinístico para generar datos consistentes sin hardcodear 2700 filas
+const hash = (s) => {
+  let h = 5381;
+  for (let i = 0; i < s.length; i++) h = (h << 5) + h + s.charCodeAt(i);
+  return Math.abs(h);
+};
+
+// Pendientes máximos por trimestre: t1 casi todos entregan, t2 algunos rezagados, t3 recién inicia
+const MAX_PENDING = { 1: 1, 2: 4, 3: 2 };
+
+const buildReportData = () => {
+  const data = {};
+  for (const tipo of ["tareas", "actividades"]) {
+    data[tipo] = {};
+    for (const t of ["1", "2", "3"]) {
+      data[tipo][t] = {};
+      for (const m of MATERIAS.map((x) => x.id)) {
+        data[tipo][t][m] = STUDENTS.map((s) => {
+          const gh = hash(`${tipo}-${t}-${m}-${s.grade}`);
+          const total = Math.max(5, BASE_TOTALS[tipo][t] - 2 + (gh % 5));
+          const sh = hash(`${tipo}-${t}-${m}-${s.id}`);
+          const pending = sh % (MAX_PENDING[t] + 1);
+          const entregadas = Math.max(0, total - pending);
+          return { alumnoId: s.id, total, entregadas };
+        });
+      }
+    }
+  }
+  return data;
+};
+
+const REPORT_DATA = buildReportData();
+
+/* ─── Componente ─────────────────────────────────────────────────────────── */
+
 const Reportes = () => {
-  const STUDENTS = [
-    { id: "s1", name: "Carlos Mendoza", grade: "1°A" },
-    { id: "s2", name: "Sofía Reyes", grade: "1°A" },
-    { id: "s3", name: "Diego Luna", grade: "1°B" },
-    { id: "s4", name: "Valentina Cruz", grade: "1°B" },
-    { id: "s5", name: "Mateo García", grade: "2°A" },
-    { id: "s6", name: "Isabella Martínez", grade: "2°A" },
-    { id: "s7", name: "Sebastián López", grade: "2°B" },
-    { id: "s8", name: "Camila Torres", grade: "2°B" },
-    { id: "s9", name: "Alejandro Díaz", grade: "3°A" },
-    { id: "s10", name: "Lucía Hernández", grade: "3°A" },
+  const GRUPOS = [
+    "todos",
+    ...Array.from(new Set(STUDENTS.map((s) => s.grade))).sort(),
   ];
-
-  const MATERIAS = [
-    { id: "matematicas", label: "Matemáticas" },
-    { id: "espanol", label: "Español" },
-    { id: "ciencias", label: "Ciencias" },
-    { id: "historia", label: "Historia" },
-    { id: "ingles", label: "Inglés" },
-  ];
-
-  // REPORT_DATA[tipo][trimestre][materiaId] = [{ alumnoId, total, entregadas }]
-  const REPORT_DATA = {
-    tareas: {
-      1: {
-        matematicas: [
-          { alumnoId: "s1", total: 10, entregadas: 10 },
-          { alumnoId: "s2", total: 10, entregadas: 9 },
-          { alumnoId: "s3", total: 10, entregadas: 10 },
-          { alumnoId: "s4", total: 10, entregadas: 8 },
-          { alumnoId: "s5", total: 10, entregadas: 10 },
-          { alumnoId: "s6", total: 10, entregadas: 10 },
-          { alumnoId: "s7", total: 10, entregadas: 7 },
-          { alumnoId: "s8", total: 10, entregadas: 10 },
-          { alumnoId: "s9", total: 10, entregadas: 9 },
-          { alumnoId: "s10", total: 10, entregadas: 10 },
-        ],
-        espanol: [
-          { alumnoId: "s1", total: 8, entregadas: 8 },
-          { alumnoId: "s2", total: 8, entregadas: 8 },
-          { alumnoId: "s3", total: 8, entregadas: 7 },
-          { alumnoId: "s4", total: 8, entregadas: 8 },
-          { alumnoId: "s5", total: 8, entregadas: 6 },
-          { alumnoId: "s6", total: 8, entregadas: 8 },
-          { alumnoId: "s7", total: 8, entregadas: 8 },
-          { alumnoId: "s8", total: 8, entregadas: 5 },
-          { alumnoId: "s9", total: 8, entregadas: 8 },
-          { alumnoId: "s10", total: 8, entregadas: 8 },
-        ],
-        ciencias: [
-          { alumnoId: "s1", total: 9, entregadas: 9 },
-          { alumnoId: "s2", total: 9, entregadas: 8 },
-          { alumnoId: "s3", total: 9, entregadas: 9 },
-          { alumnoId: "s4", total: 9, entregadas: 9 },
-          { alumnoId: "s5", total: 9, entregadas: 7 },
-          { alumnoId: "s6", total: 9, entregadas: 9 },
-          { alumnoId: "s7", total: 9, entregadas: 9 },
-          { alumnoId: "s8", total: 9, entregadas: 9 },
-          { alumnoId: "s9", total: 9, entregadas: 6 },
-          { alumnoId: "s10", total: 9, entregadas: 9 },
-        ],
-        historia: [
-          { alumnoId: "s1", total: 7, entregadas: 7 },
-          { alumnoId: "s2", total: 7, entregadas: 7 },
-          { alumnoId: "s3", total: 7, entregadas: 6 },
-          { alumnoId: "s4", total: 7, entregadas: 7 },
-          { alumnoId: "s5", total: 7, entregadas: 7 },
-          { alumnoId: "s6", total: 7, entregadas: 5 },
-          { alumnoId: "s7", total: 7, entregadas: 7 },
-          { alumnoId: "s8", total: 7, entregadas: 7 },
-          { alumnoId: "s9", total: 7, entregadas: 7 },
-          { alumnoId: "s10", total: 7, entregadas: 4 },
-        ],
-        ingles: [
-          { alumnoId: "s1", total: 6, entregadas: 6 },
-          { alumnoId: "s2", total: 6, entregadas: 5 },
-          { alumnoId: "s3", total: 6, entregadas: 6 },
-          { alumnoId: "s4", total: 6, entregadas: 6 },
-          { alumnoId: "s5", total: 6, entregadas: 6 },
-          { alumnoId: "s6", total: 6, entregadas: 6 },
-          { alumnoId: "s7", total: 6, entregadas: 4 },
-          { alumnoId: "s8", total: 6, entregadas: 6 },
-          { alumnoId: "s9", total: 6, entregadas: 6 },
-          { alumnoId: "s10", total: 6, entregadas: 6 },
-        ],
-      },
-      2: {
-        matematicas: [
-          { alumnoId: "s1", total: 8, entregadas: 7 },
-          { alumnoId: "s2", total: 8, entregadas: 8 },
-          { alumnoId: "s3", total: 8, entregadas: 5 },
-          { alumnoId: "s4", total: 8, entregadas: 8 },
-          { alumnoId: "s5", total: 8, entregadas: 8 },
-          { alumnoId: "s6", total: 8, entregadas: 4 },
-          { alumnoId: "s7", total: 8, entregadas: 8 },
-          { alumnoId: "s8", total: 8, entregadas: 6 },
-          { alumnoId: "s9", total: 8, entregadas: 3 },
-          { alumnoId: "s10", total: 8, entregadas: 8 },
-        ],
-        espanol: [
-          { alumnoId: "s1", total: 6, entregadas: 6 },
-          { alumnoId: "s2", total: 6, entregadas: 4 },
-          { alumnoId: "s3", total: 6, entregadas: 6 },
-          { alumnoId: "s4", total: 6, entregadas: 6 },
-          { alumnoId: "s5", total: 6, entregadas: 5 },
-          { alumnoId: "s6", total: 6, entregadas: 6 },
-          { alumnoId: "s7", total: 6, entregadas: 2 },
-          { alumnoId: "s8", total: 6, entregadas: 6 },
-          { alumnoId: "s9", total: 6, entregadas: 6 },
-          { alumnoId: "s10", total: 6, entregadas: 3 },
-        ],
-        ciencias: [
-          { alumnoId: "s1", total: 7, entregadas: 7 },
-          { alumnoId: "s2", total: 7, entregadas: 6 },
-          { alumnoId: "s3", total: 7, entregadas: 7 },
-          { alumnoId: "s4", total: 7, entregadas: 4 },
-          { alumnoId: "s5", total: 7, entregadas: 7 },
-          { alumnoId: "s6", total: 7, entregadas: 7 },
-          { alumnoId: "s7", total: 7, entregadas: 5 },
-          { alumnoId: "s8", total: 7, entregadas: 7 },
-          { alumnoId: "s9", total: 7, entregadas: 7 },
-          { alumnoId: "s10", total: 7, entregadas: 6 },
-        ],
-        historia: [
-          { alumnoId: "s1", total: 5, entregadas: 5 },
-          { alumnoId: "s2", total: 5, entregadas: 5 },
-          { alumnoId: "s3", total: 5, entregadas: 3 },
-          { alumnoId: "s4", total: 5, entregadas: 5 },
-          { alumnoId: "s5", total: 5, entregadas: 5 },
-          { alumnoId: "s6", total: 5, entregadas: 2 },
-          { alumnoId: "s7", total: 5, entregadas: 5 },
-          { alumnoId: "s8", total: 5, entregadas: 4 },
-          { alumnoId: "s9", total: 5, entregadas: 5 },
-          { alumnoId: "s10", total: 5, entregadas: 5 },
-        ],
-        ingles: [
-          { alumnoId: "s1", total: 5, entregadas: 4 },
-          { alumnoId: "s2", total: 5, entregadas: 5 },
-          { alumnoId: "s3", total: 5, entregadas: 5 },
-          { alumnoId: "s4", total: 5, entregadas: 1 },
-          { alumnoId: "s5", total: 5, entregadas: 5 },
-          { alumnoId: "s6", total: 5, entregadas: 5 },
-          { alumnoId: "s7", total: 5, entregadas: 5 },
-          { alumnoId: "s8", total: 5, entregadas: 2 },
-          { alumnoId: "s9", total: 5, entregadas: 5 },
-          { alumnoId: "s10", total: 5, entregadas: 5 },
-        ],
-      },
-      3: {
-        matematicas: [
-          { alumnoId: "s1", total: 3, entregadas: 3 },
-          { alumnoId: "s2", total: 3, entregadas: 2 },
-          { alumnoId: "s3", total: 3, entregadas: 3 },
-          { alumnoId: "s4", total: 3, entregadas: 3 },
-          { alumnoId: "s5", total: 3, entregadas: 1 },
-          { alumnoId: "s6", total: 3, entregadas: 3 },
-          { alumnoId: "s7", total: 3, entregadas: 3 },
-          { alumnoId: "s8", total: 3, entregadas: 0 },
-          { alumnoId: "s9", total: 3, entregadas: 3 },
-          { alumnoId: "s10", total: 3, entregadas: 2 },
-        ],
-        espanol: [
-          { alumnoId: "s1", total: 2, entregadas: 2 },
-          { alumnoId: "s2", total: 2, entregadas: 2 },
-          { alumnoId: "s3", total: 2, entregadas: 1 },
-          { alumnoId: "s4", total: 2, entregadas: 2 },
-          { alumnoId: "s5", total: 2, entregadas: 2 },
-          { alumnoId: "s6", total: 2, entregadas: 0 },
-          { alumnoId: "s7", total: 2, entregadas: 2 },
-          { alumnoId: "s8", total: 2, entregadas: 2 },
-          { alumnoId: "s9", total: 2, entregadas: 2 },
-          { alumnoId: "s10", total: 2, entregadas: 1 },
-        ],
-        ciencias: [
-          { alumnoId: "s1", total: 2, entregadas: 2 },
-          { alumnoId: "s2", total: 2, entregadas: 1 },
-          { alumnoId: "s3", total: 2, entregadas: 2 },
-          { alumnoId: "s4", total: 2, entregadas: 2 },
-          { alumnoId: "s5", total: 2, entregadas: 2 },
-          { alumnoId: "s6", total: 2, entregadas: 2 },
-          { alumnoId: "s7", total: 2, entregadas: 0 },
-          { alumnoId: "s8", total: 2, entregadas: 2 },
-          { alumnoId: "s9", total: 2, entregadas: 2 },
-          { alumnoId: "s10", total: 2, entregadas: 2 },
-        ],
-        historia: [
-          { alumnoId: "s1", total: 2, entregadas: 2 },
-          { alumnoId: "s2", total: 2, entregadas: 2 },
-          { alumnoId: "s3", total: 2, entregadas: 2 },
-          { alumnoId: "s4", total: 2, entregadas: 1 },
-          { alumnoId: "s5", total: 2, entregadas: 2 },
-          { alumnoId: "s6", total: 2, entregadas: 2 },
-          { alumnoId: "s7", total: 2, entregadas: 2 },
-          { alumnoId: "s8", total: 2, entregadas: 2 },
-          { alumnoId: "s9", total: 2, entregadas: 0 },
-          { alumnoId: "s10", total: 2, entregadas: 2 },
-        ],
-        ingles: [
-          { alumnoId: "s1", total: 2, entregadas: 2 },
-          { alumnoId: "s2", total: 2, entregadas: 2 },
-          { alumnoId: "s3", total: 2, entregadas: 2 },
-          { alumnoId: "s4", total: 2, entregadas: 2 },
-          { alumnoId: "s5", total: 2, entregadas: 2 },
-          { alumnoId: "s6", total: 2, entregadas: 1 },
-          { alumnoId: "s7", total: 2, entregadas: 2 },
-          { alumnoId: "s8", total: 2, entregadas: 0 },
-          { alumnoId: "s9", total: 2, entregadas: 2 },
-          { alumnoId: "s10", total: 2, entregadas: 2 },
-        ],
-      },
-    },
-    actividades: {
-      1: {
-        matematicas: [
-          { alumnoId: "s1", total: 12, entregadas: 12 },
-          { alumnoId: "s2", total: 12, entregadas: 11 },
-          { alumnoId: "s3", total: 12, entregadas: 12 },
-          { alumnoId: "s4", total: 12, entregadas: 10 },
-          { alumnoId: "s5", total: 12, entregadas: 12 },
-          { alumnoId: "s6", total: 12, entregadas: 9 },
-          { alumnoId: "s7", total: 12, entregadas: 12 },
-          { alumnoId: "s8", total: 12, entregadas: 12 },
-          { alumnoId: "s9", total: 12, entregadas: 8 },
-          { alumnoId: "s10", total: 12, entregadas: 12 },
-        ],
-        espanol: [
-          { alumnoId: "s1", total: 10, entregadas: 10 },
-          { alumnoId: "s2", total: 10, entregadas: 9 },
-          { alumnoId: "s3", total: 10, entregadas: 10 },
-          { alumnoId: "s4", total: 10, entregadas: 10 },
-          { alumnoId: "s5", total: 10, entregadas: 7 },
-          { alumnoId: "s6", total: 10, entregadas: 10 },
-          { alumnoId: "s7", total: 10, entregadas: 10 },
-          { alumnoId: "s8", total: 10, entregadas: 6 },
-          { alumnoId: "s9", total: 10, entregadas: 10 },
-          { alumnoId: "s10", total: 10, entregadas: 10 },
-        ],
-        ciencias: [
-          { alumnoId: "s1", total: 8, entregadas: 8 },
-          { alumnoId: "s2", total: 8, entregadas: 8 },
-          { alumnoId: "s3", total: 8, entregadas: 6 },
-          { alumnoId: "s4", total: 8, entregadas: 8 },
-          { alumnoId: "s5", total: 8, entregadas: 8 },
-          { alumnoId: "s6", total: 8, entregadas: 8 },
-          { alumnoId: "s7", total: 8, entregadas: 5 },
-          { alumnoId: "s8", total: 8, entregadas: 8 },
-          { alumnoId: "s9", total: 8, entregadas: 8 },
-          { alumnoId: "s10", total: 8, entregadas: 7 },
-        ],
-        historia: [
-          { alumnoId: "s1", total: 6, entregadas: 6 },
-          { alumnoId: "s2", total: 6, entregadas: 6 },
-          { alumnoId: "s3", total: 6, entregadas: 5 },
-          { alumnoId: "s4", total: 6, entregadas: 6 },
-          { alumnoId: "s5", total: 6, entregadas: 6 },
-          { alumnoId: "s6", total: 6, entregadas: 4 },
-          { alumnoId: "s7", total: 6, entregadas: 6 },
-          { alumnoId: "s8", total: 6, entregadas: 6 },
-          { alumnoId: "s9", total: 6, entregadas: 6 },
-          { alumnoId: "s10", total: 6, entregadas: 3 },
-        ],
-        ingles: [
-          { alumnoId: "s1", total: 8, entregadas: 8 },
-          { alumnoId: "s2", total: 8, entregadas: 7 },
-          { alumnoId: "s3", total: 8, entregadas: 8 },
-          { alumnoId: "s4", total: 8, entregadas: 8 },
-          { alumnoId: "s5", total: 8, entregadas: 6 },
-          { alumnoId: "s6", total: 8, entregadas: 8 },
-          { alumnoId: "s7", total: 8, entregadas: 8 },
-          { alumnoId: "s8", total: 8, entregadas: 5 },
-          { alumnoId: "s9", total: 8, entregadas: 8 },
-          { alumnoId: "s10", total: 8, entregadas: 8 },
-        ],
-      },
-      2: {
-        matematicas: [
-          { alumnoId: "s1", total: 9, entregadas: 8 },
-          { alumnoId: "s2", total: 9, entregadas: 9 },
-          { alumnoId: "s3", total: 9, entregadas: 4 },
-          { alumnoId: "s4", total: 9, entregadas: 9 },
-          { alumnoId: "s5", total: 9, entregadas: 9 },
-          { alumnoId: "s6", total: 9, entregadas: 3 },
-          { alumnoId: "s7", total: 9, entregadas: 9 },
-          { alumnoId: "s8", total: 9, entregadas: 7 },
-          { alumnoId: "s9", total: 9, entregadas: 2 },
-          { alumnoId: "s10", total: 9, entregadas: 9 },
-        ],
-        espanol: [
-          { alumnoId: "s1", total: 7, entregadas: 7 },
-          { alumnoId: "s2", total: 7, entregadas: 5 },
-          { alumnoId: "s3", total: 7, entregadas: 7 },
-          { alumnoId: "s4", total: 7, entregadas: 7 },
-          { alumnoId: "s5", total: 7, entregadas: 6 },
-          { alumnoId: "s6", total: 7, entregadas: 7 },
-          { alumnoId: "s7", total: 7, entregadas: 1 },
-          { alumnoId: "s8", total: 7, entregadas: 7 },
-          { alumnoId: "s9", total: 7, entregadas: 7 },
-          { alumnoId: "s10", total: 7, entregadas: 4 },
-        ],
-        ciencias: [
-          { alumnoId: "s1", total: 6, entregadas: 6 },
-          { alumnoId: "s2", total: 6, entregadas: 5 },
-          { alumnoId: "s3", total: 6, entregadas: 6 },
-          { alumnoId: "s4", total: 6, entregadas: 3 },
-          { alumnoId: "s5", total: 6, entregadas: 6 },
-          { alumnoId: "s6", total: 6, entregadas: 6 },
-          { alumnoId: "s7", total: 6, entregadas: 4 },
-          { alumnoId: "s8", total: 6, entregadas: 6 },
-          { alumnoId: "s9", total: 6, entregadas: 6 },
-          { alumnoId: "s10", total: 6, entregadas: 5 },
-        ],
-        historia: [
-          { alumnoId: "s1", total: 4, entregadas: 4 },
-          { alumnoId: "s2", total: 4, entregadas: 4 },
-          { alumnoId: "s3", total: 4, entregadas: 2 },
-          { alumnoId: "s4", total: 4, entregadas: 4 },
-          { alumnoId: "s5", total: 4, entregadas: 4 },
-          { alumnoId: "s6", total: 4, entregadas: 1 },
-          { alumnoId: "s7", total: 4, entregadas: 4 },
-          { alumnoId: "s8", total: 4, entregadas: 3 },
-          { alumnoId: "s9", total: 4, entregadas: 4 },
-          { alumnoId: "s10", total: 4, entregadas: 4 },
-        ],
-        ingles: [
-          { alumnoId: "s1", total: 6, entregadas: 5 },
-          { alumnoId: "s2", total: 6, entregadas: 6 },
-          { alumnoId: "s3", total: 6, entregadas: 6 },
-          { alumnoId: "s4", total: 6, entregadas: 0 },
-          { alumnoId: "s5", total: 6, entregadas: 6 },
-          { alumnoId: "s6", total: 6, entregadas: 6 },
-          { alumnoId: "s7", total: 6, entregadas: 6 },
-          { alumnoId: "s8", total: 6, entregadas: 3 },
-          { alumnoId: "s9", total: 6, entregadas: 6 },
-          { alumnoId: "s10", total: 6, entregadas: 6 },
-        ],
-      },
-      3: {
-        matematicas: [
-          { alumnoId: "s1", total: 3, entregadas: 3 },
-          { alumnoId: "s2", total: 3, entregadas: 3 },
-          { alumnoId: "s3", total: 3, entregadas: 1 },
-          { alumnoId: "s4", total: 3, entregadas: 3 },
-          { alumnoId: "s5", total: 3, entregadas: 3 },
-          { alumnoId: "s6", total: 3, entregadas: 0 },
-          { alumnoId: "s7", total: 3, entregadas: 3 },
-          { alumnoId: "s8", total: 3, entregadas: 2 },
-          { alumnoId: "s9", total: 3, entregadas: 3 },
-          { alumnoId: "s10", total: 3, entregadas: 3 },
-        ],
-        espanol: [
-          { alumnoId: "s1", total: 2, entregadas: 2 },
-          { alumnoId: "s2", total: 2, entregadas: 1 },
-          { alumnoId: "s3", total: 2, entregadas: 2 },
-          { alumnoId: "s4", total: 2, entregadas: 2 },
-          { alumnoId: "s5", total: 2, entregadas: 2 },
-          { alumnoId: "s6", total: 2, entregadas: 2 },
-          { alumnoId: "s7", total: 2, entregadas: 0 },
-          { alumnoId: "s8", total: 2, entregadas: 2 },
-          { alumnoId: "s9", total: 2, entregadas: 2 },
-          { alumnoId: "s10", total: 2, entregadas: 2 },
-        ],
-        ciencias: [
-          { alumnoId: "s1", total: 2, entregadas: 2 },
-          { alumnoId: "s2", total: 2, entregadas: 2 },
-          { alumnoId: "s3", total: 2, entregadas: 2 },
-          { alumnoId: "s4", total: 2, entregadas: 0 },
-          { alumnoId: "s5", total: 2, entregadas: 2 },
-          { alumnoId: "s6", total: 2, entregadas: 2 },
-          { alumnoId: "s7", total: 2, entregadas: 2 },
-          { alumnoId: "s8", total: 2, entregadas: 2 },
-          { alumnoId: "s9", total: 2, entregadas: 1 },
-          { alumnoId: "s10", total: 2, entregadas: 2 },
-        ],
-        historia: [
-          { alumnoId: "s1", total: 2, entregadas: 2 },
-          { alumnoId: "s2", total: 2, entregadas: 2 },
-          { alumnoId: "s3", total: 2, entregadas: 2 },
-          { alumnoId: "s4", total: 2, entregadas: 2 },
-          { alumnoId: "s5", total: 2, entregadas: 0 },
-          { alumnoId: "s6", total: 2, entregadas: 2 },
-          { alumnoId: "s7", total: 2, entregadas: 2 },
-          { alumnoId: "s8", total: 2, entregadas: 2 },
-          { alumnoId: "s9", total: 2, entregadas: 2 },
-          { alumnoId: "s10", total: 2, entregadas: 1 },
-        ],
-        ingles: [
-          { alumnoId: "s1", total: 2, entregadas: 2 },
-          { alumnoId: "s2", total: 2, entregadas: 2 },
-          { alumnoId: "s3", total: 2, entregadas: 2 },
-          { alumnoId: "s4", total: 2, entregadas: 2 },
-          { alumnoId: "s5", total: 2, entregadas: 2 },
-          { alumnoId: "s6", total: 2, entregadas: 2 },
-          { alumnoId: "s7", total: 2, entregadas: 1 },
-          { alumnoId: "s8", total: 2, entregadas: 0 },
-          { alumnoId: "s9", total: 2, entregadas: 2 },
-          { alumnoId: "s10", total: 2, entregadas: 2 },
-        ],
-      },
-    },
-  };
 
   const [tipo, setTipo] = useState("tareas");
   const [trimestre, setTrimestre] = useState("2");
   const [materia, setMateria] = useState("matematicas");
   const [grupo, setGrupo] = useState("todos");
-
-  const GRUPOS = [
-    "todos",
-    ...Array.from(new Set(STUDENTS.map((s) => s.grade))).sort(),
-  ];
 
   const rows = (REPORT_DATA[tipo][trimestre][materia] || [])
     .map((r) => {
@@ -441,14 +190,14 @@ const Reportes = () => {
   ];
 
   return (
-    <div style={{ padding: "28px 32px", maxWidth: 860, margin: "0 auto" }}>
+    <div style={{ padding: "28px 32px", maxWidth: 900, margin: "0 auto" }}>
       {/* Filtros */}
       <div
         style={{
           display: "flex",
           flexWrap: "wrap",
           alignItems: "center",
-          gap: 16,
+          gap: 14,
           marginBottom: 28,
         }}
       >
@@ -525,7 +274,6 @@ const Reportes = () => {
           overflow: "hidden",
         }}
       >
-        {/* Header */}
         <div
           style={{
             display: "grid",
@@ -547,32 +295,30 @@ const Reportes = () => {
           <span style={{ textAlign: "center" }}>Avance</span>
         </div>
 
-        {/* Rows */}
         {rows.map((r, i) => (
           <div
             key={r.alumnoId}
             style={{
               display: "grid",
               gridTemplateColumns: "1fr 80px 100px 100px 140px",
-              padding: "11px 20px",
+              padding: "10px 20px",
               borderBottom:
                 i < rows.length - 1 ? "1px solid var(--line)" : "none",
               background: rowBg(r.pendientes, r.total),
               alignItems: "center",
             }}
           >
-            {/* Alumno */}
             <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
               <div
                 style={{
-                  width: 30,
-                  height: 30,
+                  width: 28,
+                  height: 28,
                   borderRadius: "50%",
                   background: "var(--line-strong)",
                   display: "flex",
                   alignItems: "center",
                   justifyContent: "center",
-                  fontSize: 11.5,
+                  fontSize: 10.5,
                   fontWeight: 700,
                   color: "var(--ink-3)",
                   flexShrink: 0,
@@ -586,21 +332,16 @@ const Reportes = () => {
               </div>
               <div>
                 <div
-                  style={{
-                    fontSize: 13.5,
-                    fontWeight: 500,
-                    color: "var(--ink)",
-                  }}
+                  style={{ fontSize: 13, fontWeight: 500, color: "var(--ink)" }}
                 >
                   {r.alumno.name}
                 </div>
-                <div style={{ fontSize: 11.5, color: "var(--ink-4)" }}>
+                <div style={{ fontSize: 11, color: "var(--ink-4)" }}>
                   {r.alumno.grade}
                 </div>
               </div>
             </div>
 
-            {/* Total */}
             <div
               style={{
                 textAlign: "center",
@@ -612,7 +353,6 @@ const Reportes = () => {
               {r.total}
             </div>
 
-            {/* Entregadas */}
             <div
               style={{
                 textAlign: "center",
@@ -624,7 +364,6 @@ const Reportes = () => {
               {r.entregadas}
             </div>
 
-            {/* Pendientes */}
             <div
               style={{
                 textAlign: "center",
@@ -641,12 +380,11 @@ const Reportes = () => {
               {r.pendientes}
             </div>
 
-            {/* Barra de avance */}
             <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
               <div
                 style={{
                   flex: 1,
-                  height: 7,
+                  height: 6,
                   borderRadius: 999,
                   background: "var(--line-strong)",
                   overflow: "hidden",
@@ -671,9 +409,9 @@ const Reportes = () => {
               </div>
               <span
                 style={{
-                  fontSize: 12,
+                  fontSize: 11.5,
                   fontWeight: 600,
-                  minWidth: 34,
+                  minWidth: 32,
                   textAlign: "right",
                   color:
                     r.pct === 100
@@ -697,8 +435,8 @@ const Reportes = () => {
         style={{
           display: "flex",
           gap: 24,
-          marginTop: 16,
-          padding: "12px 20px",
+          marginTop: 14,
+          padding: "11px 20px",
           background: "var(--surface)",
           border: "1px solid var(--line)",
           borderRadius: 10,
@@ -710,7 +448,7 @@ const Reportes = () => {
           <strong style={{ color: "var(--ink)" }}>{rows.length}</strong> alumnos
         </span>
         <span>
-          Promedio de entrega:{" "}
+          Promedio:{" "}
           <strong
             style={{
               color:
