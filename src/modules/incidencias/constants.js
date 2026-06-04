@@ -142,7 +142,8 @@ const MOCK_INCIDENTS = [
     id: "i2",
     alumnoId: "st3",
     titulo: "Da\u00f1o a silla del sal\u00f3n",
-    descripcion: "Ray\u00f3 la silla con un comp\u00e1s causando da\u00f1o al mobiliario.",
+    descripcion:
+      "Ray\u00f3 la silla con un comp\u00e1s causando da\u00f1o al mobiliario.",
     categoria: "dano",
     gravedad: "leve",
     fecha: "2026-04-28",
@@ -155,7 +156,8 @@ const MOCK_INCIDENTS = [
     id: "i3",
     alumnoId: "st3",
     titulo: "Incumplimiento de uniforme",
-    descripcion: "Asisti\u00f3 tres d\u00edas consecutivos sin el su\u00e9ter reglamentario.",
+    descripcion:
+      "Asisti\u00f3 tres d\u00edas consecutivos sin el su\u00e9ter reglamentario.",
     categoria: "uniforme",
     gravedad: "leve",
     fecha: "2026-05-12",
@@ -238,14 +240,16 @@ const MOCK_INCIDENTS = [
     id: "i9",
     alumnoId: "st7",
     titulo: "Tardanza reiterada",
-    descripcion: "Lleg\u00f3 tarde los primeros d\u00edas del periodo sin justificaci\u00f3n.",
+    descripcion:
+      "Lleg\u00f3 tarde los primeros d\u00edas del periodo sin justificaci\u00f3n.",
     categoria: "asistencia",
     gravedad: "leve",
     fecha: "2026-03-10",
     registradoPor: "Prof. Fernando Paulino",
     seccion: "secundaria",
     estado: "resuelta",
-    resolucion: "Habl\u00f3 con los padres. Se comprometieron a llegar temprano.",
+    resolucion:
+      "Habl\u00f3 con los padres. Se comprometieron a llegar temprano.",
   },
   {
     id: "i10",
@@ -279,7 +283,8 @@ const MOCK_INCIDENTS = [
     id: "i12",
     alumnoId: "st8",
     titulo: "Inasistencia sin justificante",
-    descripcion: "Falt\u00f3 un d\u00eda sin avisar previamente a la instituci\u00f3n.",
+    descripcion:
+      "Falt\u00f3 un d\u00eda sin avisar previamente a la instituci\u00f3n.",
     categoria: "asistencia",
     gravedad: "leve",
     fecha: "2026-03-22",
@@ -385,7 +390,7 @@ const GRAVEDAD = {
   grave: { label: "Grave", color: "#b91c1c", bg: "#fee2e2" },
 };
 
-const MONTHS = [
+const MONTHS_SHORT = [
   "ene",
   "feb",
   "mar",
@@ -406,4 +411,4 @@ window.CATEGORIES = CATEGORIES;
 window.CAT_LABEL = CAT_LABEL;
 window.SEMAFORO = SEMAFORO;
 window.GRAVEDAD = GRAVEDAD;
-window.MONTHS = MONTHS;
+window.MONTHS_SHORT = MONTHS_SHORT;
