@@ -104,6 +104,11 @@ const App = () => {
     subtitle = "Tareas y actividades por alumno, materia y trimestre";
     breadcrumbs = ["Módulos", "Reportes"];
     body = <Reportes />;
+  } else if (current === "formatos") {
+    title = "Formatos";
+    subtitle = "Documentos oficiales del colegio";
+    breadcrumbs = ["Módulos", "Formatos"];
+    body = <Formatos />;
   } else if (current === "modulos") {
     title = "Administración de módulos";
     subtitle = "Activa, desactiva y reordena los módulos del sistema";

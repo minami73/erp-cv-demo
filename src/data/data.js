@@ -813,16 +813,23 @@ window.CV_DATA = (function () {
     {
       id: "alumnos-especiales",
       label: "Alumnos Especiales",
-      icon: "clipboard",
+      icon: "user",
       active: true,
       desc: "Expedientes y seguimiento de alumnos con necesidades especiales o situaciones sensibles.",
     },
     {
       id: "reportes",
-      label: "Reportes",
+      label: "Reportes Actividades y Tareas",
       icon: "chart",
       active: true,
       desc: "Reporte de tareas y actividades por alumno, materia y trimestre.",
+    },
+    {
+      id: "formatos",
+      label: "Formatos",
+      icon: "clipboard",
+      active: true,
+      desc: "Formatos oficiales descargables: listas de asistencia, planeaciones y más.",
     },
     {
       id: "planeaciones",

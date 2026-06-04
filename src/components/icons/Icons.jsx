@@ -34,6 +34,13 @@ const Icon = ({ name, size = 18, stroke = 1.6, style }) => {
           <path d="M9 13h6M9 17h4" />
         </svg>
       );
+    case "user":
+      return (
+        <svg {...common}>
+          <circle cx="12" cy="8" r="4" />
+          <path d="M4 20c1-4 4.5-6 8-6s7 2 8 6" />
+        </svg>
+      );
     case "users":
       return (
         <svg {...common}>
