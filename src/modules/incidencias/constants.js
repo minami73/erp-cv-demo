@@ -390,25 +390,9 @@ const GRAVEDAD = {
   grave: { label: "Grave", color: "#b91c1c", bg: "#fee2e2" },
 };
 
-const MONTHS_SHORT = [
-  "ene",
-  "feb",
-  "mar",
-  "abr",
-  "may",
-  "jun",
-  "jul",
-  "ago",
-  "sep",
-  "oct",
-  "nov",
-  "dic",
-];
-
 window.MOCK_STUDENTS = MOCK_STUDENTS;
 window.MOCK_INCIDENTS = MOCK_INCIDENTS;
 window.CATEGORIES = CATEGORIES;
 window.CAT_LABEL = CAT_LABEL;
 window.SEMAFORO = SEMAFORO;
 window.GRAVEDAD = GRAVEDAD;
-window.MONTHS_SHORT = MONTHS_SHORT;

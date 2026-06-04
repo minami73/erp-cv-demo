@@ -10,9 +10,8 @@ function calcSemaforo(alumnoId, incidents) {
 }
 
 function fmtFecha(str) {
-  const MONTHS = window.MONTHS_SHORT;
   const [y, m, d] = str.split("-");
-  return `${+d} ${MONTHS[+m - 1]} ${y}`;
+  return `${+d} ${window.MONTHS[+m - 1].slice(0, 3)} ${y}`;
 }
 
 window.calcSemaforo = calcSemaforo;
