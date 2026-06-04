@@ -818,6 +818,13 @@ window.CV_DATA = (function () {
       desc: "Expedientes y seguimiento de alumnos con necesidades especiales o situaciones sensibles.",
     },
     {
+      id: "reportes",
+      label: "Reportes",
+      icon: "chart",
+      active: true,
+      desc: "Reporte de tareas y actividades por alumno, materia y trimestre.",
+    },
+    {
       id: "planeaciones",
       label: "Planeaciones",
       icon: "doc",

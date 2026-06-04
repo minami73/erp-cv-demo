@@ -300,6 +300,13 @@ const Icon = ({ name, size = 18, stroke = 1.6, style }) => {
           <rect x="16" y="17" width="6" height="5" rx="1" />
         </svg>
       );
+    case "chart":
+      return (
+        <svg {...common}>
+          <path d="M3 3v18h18" />
+          <path d="M7 16l4-4 4 4 4-6" />
+        </svg>
+      );
     case "menu":
       return (
         <svg {...common}>

@@ -99,6 +99,11 @@ const App = () => {
     subtitle = "Expedientes y seguimiento · Acceso restringido";
     breadcrumbs = ["Módulos", "Alumnos Especiales"];
     body = <AlumnosEspeciales />;
+  } else if (current === "reportes") {
+    title = "Reportes";
+    subtitle = "Tareas y actividades por alumno, materia y trimestre";
+    breadcrumbs = ["Módulos", "Reportes"];
+    body = <Reportes />;
   } else if (current === "modulos") {
     title = "Administración de módulos";
     subtitle = "Activa, desactiva y reordena los módulos del sistema";
