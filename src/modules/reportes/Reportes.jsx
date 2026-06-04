@@ -158,6 +158,7 @@ const Reportes = () => {
   const [trimestre, setTrimestre] = useState("2");
   const [materia, setMateria] = useState("matematicas");
   const [grupo, setGrupo] = useState("todos");
+  const [busqueda, setBusqueda] = useState("");
   const [sortCol, setSortCol] = useState(null);
   const [sortDir, setSortDir] = useState("asc");
 
@@ -177,6 +178,11 @@ const Reportes = () => {
       return { ...r, alumno, pendientes, pct };
     })
     .filter((r) => grupo === "todos" || r.alumno.grade === grupo)
+    .filter(
+      (r) =>
+        !busqueda ||
+        r.alumno.name.toLowerCase().includes(busqueda.toLowerCase()),
+    )
     .sort((a, b) => {
       if (!sortCol) return 0;
       const va = sortCol === "alumno" ? a.alumno.name : a[sortCol];
@@ -279,6 +285,60 @@ const Reportes = () => {
               </option>
             ))}
           </Select>
+        </div>
+
+        <div style={{ position: "relative", marginLeft: "auto" }}>
+          <span
+            style={{
+              position: "absolute",
+              left: 10,
+              top: "50%",
+              transform: "translateY(-50%)",
+              fontSize: 13,
+              color: "var(--ink-4)",
+              pointerEvents: "none",
+            }}
+          >
+            🔍
+          </span>
+          <input
+            type="text"
+            placeholder="Buscar alumno…"
+            value={busqueda}
+            onChange={(e) => setBusqueda(e.target.value)}
+            style={{
+              height: 34,
+              paddingLeft: 30,
+              paddingRight: busqueda ? 28 : 12,
+              fontSize: 13,
+              border: "1px solid var(--line)",
+              borderRadius: 8,
+              background: "var(--surface)",
+              color: "var(--ink)",
+              outline: "none",
+              width: 200,
+            }}
+          />
+          {busqueda && (
+            <button
+              onClick={() => setBusqueda("")}
+              style={{
+                position: "absolute",
+                right: 8,
+                top: "50%",
+                transform: "translateY(-50%)",
+                background: "none",
+                border: "none",
+                cursor: "pointer",
+                fontSize: 13,
+                color: "var(--ink-4)",
+                padding: 0,
+                lineHeight: 1,
+              }}
+            >
+              ✕
+            </button>
+          )}
         </div>
       </div>
 
