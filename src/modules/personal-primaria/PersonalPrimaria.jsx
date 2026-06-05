@@ -350,6 +350,7 @@ const TABS = [
   { id: "avance", label: "Avance de libro" },
   { id: "entrevistas", label: "Entrevistas" },
   { id: "incidenciasaula", label: "Incidencias" },
+  { id: "actasadmin", label: "Actas Admin." },
 ];
 
 // Semanas por bimestre (label, límite de entrega viernes)
@@ -1150,6 +1151,119 @@ const INCIDENCIAS_AULA_DATA = {
         "Durante presentación de proyecto musical, grupo de alumnas hizo comentarios negativos en voz baja sobre la actuación de una compañera, quien se dio cuenta y lloró.",
       estado: "activa",
       resolucion: null,
+    },
+  ],
+};
+
+const TIPO_ACTA = {
+  tardanza: { label: "Llegada tarde", color: "#D97706", bg: "#FFFBEB" },
+  falta: { label: "Falta injustificada", color: "#DC2626", bg: "#FEF2F2" },
+  planeacion: {
+    label: "No entrega de planeación",
+    color: "#7C3AED",
+    bg: "#F5F3FF",
+  },
+  respeto: { label: "Falta de respeto", color: "#B91C1C", bg: "#FFF1F2" },
+  desempeno: { label: "Desempeño inadecuado", color: "#0369A1", bg: "#F0F9FF" },
+  otro: { label: "Otro", color: "#6B7280", bg: "#F9FAFB" },
+};
+
+const ESTADO_ACTA = {
+  pendiente_firma: {
+    label: "Pendiente de firma",
+    color: "#CA8A04",
+    bg: "#FEF9C3",
+  },
+  firmada: { label: "Firmada", color: "#16A34A", bg: "#DCFCE7" },
+  impugnada: { label: "Impugnada", color: "#DC2626", bg: "#FEE2E2" },
+};
+
+const ACTAS_DATA = {
+  d03: [
+    {
+      id: "aa01",
+      folio: "AA-2026-003",
+      fecha: "2026-02-06",
+      tipo: "tardanza",
+      descripcion:
+        "La docente se presentó al aula a las 07:22 hrs, 22 minutos después del inicio del turno escolar. Los alumnos permanecieron sin supervisión en el pasillo.",
+      consecuencia:
+        "Amonestación verbal. Se le recuerda que tres tardanzas consecutivas implican amonestación escrita.",
+      estado: "firmada",
+    },
+    {
+      id: "aa02",
+      folio: "AA-2026-008",
+      fecha: "2026-04-14",
+      tipo: "planeacion",
+      descripcion:
+        "La docente no entregó la planeación correspondiente al Bimestre 3, semanas 2 y 3, en las fechas establecidas por la coordinación académica.",
+      consecuencia:
+        "Amonestación escrita. Deberá entregar planeaciones con 48 hrs de anticipación durante el resto del ciclo.",
+      estado: "pendiente_firma",
+    },
+  ],
+  d05: [
+    {
+      id: "aa03",
+      folio: "AA-2026-005",
+      fecha: "2026-03-03",
+      tipo: "desempeno",
+      descripcion:
+        "Durante visita de observación al aula, se detectó que el docente no siguió la planeación entregada y dedicó la clase a actividades no relacionadas con el programa (videos de YouTube sin contexto educativo).",
+      consecuencia:
+        "Amonestación escrita. Se cita a reunión con el Director de Primaria para revisión de práctica docente.",
+      estado: "firmada",
+    },
+  ],
+  d08: [
+    {
+      id: "aa04",
+      folio: "AA-2026-007",
+      fecha: "2026-03-20",
+      tipo: "respeto",
+      descripcion:
+        "El docente levantó la voz de forma agresiva a una madre de familia en el pasillo, frente a otros padres, durante la salida escolar. La madre presentó queja formal ante dirección.",
+      consecuencia:
+        "Amonestación escrita. Se requiere disculpa formal con la madre y capacitación en atención a padres de familia.",
+      estado: "impugnada",
+    },
+  ],
+  d13: [
+    {
+      id: "aa05",
+      folio: "AA-2026-002",
+      fecha: "2026-01-28",
+      tipo: "falta",
+      descripcion:
+        "La docente no se presentó a laborar el día 27 de enero sin previo aviso ni justificante médico. Los grupos 1°A y 1°B quedaron sin clase de inglés.",
+      consecuencia:
+        "Descuento de un día de nómina conforme al reglamento interno. Se requiere justificante médico para abonos futuros.",
+      estado: "firmada",
+    },
+  ],
+  d18: [
+    {
+      id: "aa06",
+      folio: "AA-2026-006",
+      fecha: "2026-03-11",
+      tipo: "tardanza",
+      descripcion:
+        "El docente se presentó 35 minutos tarde al inicio de la jornada escolar sin notificación previa. Es la segunda tardanza registrada en el ciclo.",
+      consecuencia:
+        "Amonestación escrita (segunda instancia). Una tardanza adicional derivará en descuento de nómina.",
+      estado: "pendiente_firma",
+    },
+    {
+      id: "aa07",
+      folio: "AA-2026-011",
+      fecha: "2026-05-05",
+      tipo: "planeacion",
+      descripcion:
+        "No presentó planeación de Educación Física para el Bimestre 4. Al solicitársela, argumentó que la actividad física no requiere planeación escrita.",
+      consecuencia:
+        "Amonestación verbal. Se le informa que todos los docentes, sin excepción, deben entregar planeación bimestral.",
+      estado: "pendiente_firma",
     },
   ],
 };
@@ -2083,6 +2197,204 @@ const PersonalPrimaria = () => {
       );
     };
 
+    const TabActasAdmin = () => {
+      const todas = ACTAS_DATA[seleccionado.id] || [];
+      const [filtro, setFiltro] = React.useState("todas");
+
+      const actas = todas.filter((a) =>
+        filtro === "todas" ? true : a.estado === filtro,
+      );
+
+      const cnt = (est) => todas.filter((a) => a.estado === est).length;
+
+      if (todas.length === 0)
+        return (
+          <div
+            style={{
+              textAlign: "center",
+              padding: "48px 0",
+              color: "var(--ink-4)",
+              fontSize: 14,
+            }}
+          >
+            Sin actas administrativas registradas
+          </div>
+        );
+
+      return (
+        <div>
+          {/* Filtro */}
+          <div
+            style={{
+              display: "flex",
+              gap: 6,
+              marginBottom: 16,
+              flexWrap: "wrap",
+            }}
+          >
+            {[
+              { val: "todas", label: `Todas (${todas.length})` },
+              {
+                val: "pendiente_firma",
+                label: `Pendiente firma (${cnt("pendiente_firma")})`,
+              },
+              { val: "firmada", label: `Firmadas (${cnt("firmada")})` },
+              { val: "impugnada", label: `Impugnadas (${cnt("impugnada")})` },
+            ].map((op) => (
+              <button
+                key={op.val}
+                onClick={() => setFiltro(op.val)}
+                style={{
+                  padding: "5px 12px",
+                  borderRadius: 20,
+                  border: "1px solid",
+                  fontSize: 12,
+                  fontWeight: filtro === op.val ? 600 : 400,
+                  cursor: "pointer",
+                  borderColor:
+                    filtro === op.val ? "var(--brand, #2563EB)" : "var(--line)",
+                  background:
+                    filtro === op.val ? "var(--brand, #2563EB)" : "none",
+                  color: filtro === op.val ? "#fff" : "var(--ink-3)",
+                }}
+              >
+                {op.label}
+              </button>
+            ))}
+          </div>
+
+          {/* Cards */}
+          {actas.length === 0 ? (
+            <div
+              style={{
+                textAlign: "center",
+                padding: "32px 0",
+                color: "var(--ink-4)",
+                fontSize: 13,
+              }}
+            >
+              Sin resultados
+            </div>
+          ) : (
+            <div style={{ display: "flex", flexDirection: "column", gap: 14 }}>
+              {actas.map((a) => {
+                const tipo = TIPO_ACTA[a.tipo] || TIPO_ACTA.otro;
+                const estado =
+                  ESTADO_ACTA[a.estado] || ESTADO_ACTA.pendiente_firma;
+                return (
+                  <div
+                    key={a.id}
+                    style={{
+                      background: "var(--surface)",
+                      border: "1px solid var(--line)",
+                      borderRadius: 10,
+                      padding: "14px 18px",
+                    }}
+                  >
+                    {/* Fila superior */}
+                    <div
+                      style={{
+                        display: "flex",
+                        alignItems: "center",
+                        flexWrap: "wrap",
+                        gap: 8,
+                        marginBottom: 10,
+                      }}
+                    >
+                      <span
+                        style={{
+                          fontFamily: "monospace",
+                          fontSize: 12,
+                          color: "var(--ink-4)",
+                          background: "var(--surface-2)",
+                          border: "1px solid var(--line)",
+                          borderRadius: 4,
+                          padding: "1px 6px",
+                        }}
+                      >
+                        {a.folio}
+                      </span>
+                      <span style={{ fontSize: 12, color: "var(--ink-4)" }}>
+                        {a.fecha}
+                      </span>
+                      <span
+                        style={{
+                          borderRadius: 20,
+                          padding: "2px 10px",
+                          fontSize: 12,
+                          fontWeight: 500,
+                          background: tipo.bg,
+                          color: tipo.color,
+                        }}
+                      >
+                        {tipo.label}
+                      </span>
+                      <span
+                        style={{
+                          marginLeft: "auto",
+                          borderRadius: 20,
+                          padding: "2px 10px",
+                          fontSize: 12,
+                          fontWeight: 600,
+                          background: estado.bg,
+                          color: estado.color,
+                        }}
+                      >
+                        {estado.label}
+                      </span>
+                    </div>
+
+                    {/* Descripción */}
+                    <p
+                      style={{
+                        margin: 0,
+                        fontSize: 13,
+                        color: "var(--ink-2)",
+                        lineHeight: 1.5,
+                      }}
+                    >
+                      {a.descripcion}
+                    </p>
+
+                    {/* Consecuencia */}
+                    <div
+                      style={{
+                        marginTop: 10,
+                        paddingTop: 10,
+                        borderTop: "1px solid var(--line)",
+                      }}
+                    >
+                      <span
+                        style={{
+                          fontSize: 11,
+                          fontWeight: 600,
+                          color: "var(--ink-4)",
+                          textTransform: "uppercase",
+                          letterSpacing: ".05em",
+                        }}
+                      >
+                        Consecuencia
+                      </span>
+                      <p
+                        style={{
+                          margin: "3px 0 0",
+                          fontSize: 13,
+                          color: "var(--ink-3)",
+                          lineHeight: 1.5,
+                        }}
+                      >
+                        {a.consecuencia}
+                      </p>
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+          )}
+        </div>
+      );
+    };
+
     const TabPuntualidad = () => {
       const retardos = RETARDOS_DATA[seleccionado.id] || [];
       const total = retardos.length;
@@ -2865,6 +3177,7 @@ const PersonalPrimaria = () => {
         {tabActivo === "avance" && <TabAvance />}
         {tabActivo === "entrevistas" && <TabEntrevistas />}
         {tabActivo === "incidenciasaula" && <TabIncidenciasAula />}
+        {tabActivo === "actasadmin" && <TabActasAdmin />}
       </div>
     );
   }
