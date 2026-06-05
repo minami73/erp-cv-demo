@@ -109,6 +109,11 @@ const App = () => {
     subtitle = "Documentos oficiales del colegio";
     breadcrumbs = ["Módulos", "Formatos"];
     body = <Formatos />;
+  } else if (current === "personal-primaria") {
+    title = "Personal Primaria";
+    subtitle = "Docentes de la sección primaria";
+    breadcrumbs = ["Personal", "Primaria"];
+    body = <PersonalPrimaria />;
   } else if (current.startsWith("personal-")) {
     const labels = {
       "personal-maternal": "Personal Maternal",

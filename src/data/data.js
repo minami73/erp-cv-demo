@@ -783,6 +783,20 @@ window.CV_DATA = (function () {
       desc: "Eventos institucionales por sección, con exportación y filtros.",
     },
     {
+      id: "personal",
+      label: "Personal",
+      icon: "users",
+      active: true,
+      desc: "Directorio del personal, contratos, incidencias y desempeño.",
+      children: [
+        { id: "personal-maternal", label: "Personal Maternal" },
+        { id: "personal-preescolar", label: "Personal Preescolar" },
+        { id: "personal-primaria", label: "Personal Primaria" },
+        { id: "personal-secundaria", label: "Personal Secundaria" },
+        { id: "personal-bachillerato", label: "Personal Bachillerato" },
+      ],
+    },
+    {
       id: "horarios",
       label: "Horarios",
       icon: "clock",
@@ -837,20 +851,6 @@ window.CV_DATA = (function () {
       icon: "doc",
       active: true,
       desc: "Planeaciones didácticas, revisión y aprobación por jefe de academia.",
-    },
-    {
-      id: "personal",
-      label: "Personal",
-      icon: "users",
-      active: true,
-      desc: "Directorio del personal, contratos, incidencias y desempeño.",
-      children: [
-        { id: "personal-maternal", label: "Personal Maternal" },
-        { id: "personal-preescolar", label: "Personal Preescolar" },
-        { id: "personal-primaria", label: "Personal Primaria" },
-        { id: "personal-secundaria", label: "Personal Secundaria" },
-        { id: "personal-bachillerato", label: "Personal Bachillerato" },
-      ],
     },
     {
       id: "estacionamiento",
