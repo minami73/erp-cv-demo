@@ -713,6 +713,9 @@ const PersonalPrimaria = () => {
 
   if (seleccionado) {
     const extra = PERFIL_EXTRA[seleccionado.id] || {};
+    const idx = docentes.findIndex((d) => d.id === seleccionado.id);
+    const prevDocente = idx > 0 ? docentes[idx - 1] : null;
+    const nextDocente = idx < docentes.length - 1 ? docentes[idx + 1] : null;
 
     const TabPerfil = () => (
       <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 16 }}>
@@ -1505,6 +1508,66 @@ const PersonalPrimaria = () => {
               flexShrink: 0,
             }}
           />
+          {/* Navegación prev/next */}
+          <div
+            style={{
+              display: "flex",
+              alignItems: "center",
+              gap: 4,
+              marginLeft: 8,
+            }}
+          >
+            <button
+              onClick={() => {
+                setSeleccionado(prevDocente);
+                setTabActivo("perfil");
+              }}
+              disabled={!prevDocente}
+              title={prevDocente ? prevDocente.nombre : ""}
+              style={{
+                background: "none",
+                border: "1px solid var(--line)",
+                borderRadius: 6,
+                cursor: prevDocente ? "pointer" : "not-allowed",
+                opacity: prevDocente ? 1 : 0.35,
+                padding: "4px 6px",
+                display: "flex",
+                alignItems: "center",
+              }}
+            >
+              <Icon name="chevron-left" size={15} stroke={2} />
+            </button>
+            <span
+              style={{
+                fontSize: 12,
+                color: "var(--ink-4)",
+                minWidth: 36,
+                textAlign: "center",
+              }}
+            >
+              {idx + 1} / {docentes.length}
+            </span>
+            <button
+              onClick={() => {
+                setSeleccionado(nextDocente);
+                setTabActivo("perfil");
+              }}
+              disabled={!nextDocente}
+              title={nextDocente ? nextDocente.nombre : ""}
+              style={{
+                background: "none",
+                border: "1px solid var(--line)",
+                borderRadius: 6,
+                cursor: nextDocente ? "pointer" : "not-allowed",
+                opacity: nextDocente ? 1 : 0.35,
+                padding: "4px 6px",
+                display: "flex",
+                alignItems: "center",
+              }}
+            >
+              <Icon name="chevron-right" size={15} stroke={2} />
+            </button>
+          </div>
         </div>
 
         {/* Tab bar */}
