@@ -3138,7 +3138,7 @@ const PersonalPrimaria = () => {
             marginBottom: 20,
             gap: 0,
             overflowX: "auto",
-            scrollbarWidth: "none",
+            overflowY: "hidden",
           }}
         >
           {TABS.map((t) => (
@@ -3160,6 +3160,7 @@ const PersonalPrimaria = () => {
                   tabActivo === t.id ? "var(--brand, #2563EB)" : "var(--ink-3)",
                 marginBottom: -1,
                 whiteSpace: "nowrap",
+                flexShrink: 0,
                 transition: "color .15s",
               }}
             >

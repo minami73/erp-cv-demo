@@ -114,6 +114,11 @@ const App = () => {
     subtitle = "Docentes de la sección primaria";
     breadcrumbs = ["Personal", "Primaria"];
     body = <PersonalPrimaria />;
+  } else if (current === "personal-bachillerato") {
+    title = "Personal Bachillerato";
+    subtitle = "Docentes de la sección bachillerato";
+    breadcrumbs = ["Personal", "Bachillerato"];
+    body = <PersonalBachillerato />;
   } else if (current.startsWith("personal-")) {
     const labels = {
       "personal-maternal": "Personal Maternal",
