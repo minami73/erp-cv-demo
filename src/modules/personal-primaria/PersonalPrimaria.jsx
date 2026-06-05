@@ -351,6 +351,305 @@ const TABS = [
   { id: "entrevistas", label: "Entrevistas" },
 ];
 
+// Semanas por bimestre (label, límite de entrega viernes)
+const SEMANAS_BIM = {
+  3: [
+    { sem: "Sem 1", label: "19–23 ene", limite: "2026-01-17" },
+    { sem: "Sem 2", label: "26–30 ene", limite: "2026-01-24" },
+    { sem: "Sem 3", label: "2–6 feb", limite: "2026-01-31" },
+    { sem: "Sem 4", label: "9–13 feb", limite: "2026-02-07" },
+    { sem: "Sem 5", label: "16–20 feb", limite: "2026-02-14" },
+    { sem: "Sem 6", label: "23–27 feb", limite: "2026-02-21" },
+  ],
+  4: [
+    { sem: "Sem 1", label: "2–6 mar", limite: "2026-02-28" },
+    { sem: "Sem 2", label: "9–13 mar", limite: "2026-03-07" },
+    { sem: "Sem 3", label: "16–20 mar", limite: "2026-03-14" },
+    { sem: "Sem 4", label: "23–27 mar", limite: "2026-03-21" },
+    { sem: "Sem 5", label: "1–3 abr", limite: "2026-03-28" },
+    { sem: "Sem 6", label: "13–17 abr", limite: "2026-04-11" },
+    { sem: "Sem 7", label: "20–24 abr", limite: "2026-04-18" },
+    { sem: "Sem 8", label: "27 abr–1 may", limite: "2026-04-25" },
+  ],
+  5: [
+    { sem: "Sem 1", label: "4–8 may", limite: "2026-05-02" },
+    { sem: "Sem 2", label: "11–15 may", limite: "2026-05-09" },
+    { sem: "Sem 3", label: "18–22 may", limite: "2026-05-16" },
+    { sem: "Sem 4", label: "25–29 may", limite: "2026-05-23" },
+    { sem: "Sem 5", label: "1–5 jun", limite: "2026-05-30" },
+  ],
+};
+
+// entrega: fecha real | "tarde:YYYY-MM-DD" | null (no entregó)
+// Si no está en el objeto → entregó a tiempo (todos los demás = record limpio)
+const PLANEACIONES_OVERRIDE = {
+  d03: {
+    "4-Sem 3": "tarde:2026-03-17",
+    "4-Sem 7": null,
+    "5-Sem 2": "tarde:2026-05-12",
+  },
+  d05: { "3-Sem 4": "tarde:2026-02-11" },
+  d08: {
+    "4-Sem 5": null,
+    "4-Sem 6": null,
+    "5-Sem 1": "tarde:2026-05-05",
+    "5-Sem 2": null,
+  },
+  d13: {
+    "4-Sem 3": null,
+    "4-Sem 4": null,
+    "4-Sem 5": null,
+    "4-Sem 6": null,
+    "4-Sem 7": null,
+  },
+  d16: { "3-Sem 2": "tarde:2026-01-28", "5-Sem 3": null },
+  d19: { "5-Sem 4": null },
+};
+
+const buildPlaneaciones = (docenteId, bim) => {
+  const semanas = SEMANAS_BIM[bim] || [];
+  const overrides = PLANEACIONES_OVERRIDE[docenteId] || {};
+  return semanas.map((s) => {
+    const key = `${bim}-${s.sem}`;
+    const ov = overrides[key];
+    if (ov === null) return { ...s, entrega: null, estado: "no_entregada" };
+    if (ov?.startsWith("tarde:"))
+      return { ...s, entrega: ov.slice(6), estado: "tarde" };
+    return { ...s, entrega: s.limite, estado: "a_tiempo" };
+  });
+};
+
+const ESTADO_PLAN = {
+  a_tiempo: { label: "A tiempo", color: "#15803D", bg: "#F0FDF4" },
+  tarde: { label: "Con retraso", color: "#B45309", bg: "#FFFBEB" },
+  no_entregada: { label: "No entregó", color: "#B91C1C", bg: "#FEF2F2" },
+};
+
+const RETARDOS_DATA = {
+  d02: [
+    {
+      fecha: "2026-02-03",
+      llegada: "07:18",
+      minutos: 18,
+      obs: "Tráfico en la entrada",
+    },
+    {
+      fecha: "2026-03-10",
+      llegada: "07:12",
+      minutos: 12,
+      obs: "Sin justificación",
+    },
+  ],
+  d03: [
+    {
+      fecha: "2026-01-20",
+      llegada: "07:22",
+      minutos: 22,
+      obs: "Problemas con transporte",
+    },
+    {
+      fecha: "2026-02-17",
+      llegada: "07:09",
+      minutos: 9,
+      obs: "Sin justificación",
+    },
+    {
+      fecha: "2026-03-31",
+      llegada: "07:35",
+      minutos: 35,
+      obs: "Accidente vial (comprobó)",
+    },
+    {
+      fecha: "2026-04-28",
+      llegada: "07:15",
+      minutos: 15,
+      obs: "Sin justificación",
+    },
+  ],
+  d06: [
+    {
+      fecha: "2026-03-05",
+      llegada: "07:08",
+      minutos: 8,
+      obs: "Sin justificación",
+    },
+  ],
+  d08: [
+    {
+      fecha: "2026-01-27",
+      llegada: "07:40",
+      minutos: 40,
+      obs: "Cita médica (llegó tarde del IMSS)",
+    },
+    {
+      fecha: "2026-02-24",
+      llegada: "07:20",
+      minutos: 20,
+      obs: "Sin justificación",
+    },
+    {
+      fecha: "2026-03-17",
+      llegada: "07:15",
+      minutos: 15,
+      obs: "Sin justificación",
+    },
+    { fecha: "2026-04-21", llegada: "07:28", minutos: 28, obs: "Tráfico" },
+    {
+      fecha: "2026-05-12",
+      llegada: "07:18",
+      minutos: 18,
+      obs: "Sin justificación",
+    },
+  ],
+  d10: [
+    {
+      fecha: "2026-04-08",
+      llegada: "07:11",
+      minutos: 11,
+      obs: "Sin justificación",
+    },
+  ],
+  d13: [
+    {
+      fecha: "2026-02-10",
+      llegada: "07:14",
+      minutos: 14,
+      obs: "Sin justificación",
+    },
+    {
+      fecha: "2026-05-19",
+      llegada: "07:10",
+      minutos: 10,
+      obs: "Sin justificación",
+    },
+  ],
+  d18: [
+    {
+      fecha: "2026-01-13",
+      llegada: "07:07",
+      minutos: 7,
+      obs: "Sin justificación",
+    },
+    {
+      fecha: "2026-03-24",
+      llegada: "07:25",
+      minutos: 25,
+      obs: "Desvío por obras en calle principal",
+    },
+    {
+      fecha: "2026-05-05",
+      llegada: "07:16",
+      minutos: 16,
+      obs: "Sin justificación",
+    },
+  ],
+};
+
+const TIPO_FALTA = {
+  enfermedad: { label: "Enfermedad", color: "#B45309", bg: "#FFFBEB" },
+  justificada: { label: "Justificada", color: "#1D4ED8", bg: "#EFF6FF" },
+  injustificada: { label: "Injustificada", color: "#B91C1C", bg: "#FEF2F2" },
+};
+
+const ASISTENCIA_DATA = {
+  d01: [
+    {
+      fecha: "2026-02-10",
+      tipo: "enfermedad",
+      motivo: "Gripa con temperatura",
+    },
+    {
+      fecha: "2026-03-18",
+      tipo: "justificada",
+      motivo: "Cita médica IMSS (carta presentada)",
+    },
+  ],
+  d03: [
+    { fecha: "2026-01-22", tipo: "enfermedad", motivo: "Gastroenteritis" },
+    { fecha: "2026-02-05", tipo: "enfermedad", motivo: "Gripa" },
+    { fecha: "2026-04-14", tipo: "injustificada", motivo: "Sin aviso" },
+  ],
+  d05: [
+    {
+      fecha: "2026-03-03",
+      tipo: "justificada",
+      motivo: "Fallecimiento familiar (3 días reglamentarios)",
+    },
+    {
+      fecha: "2026-03-04",
+      tipo: "justificada",
+      motivo: "Fallecimiento familiar (3 días reglamentarios)",
+    },
+    {
+      fecha: "2026-03-05",
+      tipo: "justificada",
+      motivo: "Fallecimiento familiar (3 días reglamentarios)",
+    },
+  ],
+  d08: [
+    {
+      fecha: "2026-02-19",
+      tipo: "injustificada",
+      motivo: "No se presentó, no notificó",
+    },
+    {
+      fecha: "2026-04-07",
+      tipo: "enfermedad",
+      motivo: "Consulta por dolor lumbar",
+    },
+    {
+      fecha: "2026-04-08",
+      tipo: "enfermedad",
+      motivo: "Reposo médico (continúa)",
+    },
+    {
+      fecha: "2026-05-02",
+      tipo: "injustificada",
+      motivo: "Sin justificación entregada",
+    },
+  ],
+  d11: [
+    { fecha: "2026-01-15", tipo: "justificada", motivo: "Comisión sindical" },
+  ],
+  d13: [
+    {
+      fecha: "2026-03-25",
+      tipo: "enfermedad",
+      motivo: "COVID-19 (prueba positiva)",
+    },
+    {
+      fecha: "2026-03-26",
+      tipo: "enfermedad",
+      motivo: "COVID-19 (aislamiento)",
+    },
+    {
+      fecha: "2026-03-27",
+      tipo: "enfermedad",
+      motivo: "COVID-19 (aislamiento)",
+    },
+    {
+      fecha: "2026-03-28",
+      tipo: "enfermedad",
+      motivo: "COVID-19 (aislamiento)",
+    },
+    {
+      fecha: "2026-03-29",
+      tipo: "enfermedad",
+      motivo: "COVID-19 (aislamiento)",
+    },
+  ],
+  d16: [
+    {
+      fecha: "2026-02-27",
+      tipo: "justificada",
+      motivo: "Congreso de tecnología educativa",
+    },
+  ],
+  d19: [
+    { fecha: "2026-04-22", tipo: "injustificada", motivo: "Sin aviso previo" },
+  ],
+};
+
 const rolColor = {
   Titular: { color: "#1D4ED8", bg: "#EFF6FF" },
   "Hora-clase": { color: "#6D28D9", bg: "#F5F3FF" },
@@ -527,6 +826,588 @@ const PersonalPrimaria = () => {
       </div>
     );
 
+    const TabPuntualidad = () => {
+      const retardos = RETARDOS_DATA[seleccionado.id] || [];
+      const total = retardos.length;
+      const promedio = total
+        ? Math.round(retardos.reduce((s, r) => s + r.minutos, 0) / total)
+        : 0;
+      const peor = total ? Math.max(...retardos.map((r) => r.minutos)) : 0;
+      const fmtF = (iso) => {
+        const [y, m, d] = iso.split("-");
+        const ms = [
+          "ene",
+          "feb",
+          "mar",
+          "abr",
+          "may",
+          "jun",
+          "jul",
+          "ago",
+          "sep",
+          "oct",
+          "nov",
+          "dic",
+        ];
+        return `${Number(d)} ${ms[Number(m) - 1]} ${y}`;
+      };
+      const semColor = (min) =>
+        min >= 30 ? "#B91C1C" : min >= 15 ? "#B45309" : "#64748B";
+      return (
+        <div>
+          <div
+            style={{
+              display: "grid",
+              gridTemplateColumns: "repeat(3,1fr)",
+              gap: 12,
+              marginBottom: 20,
+            }}
+          >
+            {[
+              {
+                label: "Total retardos",
+                valor: total,
+                color:
+                  total === 0 ? "#15803D" : total <= 2 ? "#B45309" : "#B91C1C",
+              },
+              {
+                label: "Promedio",
+                valor: total ? `${promedio} min` : "—",
+                color: "var(--ink)",
+              },
+              {
+                label: "Mayor retardo",
+                valor: total ? `${peor} min` : "—",
+                color:
+                  peor >= 30
+                    ? "#B91C1C"
+                    : peor >= 15
+                      ? "#B45309"
+                      : "var(--ink)",
+              },
+            ].map((c) => (
+              <div
+                key={c.label}
+                style={{
+                  background: "var(--surface)",
+                  border: "1px solid var(--line)",
+                  borderRadius: 10,
+                  padding: "16px 20px",
+                }}
+              >
+                <div style={{ fontSize: 26, fontWeight: 700, color: c.color }}>
+                  {c.valor}
+                </div>
+                <div
+                  style={{ fontSize: 12, color: "var(--ink-3)", marginTop: 4 }}
+                >
+                  {c.label}
+                </div>
+              </div>
+            ))}
+          </div>
+          <div
+            style={{
+              background: "var(--surface)",
+              border: "1px solid var(--line)",
+              borderRadius: 10,
+              overflow: "hidden",
+            }}
+          >
+            <div
+              style={{
+                display: "grid",
+                gridTemplateColumns: "150px 100px 100px 1fr",
+                padding: "8px 20px",
+                background: "var(--bg-sunk,#F8F9FB)",
+                borderBottom: "1px solid var(--line)",
+                fontSize: 11.5,
+                fontWeight: 600,
+                color: "var(--ink-4)",
+                letterSpacing: ".06em",
+                textTransform: "uppercase",
+              }}
+            >
+              <span>Fecha</span>
+              <span>Llegada</span>
+              <span>Minutos</span>
+              <span>Observación</span>
+            </div>
+            {total === 0 ? (
+              <div
+                style={{
+                  padding: "36px",
+                  textAlign: "center",
+                  fontSize: 13,
+                  color: "var(--ink-4)",
+                }}
+              >
+                Sin retardos registrados este ciclo ✓
+              </div>
+            ) : (
+              retardos.map((r, i) => (
+                <div
+                  key={i}
+                  style={{
+                    display: "grid",
+                    gridTemplateColumns: "150px 100px 100px 1fr",
+                    padding: "10px 20px",
+                    borderBottom:
+                      i < retardos.length - 1
+                        ? "1px solid var(--line)"
+                        : "none",
+                    alignItems: "center",
+                  }}
+                >
+                  <span style={{ fontSize: 13, color: "var(--ink-3)" }}>
+                    {fmtF(r.fecha)}
+                  </span>
+                  <span
+                    style={{
+                      fontSize: 13,
+                      fontWeight: 600,
+                      color: "var(--ink)",
+                    }}
+                  >
+                    {r.llegada}
+                  </span>
+                  <span
+                    style={{
+                      fontSize: 13,
+                      fontWeight: 700,
+                      color: semColor(r.minutos),
+                    }}
+                  >
+                    +{r.minutos} min
+                  </span>
+                  <span style={{ fontSize: 12.5, color: "var(--ink-3)" }}>
+                    {r.obs}
+                  </span>
+                </div>
+              ))
+            )}
+          </div>
+          {total > 0 && (
+            <p style={{ fontSize: 12, color: "var(--ink-4)", marginTop: 10 }}>
+              Entrada oficial: 07:00 h
+            </p>
+          )}
+        </div>
+      );
+    };
+
+    const TabPlaneaciones = () => {
+      const [bim, setBim] = React.useState("5");
+      const rows = buildPlaneaciones(seleccionado.id, bim);
+      const aTime = rows.filter((r) => r.estado === "a_tiempo").length;
+      const tarde = rows.filter((r) => r.estado === "tarde").length;
+      const noEnt = rows.filter((r) => r.estado === "no_entregada").length;
+      const pct = rows.length ? Math.round((aTime / rows.length) * 100) : 100;
+      const fmtF = (iso) => {
+        if (!iso) return "—";
+        const [y, m, d] = iso.split("-");
+        const ms = [
+          "ene",
+          "feb",
+          "mar",
+          "abr",
+          "may",
+          "jun",
+          "jul",
+          "ago",
+          "sep",
+          "oct",
+          "nov",
+          "dic",
+        ];
+        return `${Number(d)} ${ms[Number(m) - 1]}`;
+      };
+      return (
+        <div>
+          {/* Selector bimestre */}
+          <div
+            style={{
+              display: "flex",
+              gap: 4,
+              background: "var(--line)",
+              borderRadius: 8,
+              padding: 3,
+              width: "fit-content",
+              marginBottom: 16,
+            }}
+          >
+            {["3", "4", "5"].map((b) => (
+              <button
+                key={b}
+                onClick={() => setBim(b)}
+                style={{
+                  padding: "5px 14px",
+                  borderRadius: 6,
+                  border: "none",
+                  cursor: "pointer",
+                  fontSize: 12.5,
+                  fontWeight: bim === b ? 600 : 400,
+                  background: bim === b ? "var(--surface)" : "transparent",
+                  color: bim === b ? "var(--ink)" : "var(--ink-3)",
+                  boxShadow: bim === b ? "0 1px 3px rgba(0,0,0,.08)" : "none",
+                  transition: "all .15s",
+                }}
+              >
+                {b}° Bim
+              </button>
+            ))}
+          </div>
+          {/* Cards resumen */}
+          <div
+            style={{
+              display: "grid",
+              gridTemplateColumns: "repeat(4,1fr)",
+              gap: 12,
+              marginBottom: 20,
+            }}
+          >
+            {[
+              { label: "Semanas", valor: rows.length, color: "var(--ink)" },
+              { label: "A tiempo", valor: aTime, color: "#15803D" },
+              { label: "Con retraso", valor: tarde, color: "#B45309" },
+              { label: "No entregadas", valor: noEnt, color: "#B91C1C" },
+            ].map((c) => (
+              <div
+                key={c.label}
+                style={{
+                  background: "var(--surface)",
+                  border: "1px solid var(--line)",
+                  borderRadius: 10,
+                  padding: "16px 20px",
+                }}
+              >
+                <div style={{ fontSize: 26, fontWeight: 700, color: c.color }}>
+                  {c.valor}
+                </div>
+                <div
+                  style={{ fontSize: 12, color: "var(--ink-3)", marginTop: 4 }}
+                >
+                  {c.label}
+                </div>
+              </div>
+            ))}
+          </div>
+          {/* Barra cumplimiento */}
+          <div
+            style={{
+              background: "var(--surface)",
+              border: "1px solid var(--line)",
+              borderRadius: 10,
+              padding: "14px 20px",
+              marginBottom: 16,
+              display: "flex",
+              alignItems: "center",
+              gap: 14,
+            }}
+          >
+            <span
+              style={{ fontSize: 13, color: "var(--ink-3)", minWidth: 110 }}
+            >
+              Cumplimiento
+            </span>
+            <div
+              style={{
+                flex: 1,
+                height: 8,
+                borderRadius: 999,
+                background: "var(--line-strong,#E2E8F0)",
+                overflow: "hidden",
+              }}
+            >
+              <div
+                style={{
+                  height: "100%",
+                  width: `${pct}%`,
+                  borderRadius: 999,
+                  background:
+                    pct === 100
+                      ? "#15803D"
+                      : pct >= 80
+                        ? "#2563EB"
+                        : pct >= 60
+                          ? "#D97706"
+                          : "#DC2626",
+                  transition: "width .3s",
+                }}
+              />
+            </div>
+            <span
+              style={{
+                fontSize: 13,
+                fontWeight: 700,
+                minWidth: 40,
+                color:
+                  pct === 100
+                    ? "#15803D"
+                    : pct >= 80
+                      ? "#2563EB"
+                      : pct >= 60
+                        ? "#D97706"
+                        : "#DC2626",
+              }}
+            >
+              {pct}%
+            </span>
+          </div>
+          {/* Tabla */}
+          <div
+            style={{
+              background: "var(--surface)",
+              border: "1px solid var(--line)",
+              borderRadius: 10,
+              overflow: "hidden",
+            }}
+          >
+            <div
+              style={{
+                display: "grid",
+                gridTemplateColumns: "80px 1fr 110px 110px 130px",
+                padding: "8px 20px",
+                background: "var(--bg-sunk,#F8F9FB)",
+                borderBottom: "1px solid var(--line)",
+                fontSize: 11.5,
+                fontWeight: 600,
+                color: "var(--ink-4)",
+                letterSpacing: ".06em",
+                textTransform: "uppercase",
+              }}
+            >
+              <span>Semana</span>
+              <span>Período</span>
+              <span>Límite</span>
+              <span>Entregada</span>
+              <span>Estado</span>
+            </div>
+            {rows.map((r, i) => {
+              const meta = ESTADO_PLAN[r.estado];
+              return (
+                <div
+                  key={i}
+                  style={{
+                    display: "grid",
+                    gridTemplateColumns: "80px 1fr 110px 110px 130px",
+                    padding: "10px 20px",
+                    borderBottom:
+                      i < rows.length - 1 ? "1px solid var(--line)" : "none",
+                    alignItems: "center",
+                  }}
+                >
+                  <span
+                    style={{
+                      fontSize: 13,
+                      fontWeight: 500,
+                      color: "var(--ink)",
+                    }}
+                  >
+                    {r.sem}
+                  </span>
+                  <span style={{ fontSize: 12.5, color: "var(--ink-3)" }}>
+                    {r.label}
+                  </span>
+                  <span style={{ fontSize: 12.5, color: "var(--ink-3)" }}>
+                    {fmtF(r.limite)}
+                  </span>
+                  <span
+                    style={{
+                      fontSize: 12.5,
+                      color:
+                        r.estado === "a_tiempo"
+                          ? "var(--ink-3)"
+                          : r.estado === "tarde"
+                            ? "#B45309"
+                            : "var(--ink-4)",
+                    }}
+                  >
+                    {fmtF(r.entrega)}
+                  </span>
+                  <span
+                    style={{
+                      display: "inline-block",
+                      padding: "2px 9px",
+                      borderRadius: 6,
+                      fontSize: 11,
+                      fontWeight: 700,
+                      color: meta.color,
+                      background: meta.bg,
+                      width: "fit-content",
+                    }}
+                  >
+                    {meta.label}
+                  </span>
+                </div>
+              );
+            })}
+          </div>
+        </div>
+      );
+    };
+
+    const TabAsistencia = () => {
+      const faltas = ASISTENCIA_DATA[seleccionado.id] || [];
+      const conteo = { enfermedad: 0, justificada: 0, injustificada: 0 };
+      faltas.forEach((f) => {
+        if (conteo[f.tipo] !== undefined) conteo[f.tipo]++;
+      });
+      const fmtFecha = (iso) => {
+        const [y, m, d] = iso.split("-");
+        const meses = [
+          "ene",
+          "feb",
+          "mar",
+          "abr",
+          "may",
+          "jun",
+          "jul",
+          "ago",
+          "sep",
+          "oct",
+          "nov",
+          "dic",
+        ];
+        return `${Number(d)} ${meses[Number(m) - 1]} ${y}`;
+      };
+      return (
+        <div>
+          {/* Resumen */}
+          <div
+            style={{
+              display: "grid",
+              gridTemplateColumns: "repeat(4, 1fr)",
+              gap: 12,
+              marginBottom: 20,
+            }}
+          >
+            {[
+              {
+                label: "Total faltas",
+                valor: faltas.length,
+                color: "var(--ink)",
+              },
+              {
+                label: "Por enfermedad",
+                valor: conteo.enfermedad,
+                color: "#B45309",
+              },
+              {
+                label: "Justificadas",
+                valor: conteo.justificada,
+                color: "#1D4ED8",
+              },
+              {
+                label: "Injustificadas",
+                valor: conteo.injustificada,
+                color: "#B91C1C",
+              },
+            ].map((c) => (
+              <div
+                key={c.label}
+                style={{
+                  background: "var(--surface)",
+                  border: "1px solid var(--line)",
+                  borderRadius: 10,
+                  padding: "16px 20px",
+                }}
+              >
+                <div style={{ fontSize: 26, fontWeight: 700, color: c.color }}>
+                  {c.valor}
+                </div>
+                <div
+                  style={{ fontSize: 12, color: "var(--ink-3)", marginTop: 4 }}
+                >
+                  {c.label}
+                </div>
+              </div>
+            ))}
+          </div>
+          {/* Historial */}
+          <div
+            style={{
+              background: "var(--surface)",
+              border: "1px solid var(--line)",
+              borderRadius: 10,
+              overflow: "hidden",
+            }}
+          >
+            <div
+              style={{
+                display: "grid",
+                gridTemplateColumns: "130px 130px 1fr",
+                padding: "8px 20px",
+                background: "var(--bg-sunk, #F8F9FB)",
+                borderBottom: "1px solid var(--line)",
+                fontSize: 11.5,
+                fontWeight: 600,
+                color: "var(--ink-4)",
+                letterSpacing: ".06em",
+                textTransform: "uppercase",
+              }}
+            >
+              <span>Fecha</span>
+              <span>Tipo</span>
+              <span>Motivo</span>
+            </div>
+            {faltas.length === 0 ? (
+              <div
+                style={{
+                  padding: "36px",
+                  textAlign: "center",
+                  fontSize: 13,
+                  color: "var(--ink-4)",
+                }}
+              >
+                Sin faltas registradas este ciclo ✓
+              </div>
+            ) : (
+              faltas.map((f, i) => {
+                const meta = TIPO_FALTA[f.tipo];
+                return (
+                  <div
+                    key={i}
+                    style={{
+                      display: "grid",
+                      gridTemplateColumns: "130px 130px 1fr",
+                      padding: "11px 20px",
+                      borderBottom:
+                        i < faltas.length - 1
+                          ? "1px solid var(--line)"
+                          : "none",
+                      alignItems: "center",
+                    }}
+                  >
+                    <span style={{ fontSize: 13, color: "var(--ink-3)" }}>
+                      {fmtFecha(f.fecha)}
+                    </span>
+                    <span
+                      style={{
+                        display: "inline-block",
+                        padding: "2px 9px",
+                        borderRadius: 6,
+                        fontSize: 11,
+                        fontWeight: 700,
+                        color: meta.color,
+                        background: meta.bg,
+                        width: "fit-content",
+                      }}
+                    >
+                      {meta.label}
+                    </span>
+                    <span style={{ fontSize: 13, color: "var(--ink)" }}>
+                      {f.motivo}
+                    </span>
+                  </div>
+                );
+              })
+            )}
+          </div>
+        </div>
+      );
+    };
+
     const TabPlaceholder = ({ nombre }) => (
       <div
         style={{
@@ -664,11 +1545,9 @@ const PersonalPrimaria = () => {
 
         {/* Tab content */}
         {tabActivo === "perfil" && <TabPerfil />}
-        {tabActivo === "asistencia" && <TabPlaceholder nombre="Asistencia" />}
-        {tabActivo === "planeaciones" && (
-          <TabPlaceholder nombre="Planeaciones" />
-        )}
-        {tabActivo === "puntualidad" && <TabPlaceholder nombre="Puntualidad" />}
+        {tabActivo === "asistencia" && <TabAsistencia />}
+        {tabActivo === "planeaciones" && <TabPlaneaciones />}
+        {tabActivo === "puntualidad" && <TabPuntualidad />}
         {tabActivo === "observaciones" && (
           <TabPlaceholder nombre="Observaciones de clase" />
         )}
