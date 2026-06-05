@@ -797,6 +797,99 @@ const AVANCE_DATA = {
   ],
 };
 
+const ENTREVISTAS_DATA = {
+  d01: [
+    {
+      id: "e01",
+      fecha: "2026-02-14",
+      alumno: "Sofía Ramírez Torres",
+      grupo: "1°A",
+      motivo: "Bajo rendimiento en matemáticas",
+      acuerdos:
+        "Papás se comprometen a repasar tablas de multiplicar en casa 15 min diarios. Docente enviará ejercicios de práctica.",
+      seguimiento: "completado",
+    },
+    {
+      id: "e02",
+      fecha: "2026-04-08",
+      alumno: "Emiliano Castro Vega",
+      grupo: "1°A",
+      motivo: "Conducta disruptiva en clase",
+      acuerdos:
+        "Se acuerda revisión con psicóloga escolar. Mamá se compromete a seguimiento en casa.",
+      seguimiento: "pendiente",
+    },
+  ],
+  d03: [
+    {
+      id: "e03",
+      fecha: "2026-03-03",
+      alumno: "Valeria Fuentes Mora",
+      grupo: "2°A",
+      motivo: "Inasistencias frecuentes",
+      acuerdos:
+        "Familia notifica que la alumna tuvo problemas de salud. Se acuerda plan de recuperación de contenidos.",
+      seguimiento: "completado",
+    },
+  ],
+  d05: [
+    {
+      id: "e04",
+      fecha: "2026-02-20",
+      alumno: "Diego Hernández Soto",
+      grupo: "3°A",
+      motivo: "Conflicto con compañero de grupo",
+      acuerdos:
+        "Ambas familias informadas. Se acuerda mediación con orientador y seguimiento semanal.",
+      seguimiento: "completado",
+    },
+    {
+      id: "e05",
+      fecha: "2026-04-22",
+      alumno: "Rodrigo Peña Lara",
+      grupo: "3°A",
+      motivo: "Avance académico por encima del grupo",
+      acuerdos:
+        "Se propone material de enriquecimiento. Papás interesados en participación en concurso de matemáticas.",
+      seguimiento: "pendiente",
+    },
+  ],
+  d08: [
+    {
+      id: "e06",
+      fecha: "2026-03-17",
+      alumno: "Isabela Gutiérrez Reyes",
+      grupo: "4°B",
+      motivo: "Dificultades en comprensión lectora",
+      acuerdos:
+        "Docente adaptará materiales. Familia se compromete a lectura diaria en casa de 20 min.",
+      seguimiento: "pendiente",
+    },
+  ],
+  d11: [
+    {
+      id: "e07",
+      fecha: "2026-02-10",
+      alumno: "Mateo Salinas Cruz",
+      grupo: "6°A",
+      motivo: "Orientación para ingreso a secundaria",
+      acuerdos:
+        "Se entrega información sobre proceso de admisión. Docente recomienda refuerzo en español.",
+      seguimiento: "completado",
+    },
+    {
+      id: "e08",
+      fecha: "2026-04-29",
+      alumno: "Andrea Moreno Ibáñez",
+      grupo: "6°A",
+      motivo: "Nerviosismo ante exámenes finales",
+      acuerdos:
+        "Se recomienda canalización con psicóloga. Mamá acepta apoyo. Seguimiento en 2 semanas.",
+      seguimiento: "pendiente",
+    },
+  ],
+};
+
 const TIPO_FALTA = {
   enfermedad: { label: "Enfermedad", color: "#B45309", bg: "#FFFBEB" },
   justificada: { label: "Justificada", color: "#1D4ED8", bg: "#EFF6FF" },
@@ -1368,6 +1461,146 @@ const PersonalPrimaria = () => {
               </div>
             );
           })}
+        </div>
+      );
+    };
+
+    const TabEntrevistas = () => {
+      const entrevistas = ENTREVISTAS_DATA[seleccionado.id] || [];
+
+      if (entrevistas.length === 0)
+        return (
+          <div
+            style={{
+              textAlign: "center",
+              padding: "48px 0",
+              color: "var(--ink-4)",
+              fontSize: 14,
+            }}
+          >
+            Sin entrevistas registradas
+          </div>
+        );
+
+      return (
+        <div style={{ display: "flex", flexDirection: "column", gap: 14 }}>
+          {entrevistas.map((e) => (
+            <div
+              key={e.id}
+              style={{
+                background: "var(--surface)",
+                border: "1px solid var(--line)",
+                borderRadius: 10,
+                padding: "16px 20px",
+              }}
+            >
+              {/* Header */}
+              <div
+                style={{
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "space-between",
+                  marginBottom: 10,
+                  gap: 12,
+                  flexWrap: "wrap",
+                }}
+              >
+                <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
+                  <span
+                    style={{
+                      fontSize: 13,
+                      fontWeight: 600,
+                      color: "var(--ink)",
+                    }}
+                  >
+                    {e.alumno}
+                  </span>
+                  <span
+                    style={{
+                      background: "var(--surface-2)",
+                      border: "1px solid var(--line)",
+                      borderRadius: 20,
+                      padding: "2px 8px",
+                      fontSize: 12,
+                      color: "var(--ink-3)",
+                    }}
+                  >
+                    {e.grupo}
+                  </span>
+                </div>
+                <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
+                  <span style={{ fontSize: 12, color: "var(--ink-4)" }}>
+                    {e.fecha}
+                  </span>
+                  <span
+                    style={{
+                      borderRadius: 20,
+                      padding: "2px 10px",
+                      fontSize: 12,
+                      fontWeight: 600,
+                      background:
+                        e.seguimiento === "completado" ? "#DCFCE7" : "#FEF9C3",
+                      color:
+                        e.seguimiento === "completado" ? "#16A34A" : "#CA8A04",
+                    }}
+                  >
+                    {e.seguimiento === "completado"
+                      ? "Completado"
+                      : "Pendiente"}
+                  </span>
+                </div>
+              </div>
+
+              {/* Motivo */}
+              <div style={{ marginBottom: 8 }}>
+                <span
+                  style={{
+                    fontSize: 12,
+                    color: "var(--ink-4)",
+                    textTransform: "uppercase",
+                    letterSpacing: ".05em",
+                    fontWeight: 600,
+                  }}
+                >
+                  Motivo
+                </span>
+                <p
+                  style={{
+                    margin: "3px 0 0",
+                    fontSize: 13,
+                    color: "var(--ink-2)",
+                  }}
+                >
+                  {e.motivo}
+                </p>
+              </div>
+
+              {/* Acuerdos */}
+              <div>
+                <span
+                  style={{
+                    fontSize: 12,
+                    color: "var(--ink-4)",
+                    textTransform: "uppercase",
+                    letterSpacing: ".05em",
+                    fontWeight: 600,
+                  }}
+                >
+                  Acuerdos
+                </span>
+                <p
+                  style={{
+                    margin: "3px 0 0",
+                    fontSize: 13,
+                    color: "var(--ink-3)",
+                    lineHeight: 1.5,
+                  }}
+                >
+                  {e.acuerdos}
+                </p>
+              </div>
+            </div>
+          ))}
         </div>
       );
     };
@@ -2152,9 +2385,7 @@ const PersonalPrimaria = () => {
         {tabActivo === "puntualidad" && <TabPuntualidad />}
         {tabActivo === "observaciones" && <TabObservaciones />}
         {tabActivo === "avance" && <TabAvance />}
-        {tabActivo === "entrevistas" && (
-          <TabPlaceholder nombre="Entrevistas con papás" />
-        )}
+        {tabActivo === "entrevistas" && <TabEntrevistas />}
       </div>
     );
   }
