@@ -655,6 +655,148 @@ const CHECKLIST_LABELS = {
   puntualidad: "Puntualidad al iniciar",
 };
 
+const MATERIAS_TITULAR = [
+  { id: "esp", nombre: "Español", paginas: 240 },
+  { id: "mat", nombre: "Matemáticas", paginas: 220 },
+  { id: "cien", nombre: "Ciencias Naturales", paginas: 180 },
+  { id: "hist", nombre: "Historia", paginas: 160 },
+  { id: "geo", nombre: "Geografía", paginas: 150 },
+  { id: "fcye", nombre: "Formación Cívica y Ética", paginas: 130 },
+];
+
+const AVANCE_DATA = {
+  // Titulares
+  d01: [
+    { materiaId: "esp", actual: 210, actualizado: "2026-05-28" },
+    { materiaId: "mat", actual: 185, actualizado: "2026-05-28" },
+    { materiaId: "cien", actual: 162, actualizado: "2026-05-20" },
+    { materiaId: "hist", actual: 140, actualizado: "2026-05-20" },
+    { materiaId: "geo", actual: 120, actualizado: "2026-05-15" },
+    { materiaId: "fcye", actual: 115, actualizado: "2026-05-15" },
+  ],
+  d02: [
+    { materiaId: "esp", actual: 180, actualizado: "2026-05-27" },
+    { materiaId: "mat", actual: 160, actualizado: "2026-05-27" },
+    { materiaId: "cien", actual: 130, actualizado: "2026-05-18" },
+    { materiaId: "hist", actual: 100, actualizado: "2026-05-18" },
+    { materiaId: "geo", actual: 90, actualizado: "2026-05-10" },
+    { materiaId: "fcye", actual: 75, actualizado: "2026-05-10" },
+  ],
+  d03: [
+    { materiaId: "esp", actual: 225, actualizado: "2026-05-29" },
+    { materiaId: "mat", actual: 200, actualizado: "2026-05-29" },
+    { materiaId: "cien", actual: 170, actualizado: "2026-05-22" },
+    { materiaId: "hist", actual: 148, actualizado: "2026-05-22" },
+    { materiaId: "geo", actual: 135, actualizado: "2026-05-16" },
+    { materiaId: "fcye", actual: 120, actualizado: "2026-05-16" },
+  ],
+  d05: [
+    { materiaId: "esp", actual: 190, actualizado: "2026-05-26" },
+    { materiaId: "mat", actual: 170, actualizado: "2026-05-26" },
+    { materiaId: "cien", actual: 145, actualizado: "2026-05-19" },
+    { materiaId: "hist", actual: 110, actualizado: "2026-05-19" },
+    { materiaId: "geo", actual: 80, actualizado: "2026-05-08" },
+    { materiaId: "fcye", actual: 65, actualizado: "2026-05-08" },
+  ],
+  d07: [
+    { materiaId: "esp", actual: 215, actualizado: "2026-05-28" },
+    { materiaId: "mat", actual: 195, actualizado: "2026-05-28" },
+    { materiaId: "cien", actual: 155, actualizado: "2026-05-21" },
+    { materiaId: "hist", actual: 130, actualizado: "2026-05-21" },
+    { materiaId: "geo", actual: 110, actualizado: "2026-05-14" },
+    { materiaId: "fcye", actual: 100, actualizado: "2026-05-14" },
+  ],
+  // Hora-clase
+  d12: [
+    {
+      materiaId: "ef",
+      nombre: "Educación Física",
+      actual: 28,
+      paginas: 40,
+      actualizado: "2026-05-25",
+    },
+  ],
+  d13: [
+    {
+      materiaId: "ing",
+      nombre: "Inglés",
+      actual: 95,
+      paginas: 130,
+      actualizado: "2026-05-27",
+    },
+  ],
+  d14: [
+    {
+      materiaId: "ing",
+      nombre: "Inglés",
+      actual: 78,
+      paginas: 130,
+      actualizado: "2026-05-22",
+    },
+  ],
+  d15: [
+    {
+      materiaId: "ing",
+      nombre: "Inglés",
+      actual: 68,
+      paginas: 130,
+      actualizado: "2026-05-21",
+    },
+  ],
+  d16: [
+    {
+      materiaId: "comp",
+      nombre: "Computación",
+      actual: 22,
+      paginas: 30,
+      actualizado: "2026-05-19",
+    },
+  ],
+  d17: [
+    {
+      materiaId: "comp",
+      nombre: "Computación",
+      actual: 16,
+      paginas: 30,
+      actualizado: "2026-05-16",
+    },
+  ],
+  d18: [
+    {
+      materiaId: "ef",
+      nombre: "Educación Física",
+      actual: 25,
+      paginas: 40,
+      actualizado: "2026-05-23",
+    },
+  ],
+  d19: [
+    {
+      materiaId: "ef",
+      nombre: "Educación Física",
+      actual: 20,
+      paginas: 40,
+      actualizado: "2026-05-20",
+    },
+  ],
+  d20: [
+    {
+      materiaId: "art",
+      nombre: "Artes Plásticas",
+      actual: 18,
+      paginas: 24,
+      actualizado: "2026-05-16",
+    },
+    {
+      materiaId: "musi",
+      nombre: "Música",
+      actual: 26,
+      paginas: 36,
+      actualizado: "2026-05-16",
+    },
+  ],
+};
+
 const TIPO_FALTA = {
   enfermedad: { label: "Enfermedad", color: "#B45309", bg: "#FFFBEB" },
   justificada: { label: "Justificada", color: "#1D4ED8", bg: "#EFF6FF" },
@@ -1100,6 +1242,132 @@ const PersonalPrimaria = () => {
               )}
             </div>
           ))}
+        </div>
+      );
+    };
+
+    const TabAvance = () => {
+      const esTitular = seleccionado.rol === "Titular";
+      const rawAvance = AVANCE_DATA[seleccionado.id] || [];
+
+      const filas = esTitular
+        ? MATERIAS_TITULAR.map((m) => {
+            const a = rawAvance.find((x) => x.materiaId === m.id);
+            return {
+              nombre: m.nombre,
+              actual: a ? a.actual : 0,
+              paginas: m.paginas,
+              actualizado: a ? a.actualizado : null,
+            };
+          })
+        : rawAvance.map((a) => ({
+            nombre: a.nombre,
+            actual: a.actual,
+            paginas: a.paginas,
+            actualizado: a.actualizado,
+          }));
+
+      const colorBarra = (pct) => {
+        if (pct >= 80) return "#16A34A";
+        if (pct >= 60) return "#2563EB";
+        if (pct >= 40) return "#D97706";
+        return "#DC2626";
+      };
+
+      if (filas.length === 0)
+        return (
+          <div
+            style={{
+              textAlign: "center",
+              padding: "48px 0",
+              color: "var(--ink-4)",
+              fontSize: 14,
+            }}
+          >
+            Sin datos de avance registrados
+          </div>
+        );
+
+      return (
+        <div style={{ display: "flex", flexDirection: "column", gap: 14 }}>
+          {filas.map((f) => {
+            const pct = Math.round((f.actual / f.paginas) * 100);
+            const color = colorBarra(pct);
+            return (
+              <div
+                key={f.nombre}
+                style={{
+                  background: "var(--surface)",
+                  border: "1px solid var(--line)",
+                  borderRadius: 10,
+                  padding: "14px 18px",
+                }}
+              >
+                <div
+                  style={{
+                    display: "flex",
+                    justifyContent: "space-between",
+                    alignItems: "baseline",
+                    marginBottom: 8,
+                  }}
+                >
+                  <span
+                    style={{
+                      fontSize: 14,
+                      fontWeight: 600,
+                      color: "var(--ink)",
+                    }}
+                  >
+                    {f.nombre}
+                  </span>
+                  <span
+                    style={{
+                      fontSize: 13,
+                      fontWeight: 700,
+                      color,
+                    }}
+                  >
+                    {pct}%
+                  </span>
+                </div>
+
+                {/* Barra de progreso */}
+                <div
+                  style={{
+                    height: 8,
+                    background: "var(--surface-2)",
+                    borderRadius: 99,
+                    overflow: "hidden",
+                    marginBottom: 6,
+                  }}
+                >
+                  <div
+                    style={{
+                      height: "100%",
+                      width: `${pct}%`,
+                      background: color,
+                      borderRadius: 99,
+                      transition: "width .4s ease",
+                    }}
+                  />
+                </div>
+
+                <div
+                  style={{
+                    display: "flex",
+                    justifyContent: "space-between",
+                    fontSize: 12,
+                    color: "var(--ink-4)",
+                  }}
+                >
+                  <span>
+                    Pág. {f.actual} / {f.paginas}
+                  </span>
+                  {f.actualizado && <span>Actualizado: {f.actualizado}</span>}
+                </div>
+              </div>
+            );
+          })}
         </div>
       );
     };
@@ -1846,6 +2114,8 @@ const PersonalPrimaria = () => {
             borderBottom: "1px solid var(--line)",
             marginBottom: 20,
             gap: 0,
+            overflowX: "auto",
+            scrollbarWidth: "none",
           }}
         >
           {TABS.map((t) => (
@@ -1881,7 +2151,7 @@ const PersonalPrimaria = () => {
         {tabActivo === "planeaciones" && <TabPlaneaciones />}
         {tabActivo === "puntualidad" && <TabPuntualidad />}
         {tabActivo === "observaciones" && <TabObservaciones />}
-        {tabActivo === "avance" && <TabPlaceholder nombre="Avance de libro" />}
+        {tabActivo === "avance" && <TabAvance />}
         {tabActivo === "entrevistas" && (
           <TabPlaceholder nombre="Entrevistas con papás" />
         )}
