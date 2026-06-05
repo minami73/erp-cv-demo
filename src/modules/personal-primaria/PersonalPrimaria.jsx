@@ -545,6 +545,116 @@ const RETARDOS_DATA = {
   ],
 };
 
+const OBSERVACIONES_DATA = {
+  d01: [
+    {
+      id: "o01",
+      fecha: "2026-02-10",
+      materia: "Matemáticas",
+      checklist: {
+        usaPlaneacion: "si",
+        dinamico: "si",
+        recursos: "parcial",
+        explicaClaro: "si",
+        manejoGrupo: "si",
+        puntualidad: "si",
+      },
+      notas:
+        "Buen manejo del grupo. Se sugiere incorporar más material visual para explicación de fracciones.",
+    },
+    {
+      id: "o02",
+      fecha: "2026-04-03",
+      materia: "Español",
+      checklist: {
+        usaPlaneacion: "si",
+        dinamico: "parcial",
+        recursos: "si",
+        explicaClaro: "si",
+        manejoGrupo: "si",
+        puntualidad: "si",
+      },
+      notas:
+        "La dinámica de lectura en voz alta estuvo bien. Se recomienda variar actividades para mantener atención.",
+    },
+  ],
+  d03: [
+    {
+      id: "o03",
+      fecha: "2026-03-05",
+      materia: "Ciencias Naturales",
+      checklist: {
+        usaPlaneacion: "si",
+        dinamico: "si",
+        recursos: "si",
+        explicaClaro: "si",
+        manejoGrupo: "parcial",
+        puntualidad: "no",
+      },
+      notas:
+        "Clase muy dinámica con experimento de germinación. Llegó 5 min tarde al aula.",
+    },
+  ],
+  d07: [
+    {
+      id: "o04",
+      fecha: "2026-02-25",
+      materia: "Historia",
+      checklist: {
+        usaPlaneacion: "parcial",
+        dinamico: "si",
+        recursos: "no",
+        explicaClaro: "si",
+        manejoGrupo: "si",
+        puntualidad: "si",
+      },
+      notas:
+        "No presentó planeación impresa. La clase fue fluida pero sin apoyo de recursos digitales.",
+    },
+    {
+      id: "o05",
+      fecha: "2026-04-14",
+      materia: "Matemáticas",
+      checklist: {
+        usaPlaneacion: "si",
+        dinamico: "si",
+        recursos: "si",
+        explicaClaro: "si",
+        manejoGrupo: "si",
+        puntualidad: "si",
+      },
+      notas:
+        "Excelente clase. Uso de proyector con ejercicios interactivos. Muy buen manejo del grupo.",
+    },
+  ],
+  d12: [
+    {
+      id: "o06",
+      fecha: "2026-03-18",
+      materia: "Educación Física",
+      checklist: {
+        usaPlaneacion: "no",
+        dinamico: "si",
+        recursos: "parcial",
+        explicaClaro: "si",
+        manejoGrupo: "si",
+        puntualidad: "si",
+      },
+      notas:
+        "Actividad bien estructurada en cancha. No presentó planeación por escrito.",
+    },
+  ],
+};
+
+const CHECKLIST_LABELS = {
+  usaPlaneacion: "Usa planeación",
+  dinamico: "Dinámico / despierta el interés",
+  recursos: "Usa diferentes recursos",
+  explicaClaro: "Explica el tema con claridad",
+  manejoGrupo: "Manejo del grupo",
+  puntualidad: "Puntualidad al iniciar",
+};
+
 const TIPO_FALTA = {
   enfermedad: { label: "Enfermedad", color: "#B45309", bg: "#FFFBEB" },
   justificada: { label: "Justificada", color: "#1D4ED8", bg: "#EFF6FF" },
@@ -828,6 +938,171 @@ const PersonalPrimaria = () => {
         </div>
       </div>
     );
+
+    const TabObservaciones = () => {
+      const obs = OBSERVACIONES_DATA[seleccionado.id] || [];
+
+      const EstadoIcon = ({ val }) => {
+        if (val === "si")
+          return (
+            <span
+              style={{
+                display: "inline-flex",
+                alignItems: "center",
+                justifyContent: "center",
+                width: 20,
+                height: 20,
+                borderRadius: "50%",
+                background: "#DCFCE7",
+                color: "#16A34A",
+                fontSize: 12,
+                fontWeight: 700,
+                flexShrink: 0,
+              }}
+            >
+              ✓
+            </span>
+          );
+        if (val === "no")
+          return (
+            <span
+              style={{
+                display: "inline-flex",
+                alignItems: "center",
+                justifyContent: "center",
+                width: 20,
+                height: 20,
+                borderRadius: "50%",
+                background: "#FEE2E2",
+                color: "#DC2626",
+                fontSize: 12,
+                fontWeight: 700,
+                flexShrink: 0,
+              }}
+            >
+              ✗
+            </span>
+          );
+        return (
+          <span
+            style={{
+              display: "inline-flex",
+              alignItems: "center",
+              justifyContent: "center",
+              width: 20,
+              height: 20,
+              borderRadius: "50%",
+              background: "#FEF9C3",
+              color: "#CA8A04",
+              fontSize: 11,
+              fontWeight: 700,
+              flexShrink: 0,
+            }}
+          >
+            ~
+          </span>
+        );
+      };
+
+      if (obs.length === 0)
+        return (
+          <div
+            style={{
+              textAlign: "center",
+              padding: "48px 0",
+              color: "var(--ink-4)",
+              fontSize: 14,
+            }}
+          >
+            Sin observaciones registradas
+          </div>
+        );
+
+      return (
+        <div style={{ display: "flex", flexDirection: "column", gap: 16 }}>
+          {obs.map((o) => (
+            <div
+              key={o.id}
+              style={{
+                background: "var(--surface)",
+                border: "1px solid var(--line)",
+                borderRadius: 10,
+                padding: "18px 20px",
+              }}
+            >
+              {/* Header de la card */}
+              <div
+                style={{
+                  display: "flex",
+                  alignItems: "center",
+                  gap: 12,
+                  marginBottom: 14,
+                }}
+              >
+                <span
+                  style={{
+                    fontSize: 13,
+                    fontWeight: 600,
+                    color: "var(--ink)",
+                  }}
+                >
+                  {o.fecha}
+                </span>
+                <span
+                  style={{
+                    background: "var(--surface-2)",
+                    border: "1px solid var(--line)",
+                    borderRadius: 20,
+                    padding: "2px 10px",
+                    fontSize: 12,
+                    color: "var(--ink-2)",
+                  }}
+                >
+                  {o.materia}
+                </span>
+              </div>
+
+              {/* Checklist */}
+              <div
+                style={{
+                  display: "grid",
+                  gridTemplateColumns: "1fr 1fr",
+                  gap: "8px 16px",
+                  marginBottom: 14,
+                }}
+              >
+                {Object.entries(o.checklist).map(([key, val]) => (
+                  <div
+                    key={key}
+                    style={{ display: "flex", alignItems: "center", gap: 8 }}
+                  >
+                    <EstadoIcon val={val} />
+                    <span style={{ fontSize: 13, color: "var(--ink-2)" }}>
+                      {CHECKLIST_LABELS[key]}
+                    </span>
+                  </div>
+                ))}
+              </div>
+
+              {/* Notas */}
+              {o.notas && (
+                <div
+                  style={{
+                    borderTop: "1px solid var(--line)",
+                    paddingTop: 12,
+                    fontSize: 13,
+                    color: "var(--ink-3)",
+                    lineHeight: 1.5,
+                  }}
+                >
+                  {o.notas}
+                </div>
+              )}
+            </div>
+          ))}
+        </div>
+      );
+    };
 
     const TabPuntualidad = () => {
       const retardos = RETARDOS_DATA[seleccionado.id] || [];
@@ -1518,10 +1793,7 @@ const PersonalPrimaria = () => {
             }}
           >
             <button
-              onClick={() => {
-                setSeleccionado(prevDocente);
-                setTabActivo("perfil");
-              }}
+              onClick={() => setSeleccionado(prevDocente)}
               disabled={!prevDocente}
               title={prevDocente ? prevDocente.nombre : ""}
               style={{
@@ -1548,10 +1820,7 @@ const PersonalPrimaria = () => {
               {idx + 1} / {docentes.length}
             </span>
             <button
-              onClick={() => {
-                setSeleccionado(nextDocente);
-                setTabActivo("perfil");
-              }}
+              onClick={() => setSeleccionado(nextDocente)}
               disabled={!nextDocente}
               title={nextDocente ? nextDocente.nombre : ""}
               style={{
@@ -1611,9 +1880,7 @@ const PersonalPrimaria = () => {
         {tabActivo === "asistencia" && <TabAsistencia />}
         {tabActivo === "planeaciones" && <TabPlaneaciones />}
         {tabActivo === "puntualidad" && <TabPuntualidad />}
-        {tabActivo === "observaciones" && (
-          <TabPlaceholder nombre="Observaciones de clase" />
-        )}
+        {tabActivo === "observaciones" && <TabObservaciones />}
         {tabActivo === "avance" && <TabPlaceholder nombre="Avance de libro" />}
         {tabActivo === "entrevistas" && (
           <TabPlaceholder nombre="Entrevistas con papás" />
