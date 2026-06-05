@@ -349,6 +349,7 @@ const TABS = [
   { id: "observaciones", label: "Observaciones" },
   { id: "avance", label: "Avance de libro" },
   { id: "entrevistas", label: "Entrevistas" },
+  { id: "incidenciasaula", label: "Incidencias" },
 ];
 
 // Semanas por bimestre (label, límite de entrega viernes)
@@ -886,6 +887,269 @@ const ENTREVISTAS_DATA = {
       acuerdos:
         "Se recomienda canalización con psicóloga. Mamá acepta apoyo. Seguimiento en 2 semanas.",
       seguimiento: "pendiente",
+    },
+  ],
+};
+
+const TIPO_INCIDENCIA_AULA = {
+  verbal: { label: "Conflicto verbal", color: "#2563EB", bg: "#EFF6FF" },
+  objeto: { label: "Problema con objetos", color: "#D97706", bg: "#FFFBEB" },
+  fisico: { label: "Contacto físico", color: "#DC2626", bg: "#FEF2F2" },
+  accidente: { label: "Accidente / caída", color: "#7C3AED", bg: "#F5F3FF" },
+  otro: { label: "Otro", color: "#6B7280", bg: "#F9FAFB" },
+};
+
+const INCIDENCIAS_AULA_DATA = {
+  d01: [
+    {
+      id: "ia01",
+      fecha: "2026-02-18",
+      alumno: "Emiliano Castro Vega",
+      grupo: "1°A",
+      tipo: "verbal",
+      descripcion:
+        "Dos alumnos se insultaron durante la actividad de lectura en parejas. Se separaron y hablaron con cada uno por separado.",
+      estado: "resuelta",
+      resolucion:
+        "Se habló con ambos alumnos. Pidieron disculpas frente al grupo. Sin reincidencia.",
+    },
+    {
+      id: "ia02",
+      fecha: "2026-04-07",
+      alumno: "Sofía Ramírez Torres",
+      grupo: "1°A",
+      tipo: "objeto",
+      descripcion:
+        "Alumna tomó el borrador de su compañera sin permiso y lo escondió en su mochila.",
+      estado: "resuelta",
+      resolucion:
+        "Se devolvió el objeto. Se habló con la alumna sobre el respeto a las pertenencias ajenas.",
+    },
+    {
+      id: "ia03",
+      fecha: "2026-05-13",
+      alumno: "Marcos Leal Fuentes",
+      grupo: "1°A",
+      tipo: "fisico",
+      descripcion:
+        "Alumno le pegó en el brazo a su compañero de banca durante el recreo dentro del salón.",
+      estado: "activa",
+      resolucion: null,
+    },
+  ],
+  d03: [
+    {
+      id: "ia04",
+      fecha: "2026-03-10",
+      alumno: "Valeria Fuentes Mora",
+      grupo: "2°A",
+      tipo: "accidente",
+      descripcion:
+        "Alumna se cayó al correr en el pasillo camino al baño. Golpe leve en rodilla derecha. Se aplicó primeros auxilios.",
+      estado: "resuelta",
+      resolucion:
+        "Atendida en enfermería. Papás notificados por WhatsApp. Sin complicaciones.",
+    },
+    {
+      id: "ia05",
+      fecha: "2026-05-06",
+      alumno: "Tomás Guerrero Sosa",
+      grupo: "2°A",
+      tipo: "objeto",
+      descripcion:
+        "Escondió la lonchera de un compañero debajo del escritorio. El compañero lloró pensando que la perdió.",
+      estado: "activa",
+      resolucion: null,
+    },
+  ],
+  d05: [
+    {
+      id: "ia06",
+      fecha: "2026-02-24",
+      alumno: "Diego Hernández Soto",
+      grupo: "3°A",
+      tipo: "verbal",
+      descripcion:
+        "Confrontación verbal entre dos alumnos por quién era el líder del equipo en trabajo en grupo.",
+      estado: "resuelta",
+      resolucion:
+        "Mediación en el momento. Se acordó rotación de roles en equipos.",
+    },
+    {
+      id: "ia07",
+      fecha: "2026-04-28",
+      alumno: "Rodrigo Peña Lara",
+      grupo: "3°A",
+      tipo: "fisico",
+      descripcion:
+        "Empujón en la fila de salida al recreo. Alumno dice que fue sin querer, compañero afirma que fue intencional.",
+      estado: "activa",
+      resolucion: null,
+    },
+  ],
+  d07: [
+    {
+      id: "ia08",
+      fecha: "2026-03-19",
+      alumno: "Alondra Vega Paredes",
+      grupo: "4°A",
+      tipo: "accidente",
+      descripcion:
+        "Alumna chocó contra la esquina del escritorio al levantarse rápido. Golpe en cadera. No requirió enfermería.",
+      estado: "resuelta",
+      resolucion:
+        "Se revisó el espacio del aula, se reacomodaron escritorios para evitar espacios reducidos.",
+    },
+  ],
+  d10: [
+    {
+      id: "ia09",
+      fecha: "2026-04-15",
+      alumno: "Camila Torres Ríos",
+      grupo: "5°B",
+      tipo: "objeto",
+      descripcion:
+        "Alumna reportó que le desaparecieron $20 pesos de su mochila durante la clase de computación.",
+      estado: "activa",
+      resolucion: null,
+    },
+    {
+      id: "ia10",
+      fecha: "2026-05-05",
+      alumno: "Iván Morales Díaz",
+      grupo: "5°B",
+      tipo: "otro",
+      descripcion:
+        "Alumno se negó a participar en actividad física del día y permaneció sentado sin justificación. Actitud pasivo-agresiva hacia la indicación.",
+      estado: "activa",
+      resolucion: null,
+    },
+  ],
+  d11: [
+    {
+      id: "ia11",
+      fecha: "2026-02-12",
+      alumno: "Mateo Salinas Cruz",
+      grupo: "6°A",
+      tipo: "verbal",
+      descripcion:
+        "Discusión subida de tono entre dos alumnos por una tarea que uno copió al otro.",
+      estado: "resuelta",
+      resolucion:
+        "Se anuló la tarea de quien copió. Se informó a ambas familias. No hubo más incidentes.",
+    },
+  ],
+  // Hora-clase
+  d14: [
+    {
+      id: "ia12",
+      fecha: "2026-03-04",
+      alumno: "Andrés Palomino Rivas",
+      grupo: "3°B",
+      tipo: "verbal",
+      descripcion:
+        "Durante actividad oral en inglés el alumno se burló de la pronunciación de su compañera, provocando que ella se negara a participar el resto de la clase.",
+      estado: "resuelta",
+      resolucion:
+        "Se habló con el alumno al término de la clase. Ofreció disculpa a su compañera. Se reforzó respeto durante actividades orales.",
+    },
+    {
+      id: "ia13",
+      fecha: "2026-05-07",
+      alumno: "Fernanda Cruz Medina",
+      grupo: "4°A",
+      tipo: "otro",
+      descripcion:
+        "Alumna usó su celular para traducir el examen parcial en lugar de responderlo con sus conocimientos. Se le retiró el dispositivo durante la evaluación.",
+      estado: "activa",
+      resolucion: null,
+    },
+  ],
+  d18: [
+    {
+      id: "ia14",
+      fecha: "2026-02-19",
+      alumno: "Sebastián Lara Campos",
+      grupo: "2°A",
+      tipo: "accidente",
+      descripcion:
+        "Alumno resbaló en la cancha mojada por lluvia de la mañana durante el calentamiento. Caída de rodillas. Leve raspón en rodilla izquierda.",
+      estado: "resuelta",
+      resolucion:
+        "Se atendió en enfermería. Papás notificados. Se suspendió actividad en cancha y se continuó en patio techado.",
+    },
+    {
+      id: "ia15",
+      fecha: "2026-04-10",
+      alumno: "Emilio Vargas Ponce",
+      grupo: "3°A",
+      tipo: "fisico",
+      descripcion:
+        "Durante partido de futbol, alumno le dio un codazo a un compañero al disputar el balón. El compañero lloró del dolor. Situación se ve intencional.",
+      estado: "activa",
+      resolucion: null,
+    },
+    {
+      id: "ia16",
+      fecha: "2026-05-14",
+      alumno: "Camila Rojo Estrada",
+      grupo: "1°B",
+      tipo: "accidente",
+      descripcion:
+        "Alumna chocó de frente con compañera al correr en actividad de relevos. Golpe leve en la frente de ambas. No perdieron el conocimiento.",
+      estado: "resuelta",
+      resolucion:
+        "Revisión inmediata. Aplicación de hielo. Ambas familias notificadas ese mismo día. Sin complicaciones posteriores.",
+    },
+  ],
+  d16: [
+    {
+      id: "ia17",
+      fecha: "2026-03-25",
+      alumno: "Óscar Téllez Mora",
+      grupo: "2°B",
+      tipo: "objeto",
+      descripcion:
+        "Alumno cambió el fondo de pantalla de la computadora de su compañero por una imagen inapropiada mientras él no estaba sentado.",
+      estado: "resuelta",
+      resolucion:
+        "Se restableció la configuración. Se habló con el alumno sobre el uso responsable del equipo. Sin reincidencia.",
+    },
+    {
+      id: "ia18",
+      fecha: "2026-05-06",
+      alumno: "Daniela Ríos Fuentes",
+      grupo: "3°A",
+      tipo: "otro",
+      descripcion:
+        "Alumna tomó fotos a las pantallas de sus compañeros con su celular sin permiso durante la práctica de mecanografía.",
+      estado: "activa",
+      resolucion: null,
+    },
+  ],
+  d20: [
+    {
+      id: "ia19",
+      fecha: "2026-04-22",
+      alumno: "Bruno Salazar Peña",
+      grupo: "5°A",
+      tipo: "objeto",
+      descripcion:
+        "Alumno usó las pinturas de otro compañero sin pedirlas prestadas y las regresó con las tapas mal puestas, arruinando varios colores.",
+      estado: "resuelta",
+      resolucion:
+        "Se acordó que el alumno reponga los colores dañados. Papás informados. El compañero aceptó la resolución.",
+    },
+    {
+      id: "ia20",
+      fecha: "2026-05-20",
+      alumno: "Valeria Mendoza Tapia",
+      grupo: "6°B",
+      tipo: "verbal",
+      descripcion:
+        "Durante presentación de proyecto musical, grupo de alumnas hizo comentarios negativos en voz baja sobre la actuación de una compañera, quien se dio cuenta y lloró.",
+      estado: "activa",
+      resolucion: null,
     },
   ],
 };
@@ -1601,6 +1865,220 @@ const PersonalPrimaria = () => {
               </div>
             </div>
           ))}
+        </div>
+      );
+    };
+
+    const TabIncidenciasAula = () => {
+      const todas = INCIDENCIAS_AULA_DATA[seleccionado.id] || [];
+      const [filtroEstado, setFiltroEstado] = React.useState("todas");
+
+      const incidencias = todas.filter((i) =>
+        filtroEstado === "todas" ? true : i.estado === filtroEstado,
+      );
+
+      const cntActivas = todas.filter((i) => i.estado === "activa").length;
+
+      if (todas.length === 0)
+        return (
+          <div
+            style={{
+              textAlign: "center",
+              padding: "48px 0",
+              color: "var(--ink-4)",
+              fontSize: 14,
+            }}
+          >
+            Sin incidencias registradas
+          </div>
+        );
+
+      return (
+        <div>
+          {/* Filtro */}
+          <div
+            style={{
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "space-between",
+              marginBottom: 16,
+            }}
+          >
+            <div style={{ display: "flex", gap: 6 }}>
+              {[
+                { val: "todas", label: `Todas (${todas.length})` },
+                { val: "activa", label: `Activas (${cntActivas})` },
+                {
+                  val: "resuelta",
+                  label: `Resueltas (${todas.length - cntActivas})`,
+                },
+              ].map((op) => (
+                <button
+                  key={op.val}
+                  onClick={() => setFiltroEstado(op.val)}
+                  style={{
+                    padding: "5px 12px",
+                    borderRadius: 20,
+                    border: "1px solid",
+                    fontSize: 12,
+                    fontWeight: filtroEstado === op.val ? 600 : 400,
+                    cursor: "pointer",
+                    borderColor:
+                      filtroEstado === op.val
+                        ? "var(--brand, #2563EB)"
+                        : "var(--line)",
+                    background:
+                      filtroEstado === op.val
+                        ? "var(--brand, #2563EB)"
+                        : "none",
+                    color: filtroEstado === op.val ? "#fff" : "var(--ink-3)",
+                  }}
+                >
+                  {op.label}
+                </button>
+              ))}
+            </div>
+          </div>
+
+          {/* Cards */}
+          {incidencias.length === 0 ? (
+            <div
+              style={{
+                textAlign: "center",
+                padding: "32px 0",
+                color: "var(--ink-4)",
+                fontSize: 13,
+              }}
+            >
+              Sin resultados
+            </div>
+          ) : (
+            <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
+              {incidencias.map((inc) => {
+                const tipo =
+                  TIPO_INCIDENCIA_AULA[inc.tipo] || TIPO_INCIDENCIA_AULA.otro;
+                return (
+                  <div
+                    key={inc.id}
+                    style={{
+                      background: "var(--surface)",
+                      border: "1px solid var(--line)",
+                      borderRadius: 10,
+                      padding: "14px 18px",
+                    }}
+                  >
+                    {/* Fila superior */}
+                    <div
+                      style={{
+                        display: "flex",
+                        alignItems: "center",
+                        flexWrap: "wrap",
+                        gap: 8,
+                        marginBottom: 10,
+                      }}
+                    >
+                      <span style={{ fontSize: 12, color: "var(--ink-4)" }}>
+                        {inc.fecha}
+                      </span>
+                      <span
+                        style={{
+                          fontSize: 13,
+                          fontWeight: 600,
+                          color: "var(--ink)",
+                        }}
+                      >
+                        {inc.alumno}
+                      </span>
+                      <span
+                        style={{
+                          background: "var(--surface-2)",
+                          border: "1px solid var(--line)",
+                          borderRadius: 20,
+                          padding: "2px 8px",
+                          fontSize: 12,
+                          color: "var(--ink-3)",
+                        }}
+                      >
+                        {inc.grupo}
+                      </span>
+                      <span
+                        style={{
+                          borderRadius: 20,
+                          padding: "2px 10px",
+                          fontSize: 12,
+                          fontWeight: 500,
+                          background: tipo.bg,
+                          color: tipo.color,
+                        }}
+                      >
+                        {tipo.label}
+                      </span>
+                      <span
+                        style={{
+                          marginLeft: "auto",
+                          borderRadius: 20,
+                          padding: "2px 10px",
+                          fontSize: 12,
+                          fontWeight: 600,
+                          background:
+                            inc.estado === "activa" ? "#FEF9C3" : "#DCFCE7",
+                          color:
+                            inc.estado === "activa" ? "#CA8A04" : "#16A34A",
+                        }}
+                      >
+                        {inc.estado === "activa" ? "Activa" : "Resuelta"}
+                      </span>
+                    </div>
+
+                    {/* Descripción */}
+                    <p
+                      style={{
+                        margin: 0,
+                        fontSize: 13,
+                        color: "var(--ink-2)",
+                        lineHeight: 1.5,
+                      }}
+                    >
+                      {inc.descripcion}
+                    </p>
+
+                    {/* Resolución */}
+                    {inc.resolucion && (
+                      <div
+                        style={{
+                          marginTop: 10,
+                          paddingTop: 10,
+                          borderTop: "1px solid var(--line)",
+                        }}
+                      >
+                        <span
+                          style={{
+                            fontSize: 11,
+                            fontWeight: 600,
+                            color: "var(--ink-4)",
+                            textTransform: "uppercase",
+                            letterSpacing: ".05em",
+                          }}
+                        >
+                          Resolución
+                        </span>
+                        <p
+                          style={{
+                            margin: "3px 0 0",
+                            fontSize: 13,
+                            color: "var(--ink-3)",
+                            lineHeight: 1.5,
+                          }}
+                        >
+                          {inc.resolucion}
+                        </p>
+                      </div>
+                    )}
+                  </div>
+                );
+              })}
+            </div>
+          )}
         </div>
       );
     };
@@ -2386,6 +2864,7 @@ const PersonalPrimaria = () => {
         {tabActivo === "observaciones" && <TabObservaciones />}
         {tabActivo === "avance" && <TabAvance />}
         {tabActivo === "entrevistas" && <TabEntrevistas />}
+        {tabActivo === "incidenciasaula" && <TabIncidenciasAula />}
       </div>
     );
   }
