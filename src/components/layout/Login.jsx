@@ -171,7 +171,7 @@ const Login = ({ onLogin }) => {
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   style={{ paddingLeft: 36 }}
-                  placeholder="tu@colegiovictoria.mx"
+                  placeholder="tu@colegiovictoria.com"
                 />
               </div>
             </Field>
@@ -337,7 +337,7 @@ const Login = ({ onLogin }) => {
           >
             ¿Problemas para acceder? Escribe a{" "}
             <span style={{ color: "var(--ink-2)" }}>
-              soporte@colegiovictoria.mx
+              soporte@colegiovictoria.com
             </span>
           </div>
         </div>
