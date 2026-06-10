@@ -927,33 +927,29 @@ window.CV_DATA = (function () {
     },
     {
       id: 6,
-      name: "Lic. Paulina Ortega",
-      email: "portega@colegiovictoria.mx",
+      name: "Mtra. Jeanine González",
+      email: "jgonzalez@colegiovictoria.com",
       role: "Desarrollo Académico",
       sections: ["primaria", "secundaria", "bachillerato"],
-      // Desarrollo Académico NO ve eventos de "general" (a diferencia de
-      // los directores de sección, que sí los ven en solo-lectura)
-      viewSections: ["primaria", "secundaria", "bachillerato"],
       active: true,
-      initials: "PO",
+      initials: "JG",
       restrictedModules: ["alumnos-especiales"],
     },
     {
       id: 7,
-      name: "Lic. Gerardo Téllez",
-      email: "gtellez@colegiovictoria.mx",
+      name: "Lic. Jessi Molina",
+      email: "jmolina@colegiovictoria.com",
       role: "Vinculación",
       sections: ["general"],
-      viewAll: true, // ve todas las secciones...
-      readOnly: true, // ...pero no puede crear, editar ni eliminar
+      readOnly: true, // consulta todo, no puede crear, editar ni eliminar
       active: true,
-      initials: "GT",
+      initials: "JM",
       restrictedModules: ["alumnos-especiales"],
     },
     {
       id: 8,
       name: "C.P. Norma Aguilar",
-      email: "naguilar@colegiovictoria.mx",
+      email: "naguilar@colegiovictoria.com",
       role: "Administración",
       sections: ["general"],
       active: false,
@@ -1017,26 +1013,19 @@ window.CV_DATA = (function () {
     },
     {
       userId: 6,
-      email: "portega@colegiovictoria.mx",
+      email: "jgonzalez@colegiovictoria.com",
       password: "academico2026",
     },
     {
       userId: 7,
-      email: "gtellez@colegiovictoria.mx",
+      email: "jmolina@colegiovictoria.com",
       password: "vinculacion2026",
     },
   ];
 
   // ── Helpers de permisos del demo ──────────────────────────────────────
-  // Secciones cuyos eventos el usuario puede VER en el calendario
-  function visibleSectionsFor(user) {
-    if (!user) return [];
-    if (user.admin || user.viewAll) return SECTIONS.map((s) => s.id);
-    if (user.viewSections) return user.viewSections;
-    // directores de sección: su(s) sección(es) + eventos institucionales
-    return [...new Set([...user.sections, "general"])];
-  }
-
+  // El calendario es general: todos VEN todos los eventos.
+  // La restricción es solo de escritura:
   // Secciones donde el usuario puede CREAR/EDITAR eventos
   function editableSectionsFor(user) {
     if (!user || user.readOnly) return [];
@@ -1052,7 +1041,6 @@ window.CV_DATA = (function () {
     USERS,
     TEACHERS,
     DEMO_CREDENTIALS,
-    visibleSectionsFor,
     editableSectionsFor,
   };
 })();

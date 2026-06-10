@@ -25,12 +25,7 @@ const App = () => {
     (m) => !currentUser.restrictedModules?.includes(m.id),
   );
 
-  // Solo eventos de secciones que el usuario puede ver (scope del demo)
-  const visibleSections = window.CV_DATA.visibleSectionsFor(currentUser);
-  const visibleEvents = events.filter((e) =>
-    e.sections.some((s) => visibleSections.includes(s)),
-  );
-
+  // El calendario es general: todos ven todos los eventos.
   // Secciones donde el usuario puede crear/editar. Vacío = solo consulta
   const editableSections = window.CV_DATA.editableSectionsFor(currentUser);
   const isReadOnly = editableSections.length === 0;
@@ -89,7 +84,7 @@ const App = () => {
       <Calendar
         openEvent={openEvent}
         openNew={openNew}
-        events={visibleEvents}
+        events={events}
         readOnly={isReadOnly}
       />
     );
