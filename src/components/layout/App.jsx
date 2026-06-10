@@ -72,75 +72,29 @@ const App = () => {
     setModal(null);
   };
 
-  const currentModule = modules.find((m) => m.id === current);
-
+  // Lookup en el registro central de vistas (src/views.jsx).
+  // Fallbacks: secciones de Personal sin módulo propio y módulos en preparación
   let body, title, subtitle, breadcrumbs;
+  const view = window.CV_VIEWS[current];
 
-  if (current === "calendario") {
-    title = "Calendario institucional";
-    subtitle = "Mayo 2026 · Ciclo escolar 2025–2026";
-    breadcrumbs = ["Módulos", "Calendario"];
-    body = (
-      <Calendar
-        openEvent={openEvent}
-        openNew={openNew}
-        events={events}
-        readOnly={isReadOnly}
-      />
-    );
-  } else if (current === "horarios") {
-    title = "Horarios";
-    subtitle =
-      "Horario académico y talleres extraescolares · Semana 25–29 mayo";
-    breadcrumbs = ["Módulos", "Horarios"];
-    body = <Horarios />;
-  } else if (current === "incidencias") {
-    title = "Incidencias disciplinarias";
-    subtitle = "Seguimiento de antecedentes por alumno · Ciclo 2025–2026";
-    breadcrumbs = ["Módulos", "Incidencias"];
-    body = <Incidencias />;
-  } else if (current === "incidencias-docentes") {
-    title = "Incidencias entre docentes";
-    subtitle = "Conflictos en el aula e interpersonales · Ciclo 2025–2026";
-    breadcrumbs = ["Módulos", "Incidencias docentes"];
-    body = <IncidenciasDocentes />;
-  } else if (current === "organigrama") {
-    title = "Organigrama";
-    subtitle = "Estructura directiva · Ciclo escolar 2025–2026";
-    breadcrumbs = ["Módulos", "Organigrama"];
-    body = <Organigrama />;
-  } else if (current === "alumnos-especiales") {
-    title = "Alumnos Especiales";
-    subtitle = "Expedientes y seguimiento · Acceso restringido";
-    breadcrumbs = ["Módulos", "Alumnos Especiales"];
-    body = <AlumnosEspeciales />;
-  } else if (current === "reportes") {
-    title = "Reportes";
-    subtitle = "Tareas y actividades por alumno, materia y trimestre";
-    breadcrumbs = ["Módulos", "Reportes"];
-    body = <Reportes />;
-  } else if (current === "formatos") {
-    title = "Formatos";
-    subtitle = "Documentos oficiales del colegio";
-    breadcrumbs = ["Módulos", "Formatos"];
-    body = <Formatos />;
-  } else if (current === "personal-primaria") {
-    title = "Personal Primaria";
-    subtitle = "Docentes de la sección primaria";
-    breadcrumbs = ["Personal", "Primaria"];
-    body = <PersonalPrimaria />;
-  } else if (current === "personal-bachillerato") {
-    title = "Personal Bachillerato";
-    subtitle = "Docentes de la sección bachillerato";
-    breadcrumbs = ["Personal", "Bachillerato"];
-    body = <PersonalBachillerato />;
+  if (view) {
+    title = view.title;
+    subtitle = view.subtitle;
+    breadcrumbs = view.breadcrumbs;
+    body = view.render({
+      openEvent,
+      openNew,
+      events,
+      isReadOnly,
+      modules,
+      setModules,
+      currentUser,
+    });
   } else if (current.startsWith("personal-")) {
     const labels = {
       "personal-maternal": "Personal Maternal",
       "personal-preescolar": "Personal Preescolar",
-      "personal-primaria": "Personal Primaria",
       "personal-secundaria": "Personal Secundaria",
-      "personal-bachillerato": "Personal Bachillerato",
     };
     const seccion = labels[current] || "Personal";
     const personalMod = modules.find((m) => m.id === "personal");
@@ -148,21 +102,14 @@ const App = () => {
     subtitle = "Módulo en preparación · " + seccion;
     breadcrumbs = ["Personal", seccion.replace("Personal ", "")];
     body = <Construction module={{ ...personalMod, label: seccion }} />;
-  } else if (current === "modulos") {
-    title = "Administración de módulos";
-    subtitle = "Activa, desactiva y reordena los módulos del sistema";
-    breadcrumbs = ["Configuración", "Módulos"];
-    body = <ModulesAdmin modules={modules} setModules={setModules} />;
-  } else if (current === "usuarios") {
-    title = "Usuarios y roles";
-    subtitle = `${window.CV_DATA.USERS.length} cuentas registradas`;
-    breadcrumbs = ["Configuración", "Usuarios"];
-    body = <UsersAdmin />;
-  } else if (currentModule) {
-    title = currentModule.label;
-    subtitle = "Módulo en preparación";
-    breadcrumbs = ["Módulos", currentModule.label];
-    body = <Construction module={currentModule} />;
+  } else {
+    const currentModule = modules.find((m) => m.id === current);
+    if (currentModule) {
+      title = currentModule.label;
+      subtitle = "Módulo en preparación";
+      breadcrumbs = ["Módulos", currentModule.label];
+      body = <Construction module={currentModule} />;
+    }
   }
 
   if (!loggedIn)
