@@ -14,7 +14,26 @@ const EventModal = ({
     allowedSections.length === 0 ||
     (!isNew && !event.sections.every((s) => allowedSections.includes(s)));
   const [draft, setDraft] = useState(event);
-  const set = (k, v) => setDraft((d) => ({ ...d, [k]: v }));
+  const [error, setError] = useState(null);
+  const set = (k, v) => {
+    setError(null); // el error se limpia en cuanto el usuario corrige algo
+    setDraft((d) => ({ ...d, [k]: v }));
+  };
+
+  const validate = () => {
+    if (!draft.title.trim()) return "El título es obligatorio.";
+    if (!draft.start || !draft.end) return "Indica fecha de inicio y fin.";
+    if (draft.end < draft.start)
+      return "La fecha de fin no puede ser anterior a la de inicio.";
+    if (draft.sections.length === 0) return "Selecciona al menos una sección.";
+    return null;
+  };
+
+  const handleSave = () => {
+    const err = validate();
+    if (err) return setError(err);
+    onSave({ ...draft, title: draft.title.trim() });
+  };
 
   const toggleSection = (id) => {
     set(
@@ -257,7 +276,14 @@ const EventModal = ({
             background: "var(--surface-2)",
           }}
         >
-          <div>
+          <div
+            style={{
+              display: "flex",
+              alignItems: "center",
+              gap: 12,
+              minWidth: 0,
+            }}
+          >
             {!isNew && !readOnly && (
               <Button
                 variant="danger"
@@ -267,8 +293,19 @@ const EventModal = ({
                 Eliminar
               </Button>
             )}
+            {error && (
+              <span
+                style={{
+                  fontSize: 12.5,
+                  color: "#b3261e",
+                  fontWeight: 500,
+                }}
+              >
+                {error}
+              </span>
+            )}
           </div>
-          <div style={{ display: "flex", gap: 8 }}>
+          <div style={{ display: "flex", gap: 8, flexShrink: 0 }}>
             <Button variant="secondary" size="md" onClick={onClose}>
               {readOnly ? "Cerrar" : "Cancelar"}
             </Button>
@@ -277,7 +314,7 @@ const EventModal = ({
                 variant="primary"
                 size="md"
                 icon="check"
-                onClick={() => onSave(draft)}
+                onClick={handleSave}
               >
                 {isNew ? "Crear evento" : "Guardar cambios"}
               </Button>
