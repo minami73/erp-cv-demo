@@ -26,6 +26,7 @@ const Personal = ({ config }) => {
     TIPO_FALTA,
     ASISTENCIA_DATA,
     rolColor,
+    FILTROS, // opciones del filtro de rol en la lista (varían por sección)
   } = config;
 
   const RolChip = ({ rol }) => {
@@ -1617,6 +1618,20 @@ const Personal = ({ config }) => {
                     </span>
                     <span style={{ fontSize: 13, color: "var(--ink)" }}>
                       {f.motivo}
+                      {/* Cobertura: solo secciones que la registran (ej. bachillerato) */}
+                      {f.cobertura && (
+                        <span
+                          style={{
+                            display: "block",
+                            fontSize: 12,
+                            color: "var(--ink-3)",
+                            marginTop: 3,
+                          }}
+                        >
+                          Cubrió: <strong>{f.cobertura.cubiertoPor}</strong>
+                          {f.cobertura.nota ? ` — ${f.cobertura.nota}` : ""}
+                        </span>
+                      )}
                     </span>
                   </div>
                 );
@@ -1916,11 +1931,7 @@ const Personal = ({ config }) => {
               padding: 3,
             }}
           >
-            {[
-              { val: "todos", label: "Todos" },
-              { val: "titular", label: "Titulares" },
-              { val: "horaclase", label: "Hora-clase" },
-            ].map((opt) => (
+            {FILTROS.map((opt) => (
               <button
                 key={opt.val}
                 onClick={() => setFiltro(opt.val)}

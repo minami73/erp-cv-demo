@@ -69,7 +69,7 @@ window.CV_VIEWS = {
     title: "Personal Bachillerato",
     subtitle: "Docentes de la sección bachillerato",
     breadcrumbs: ["Personal", "Bachillerato"],
-    render: () => <PersonalBachillerato />,
+    render: () => <Personal config={window.CV_PERSONAL.bachillerato} />,
   },
   modulos: {
     title: "Administración de módulos",

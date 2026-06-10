@@ -1381,10 +1381,17 @@ const rolColor = {
   "Hora-clase": { color: "#6D28D9", bg: "#F5F3FF" },
 };
 
+  const FILTROS = [
+    { val: "todos", label: "Todos" },
+    { val: "titular", label: "Titulares" },
+    { val: "horaclase", label: "Hora-clase" },
+  ];
+
   return {
     DOCENTES,
     PERFIL_EXTRA,
     TABS,
+    FILTROS,
     SEMANAS_BIM,
     PLANEACIONES_OVERRIDE,
     buildPlaneaciones,
