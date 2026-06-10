@@ -6,7 +6,27 @@ const App = () => {
     () => localStorage.getItem("cv_sidebar_collapsed") === "1",
   );
   const [current, setCurrent] = useState("calendario");
-  const [modules, setModules] = useState(window.CV_DATA.MODULES);
+  const [modules, setModules] = useState(() => {
+    // Restaura orden/activación guardados, sin perder módulos agregados
+    // después de que se guardó (merge por id contra CV_DATA.MODULES)
+    try {
+      const saved = JSON.parse(localStorage.getItem("cv_modules"));
+      if (Array.isArray(saved) && saved.length) {
+        const byId = new Map(window.CV_DATA.MODULES.map((m) => [m.id, m]));
+        const restored = saved
+          .filter((s) => byId.has(s.id))
+          .map((s) => ({ ...byId.get(s.id), ...s }));
+        const restoredIds = new Set(restored.map((m) => m.id));
+        const added = window.CV_DATA.MODULES.filter(
+          (m) => !restoredIds.has(m.id),
+        );
+        return [...restored, ...added];
+      }
+    } catch {
+      /* JSON corrupto: caer al default */
+    }
+    return window.CV_DATA.MODULES;
+  });
   const [events, setEvents] = useState(window.CV_DATA.EVENTS);
   const [modal, setModal] = useState(null);
 
