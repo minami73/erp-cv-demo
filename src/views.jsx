@@ -63,7 +63,7 @@ window.CV_VIEWS = {
     title: "Personal Primaria",
     subtitle: "Docentes de la sección primaria",
     breadcrumbs: ["Personal", "Primaria"],
-    render: () => <PersonalPrimaria />,
+    render: () => <Personal config={window.CV_PERSONAL.primaria} />,
   },
   "personal-bachillerato": {
     title: "Personal Bachillerato",
