@@ -6,11 +6,13 @@ const EventModal = ({
   isNew,
   currentUser,
 }) => {
-  const { SECTIONS, EVENT_TYPES } = window.CV_DATA;
-  const isGlobal = !currentUser || currentUser.sections.includes("general");
-  const allowedSections = isGlobal
-    ? SECTIONS.map((s) => s.id)
-    : currentUser.sections;
+  const { SECTIONS, EVENT_TYPES, editableSectionsFor } = window.CV_DATA;
+  const allowedSections = editableSectionsFor(currentUser);
+  // Solo consulta si: el usuario no edita nada (Vinculación), o el evento
+  // tiene secciones fuera de su scope (multisección = scope en TODAS)
+  const readOnly =
+    allowedSections.length === 0 ||
+    (!isNew && !event.sections.every((s) => allowedSections.includes(s)));
   const [draft, setDraft] = useState(event);
   const set = (k, v) => setDraft((d) => ({ ...d, [k]: v }));
 
@@ -84,10 +86,15 @@ const EventModal = ({
                 color: "var(--ink-4)",
               }}
             >
-              {isNew ? "Nuevo evento" : "Editar evento"}
+              {isNew
+                ? "Nuevo evento"
+                : readOnly
+                  ? "Detalle del evento"
+                  : "Editar evento"}
             </div>
             <input
               autoFocus={isNew}
+              disabled={readOnly}
               value={draft.title}
               onChange={(e) => set("title", e.target.value)}
               placeholder="Título del evento"
@@ -127,6 +134,7 @@ const EventModal = ({
             <Field label="Fecha de inicio">
               <Input
                 type="date"
+                disabled={readOnly}
                 value={draft.start}
                 onChange={(e) => set("start", e.target.value)}
               />
@@ -134,6 +142,7 @@ const EventModal = ({
             <Field label="Fecha de fin">
               <Input
                 type="date"
+                disabled={readOnly}
                 value={draft.end}
                 onChange={(e) => set("end", e.target.value)}
               />
@@ -141,6 +150,7 @@ const EventModal = ({
             <Field label="Horario">
               <Input
                 type="text"
+                disabled={readOnly}
                 value={draft.time}
                 onChange={(e) => set("time", e.target.value)}
                 placeholder="09:00 – 11:00"
@@ -150,6 +160,7 @@ const EventModal = ({
 
           <Field label="Tipo de evento">
             <Select
+              disabled={readOnly}
               value={draft.type}
               onChange={(e) => set("type", e.target.value)}
             >
@@ -164,9 +175,11 @@ const EventModal = ({
           <Field
             label="Secciones a las que aplica"
             hint={
-              isGlobal
-                ? "Selecciona una o más. El color principal se toma de la primera sección."
-                : "Tu acceso está limitado a tu sección asignada."
+              readOnly
+                ? "Solo consulta: no tienes permisos de edición sobre este evento."
+                : allowedSections.length === SECTIONS.length
+                  ? "Selecciona una o más. El color principal se toma de la primera sección."
+                  : "Tu acceso está limitado a tu(s) sección(es) asignada(s)."
             }
           >
             <div
@@ -177,51 +190,55 @@ const EventModal = ({
                 marginTop: 2,
               }}
             >
-              {SECTIONS.filter((s) => allowedSections.includes(s.id)).map(
-                (s) => {
-                  const selected = draft.sections.includes(s.id);
-                  return (
-                    <button
-                      key={s.id}
-                      type="button"
-                      onClick={() => toggleSection(s.id)}
+              {SECTIONS.filter((s) =>
+                readOnly
+                  ? draft.sections.includes(s.id)
+                  : allowedSections.includes(s.id),
+              ).map((s) => {
+                const selected = draft.sections.includes(s.id);
+                return (
+                  <button
+                    key={s.id}
+                    type="button"
+                    disabled={readOnly}
+                    onClick={readOnly ? undefined : () => toggleSection(s.id)}
+                    style={{
+                      display: "inline-flex",
+                      alignItems: "center",
+                      gap: 8,
+                      padding: "7px 12px",
+                      borderRadius: 999,
+                      cursor: readOnly ? "default" : "pointer",
+                      border:
+                        "1px solid " +
+                        (selected ? "transparent" : "var(--line-strong)"),
+                      background: selected ? s.color : "var(--surface)",
+                      color: selected ? "#fff" : "var(--ink-2)",
+                      fontSize: 12.5,
+                      fontWeight: 500,
+                      transition: "all .12s",
+                    }}
+                  >
+                    <span
                       style={{
-                        display: "inline-flex",
-                        alignItems: "center",
-                        gap: 8,
-                        padding: "7px 12px",
+                        width: 8,
+                        height: 8,
                         borderRadius: 999,
-                        cursor: "pointer",
-                        border:
-                          "1px solid " +
-                          (selected ? "transparent" : "var(--line-strong)"),
-                        background: selected ? s.color : "var(--surface)",
-                        color: selected ? "#fff" : "var(--ink-2)",
-                        fontSize: 12.5,
-                        fontWeight: 500,
-                        transition: "all .12s",
+                        background: selected
+                          ? "rgba(255,255,255,.85)"
+                          : s.color,
                       }}
-                    >
-                      <span
-                        style={{
-                          width: 8,
-                          height: 8,
-                          borderRadius: 999,
-                          background: selected
-                            ? "rgba(255,255,255,.85)"
-                            : s.color,
-                        }}
-                      />
-                      {s.label}
-                    </button>
-                  );
-                },
-              )}
+                    />
+                    {s.label}
+                  </button>
+                );
+              })}
             </div>
           </Field>
 
           <Field label="Descripción">
             <Textarea
+              disabled={readOnly}
               value={draft.desc}
               onChange={(e) => set("desc", e.target.value)}
               rows={3}
@@ -241,7 +258,7 @@ const EventModal = ({
           }}
         >
           <div>
-            {!isNew && (
+            {!isNew && !readOnly && (
               <Button
                 variant="danger"
                 size="md"
@@ -253,16 +270,18 @@ const EventModal = ({
           </div>
           <div style={{ display: "flex", gap: 8 }}>
             <Button variant="secondary" size="md" onClick={onClose}>
-              Cancelar
+              {readOnly ? "Cerrar" : "Cancelar"}
             </Button>
-            <Button
-              variant="primary"
-              size="md"
-              icon="check"
-              onClick={() => onSave(draft)}
-            >
-              {isNew ? "Crear evento" : "Guardar cambios"}
-            </Button>
+            {!readOnly && (
+              <Button
+                variant="primary"
+                size="md"
+                icon="check"
+                onClick={() => onSave(draft)}
+              >
+                {isNew ? "Crear evento" : "Guardar cambios"}
+              </Button>
+            )}
           </div>
         </div>
       </div>

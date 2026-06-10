@@ -1,4 +1,4 @@
-const Calendar = ({ openEvent, openNew, events }) => {
+const Calendar = ({ openEvent, openNew, events, readOnly = false }) => {
   const { SECTIONS, EVENT_TYPES } = window.CV_DATA;
 
   const [cursor, setCursor] = useState(new Date());
@@ -310,9 +310,11 @@ const Calendar = ({ openEvent, openNew, events }) => {
           >
             Exportar PDF
           </Button>
-          <Button variant="primary" size="md" icon="plus" onClick={openNew}>
-            Nuevo evento
-          </Button>
+          {!readOnly && (
+            <Button variant="primary" size="md" icon="plus" onClick={openNew}>
+              Nuevo evento
+            </Button>
+          )}
         </div>
 
         <div
@@ -502,7 +504,9 @@ const Calendar = ({ openEvent, openNew, events }) => {
               sectionOf={sectionOf}
               primarySection={primarySection}
               onEventClick={openEvent}
-              onDayClick={(d) => openNew(window.fmtDate(d))}
+              onDayClick={
+                readOnly ? undefined : (d) => openNew(window.fmtDate(d))
+              }
             />
           )}
           {view === "semana" && (

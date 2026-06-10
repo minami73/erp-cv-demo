@@ -31,6 +31,10 @@ const App = () => {
     e.sections.some((s) => visibleSections.includes(s)),
   );
 
+  // Secciones donde el usuario puede crear/editar. Vacío = solo consulta
+  const editableSections = window.CV_DATA.editableSectionsFor(currentUser);
+  const isReadOnly = editableSections.length === 0;
+
   useEffect(() => {
     if (currentUser.restrictedModules?.includes(current)) {
       setCurrent("calendario");
@@ -39,7 +43,10 @@ const App = () => {
 
   const openEvent = (event) => setModal({ event, isNew: false });
   const openNew = (start) => {
-    const today = start || window.fmtDate(new Date());
+    if (isReadOnly) return;
+    // El botón "Nuevo evento" pasa el click event como argumento: ignorarlo
+    const today =
+      typeof start === "string" ? start : window.fmtDate(new Date());
     setModal({
       event: {
         id: Date.now(),
@@ -49,15 +56,14 @@ const App = () => {
         end: today,
         time: "09:00 – 10:00",
         type: "reunion",
-        sections: currentUser.sections.includes("general")
-          ? ["general"]
-          : [currentUser.sections[0]],
+        sections: [currentUser.admin ? "general" : editableSections[0]],
       },
       isNew: true,
     });
   };
   const closeModal = () => setModal(null);
   const saveEvent = (ev) => {
+    if (isReadOnly) return;
     setEvents((es) => {
       const exists = es.find((e) => e.id === ev.id);
       if (exists) return es.map((e) => (e.id === ev.id ? ev : e));
@@ -66,6 +72,7 @@ const App = () => {
     setModal(null);
   };
   const deleteEvent = (id) => {
+    if (isReadOnly) return;
     setEvents((es) => es.filter((e) => e.id !== id));
     setModal(null);
   };
@@ -83,6 +90,7 @@ const App = () => {
         openEvent={openEvent}
         openNew={openNew}
         events={visibleEvents}
+        readOnly={isReadOnly}
       />
     );
   } else if (current === "horarios") {
