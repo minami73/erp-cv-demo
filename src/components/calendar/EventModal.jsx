@@ -15,6 +15,7 @@ const EventModal = ({
     (!isNew && !event.sections.every((s) => allowedSections.includes(s)));
   const [draft, setDraft] = useState(event);
   const [error, setError] = useState(null);
+  const [confirmDelete, setConfirmDelete] = useState(false);
   const set = (k, v) => {
     setError(null); // el error se limpia en cuanto el usuario corrige algo
     setDraft((d) => ({ ...d, [k]: v }));
@@ -288,9 +289,17 @@ const EventModal = ({
               <Button
                 variant="danger"
                 size="md"
-                onClick={() => onDelete(draft.id)}
+                style={
+                  confirmDelete
+                    ? { background: "#b3261e", color: "#fff" }
+                    : undefined
+                }
+                onClick={() =>
+                  confirmDelete ? onDelete(draft.id) : setConfirmDelete(true)
+                }
+                onMouseLeave={() => setConfirmDelete(false)}
               >
-                Eliminar
+                {confirmDelete ? "¿Confirmar eliminación?" : "Eliminar"}
               </Button>
             )}
             {error && (
