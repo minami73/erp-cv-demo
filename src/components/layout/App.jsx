@@ -25,6 +25,12 @@ const App = () => {
     (m) => !currentUser.restrictedModules?.includes(m.id),
   );
 
+  // Solo eventos de secciones que el usuario puede ver (scope del demo)
+  const visibleSections = window.CV_DATA.visibleSectionsFor(currentUser);
+  const visibleEvents = events.filter((e) =>
+    e.sections.some((s) => visibleSections.includes(s)),
+  );
+
   useEffect(() => {
     if (currentUser.restrictedModules?.includes(current)) {
       setCurrent("calendario");
@@ -72,7 +78,13 @@ const App = () => {
     title = "Calendario institucional";
     subtitle = "Mayo 2026 · Ciclo escolar 2025–2026";
     breadcrumbs = ["Módulos", "Calendario"];
-    body = <Calendar openEvent={openEvent} openNew={openNew} events={events} />;
+    body = (
+      <Calendar
+        openEvent={openEvent}
+        openNew={openNew}
+        events={visibleEvents}
+      />
+    );
   } else if (current === "horarios") {
     title = "Horarios";
     subtitle =

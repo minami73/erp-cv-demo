@@ -931,6 +931,9 @@ window.CV_DATA = (function () {
       email: "portega@colegiovictoria.mx",
       role: "Desarrollo Académico",
       sections: ["primaria", "secundaria", "bachillerato"],
+      // Desarrollo Académico NO ve eventos de "general" (a diferencia de
+      // los directores de sección, que sí los ven en solo-lectura)
+      viewSections: ["primaria", "secundaria", "bachillerato"],
       active: true,
       initials: "PO",
       restrictedModules: ["alumnos-especiales"],
@@ -1024,6 +1027,23 @@ window.CV_DATA = (function () {
     },
   ];
 
+  // ── Helpers de permisos del demo ──────────────────────────────────────
+  // Secciones cuyos eventos el usuario puede VER en el calendario
+  function visibleSectionsFor(user) {
+    if (!user) return [];
+    if (user.admin || user.viewAll) return SECTIONS.map((s) => s.id);
+    if (user.viewSections) return user.viewSections;
+    // directores de sección: su(s) sección(es) + eventos institucionales
+    return [...new Set([...user.sections, "general"])];
+  }
+
+  // Secciones donde el usuario puede CREAR/EDITAR eventos
+  function editableSectionsFor(user) {
+    if (!user || user.readOnly) return [];
+    if (user.admin) return SECTIONS.map((s) => s.id);
+    return user.sections;
+  }
+
   return {
     SECTIONS,
     EVENT_TYPES,
@@ -1032,5 +1052,7 @@ window.CV_DATA = (function () {
     USERS,
     TEACHERS,
     DEMO_CREDENTIALS,
+    visibleSectionsFor,
+    editableSectionsFor,
   };
 })();
