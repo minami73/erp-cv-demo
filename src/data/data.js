@@ -882,6 +882,7 @@ window.CV_DATA = (function () {
       email: "fmendoza@colegiovictoria.com",
       role: "Director General",
       sections: ["general"],
+      admin: true, // ve y edita todas las secciones
       active: true,
       initials: "FM",
     },
@@ -940,6 +941,8 @@ window.CV_DATA = (function () {
       email: "gtellez@colegiovictoria.mx",
       role: "Vinculación",
       sections: ["general"],
+      viewAll: true, // ve todas las secciones...
+      readOnly: true, // ...pero no puede crear, editar ni eliminar
       active: true,
       initials: "GT",
       restrictedModules: ["alumnos-especiales"],
@@ -1008,6 +1011,16 @@ window.CV_DATA = (function () {
       userId: 5,
       email: "fcamacho@colegiovictoria.com",
       password: "secundaria2026",
+    },
+    {
+      userId: 6,
+      email: "portega@colegiovictoria.mx",
+      password: "academico2026",
+    },
+    {
+      userId: 7,
+      email: "gtellez@colegiovictoria.mx",
+      password: "vinculacion2026",
     },
   ];
 
