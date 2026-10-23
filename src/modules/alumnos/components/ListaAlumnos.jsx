@@ -8,7 +8,7 @@ const EstadoBadge = ({ estado }) => {
     return (
       <span style={{ fontSize: 12, color: "var(--ink-4)" }}>Sin datos</span>
     );
-  const m = SEMAFORO_ACADEMICO[estado];
+  const m = SEMAFORO_CUMPLIMIENTO[estado];
   return (
     <span
       style={{
@@ -38,29 +38,24 @@ const EstadoBadge = ({ estado }) => {
 
 const ListaAlumnos = ({ alumnos, materias, desempeno, onSelect }) => {
   const [busqueda, setBusqueda] = useState("");
-  const [grado, setGrado] = useState("todos");
-  const [grupo, setGrupo] = useState("todos");
   const [estado, setEstado] = useState("todos");
 
-  const grados = Array.from(new Set(alumnos.map((a) => a.grado))).sort();
-  const grupos = Array.from(new Set(alumnos.map((a) => a.grupo))).sort();
+  const base = alumnos.map((a) => {
+    const desTrimestre = desempeno[a.id]?.["1"] || {};
+    const cumplimiento = cumplimientoEntregas(materias, desTrimestre);
+    return {
+      alumno: a,
+      cumplimiento,
+      estado: estadoCumplimiento(cumplimiento),
+    };
+  });
 
-  const filas = alumnos
-    .map((a) => {
-      const desTrimestre = desempeno[a.id]?.["2"] || {};
-      const promedio = promedioGeneral(materias, desTrimestre);
-      const cumplimiento = cumplimientoEntregas(materias, desTrimestre);
-      const riesgo = materiasEnRiesgo(materias, desTrimestre);
-      return {
-        alumno: a,
-        promedio,
-        cumplimiento,
-        riesgo,
-        estado: estadoAcademico(promedio),
-      };
-    })
-    .filter((r) => grado === "todos" || r.alumno.grado === Number(grado))
-    .filter((r) => grupo === "todos" || r.alumno.grupo === grupo)
+  // Nada capturado todavía en ningún alumno del grupo — igual se muestra la
+  // lista (EstadoBadge y la barra ya resuelven "Sin datos" / "—" por fila),
+  // con un aviso arriba en vez de esconder a los 20 alumnos del grupo.
+  const sinCaptura = base.every((r) => r.cumplimiento === null);
+
+  const filas = base
     .filter((r) => estado === "todos" || r.estado === estado)
     .filter(
       (r) =>
@@ -83,56 +78,6 @@ const ListaAlumnos = ({ alumnos, materias, desempeno, onSelect }) => {
           marginBottom: 20,
         }}
       >
-        <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
-          <span
-            style={{ fontSize: 13, color: "var(--ink-3)", fontWeight: 500 }}
-          >
-            Grado
-          </span>
-          <Select
-            value={grado}
-            onChange={(e) => setGrado(e.target.value)}
-            style={{
-              height: 34,
-              fontSize: 13,
-              paddingLeft: 10,
-              paddingRight: 28,
-            }}
-          >
-            <option value="todos">Todos</option>
-            {grados.map((g) => (
-              <option key={g} value={g}>
-                {g}°
-              </option>
-            ))}
-          </Select>
-        </div>
-
-        <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
-          <span
-            style={{ fontSize: 13, color: "var(--ink-3)", fontWeight: 500 }}
-          >
-            Grupo
-          </span>
-          <Select
-            value={grupo}
-            onChange={(e) => setGrupo(e.target.value)}
-            style={{
-              height: 34,
-              fontSize: 13,
-              paddingLeft: 10,
-              paddingRight: 28,
-            }}
-          >
-            <option value="todos">Todos</option>
-            {grupos.map((g) => (
-              <option key={g} value={g}>
-                {g}
-              </option>
-            ))}
-          </Select>
-        </div>
-
         <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
           <span
             style={{ fontSize: 13, color: "var(--ink-3)", fontWeight: 500 }}
@@ -205,6 +150,23 @@ const ListaAlumnos = ({ alumnos, materias, desempeno, onSelect }) => {
         </div>
       </div>
 
+      {sinCaptura && (
+        <div
+          style={{
+            padding: "9px 20px",
+            marginBottom: 10,
+            background: "var(--surface-2)",
+            border: "1px solid var(--line)",
+            borderRadius: "var(--radius-lg)",
+            color: "var(--ink-4)",
+            fontSize: 12.5,
+          }}
+        >
+          Nada capturado todavía para este grupo. Empieza en la pestaña{" "}
+          <strong style={{ color: "var(--ink-3)" }}>Captura</strong>.
+        </div>
+      )}
+
       {/* Tabla */}
       <div
         style={{
@@ -217,7 +179,7 @@ const ListaAlumnos = ({ alumnos, materias, desempeno, onSelect }) => {
         <div
           style={{
             display: "grid",
-            gridTemplateColumns: "1fr 110px 180px 130px 140px",
+            gridTemplateColumns: "1fr 180px 130px 140px",
             padding: "10px 20px",
             background: "var(--surface-2)",
             borderBottom: "1px solid var(--line)",
@@ -229,9 +191,8 @@ const ListaAlumnos = ({ alumnos, materias, desempeno, onSelect }) => {
           }}
         >
           <span>Alumno</span>
-          <span style={{ textAlign: "center" }}>Promedio</span>
           <span style={{ textAlign: "center" }}>Cumplimiento</span>
-          <span style={{ textAlign: "center" }}>En riesgo</span>
+          <span style={{ textAlign: "center" }}>Estado</span>
           <span></span>
         </div>
 
@@ -253,7 +214,7 @@ const ListaAlumnos = ({ alumnos, materias, desempeno, onSelect }) => {
             key={r.alumno.id}
             style={{
               display: "grid",
-              gridTemplateColumns: "1fr 110px 180px 130px 140px",
+              gridTemplateColumns: "1fr 180px 130px 140px",
               padding: "10px 20px",
               borderBottom:
                 i < filas.length - 1 ? "1px solid var(--line)" : "none",
@@ -280,26 +241,10 @@ const ListaAlumnos = ({ alumnos, materias, desempeno, onSelect }) => {
                   {r.alumno.nombreCompleto}
                 </div>
                 <div style={{ fontSize: 11, color: "var(--ink-4)" }}>
-                  {r.alumno.grado}°{r.alumno.grupo} · {r.alumno.matricula}
+                  {etiquetaGrupo(r.alumno.grado, r.alumno.grupo)} ·{" "}
+                  {r.alumno.matricula}
                 </div>
               </div>
-            </div>
-
-            <div style={{ textAlign: "center" }}>
-              {r.promedio !== null ? (
-                <span
-                  style={{
-                    fontSize: 14,
-                    fontWeight: 700,
-                    color:
-                      SEMAFORO_ACADEMICO[r.estado]?.color || "var(--ink-2)",
-                  }}
-                >
-                  {r.promedio}
-                </span>
-              ) : (
-                <span style={{ fontSize: 12, color: "var(--ink-4)" }}>—</span>
-              )}
             </div>
 
             <div style={{ display: "flex", alignItems: "center", gap: 8 }}>

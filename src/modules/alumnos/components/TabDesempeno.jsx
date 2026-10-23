@@ -38,16 +38,43 @@ const StatCard = ({ label, valor, sub, color }) => (
   </div>
 );
 
+// Suma entregadas/dejadas de un rubro (actividades o tareas) en todas las
+// materias del trimestre — SIN mezclar actividades con tareas.
+const totalRubro = (materias, desTrimestre, rubroId) => {
+  let dejadas = 0;
+  let entregadas = 0;
+  for (const m of materias) {
+    const r = desTrimestre[m.id]?.[rubroId];
+    if (r && r.total > 0) {
+      dejadas += r.total;
+      entregadas += r.entregadas;
+    }
+  }
+  return { dejadas, entregadas };
+};
+
+// Materias con algo asignado pero cumplimiento incompleto (más de un
+// pendiente) — lo que requiere atención, no lo "reprobado".
+const materiasConRezago = (materias, desTrimestre) =>
+  materias.filter((m) => {
+    const r = desTrimestre[m.id];
+    if (!r) return false;
+    const act = r.actividades || { total: 0, entregadas: 0 };
+    const tar = r.tareas || { total: 0, entregadas: 0 };
+    const total = act.total + tar.total;
+    const pendientes = total - (act.entregadas + tar.entregadas);
+    return total > 0 && pendientes > 1;
+  }).length;
+
 const TabDesempeno = ({ materias, desempeno }) => {
-  const [trimestre, setTrimestre] = useState("2");
+  const [trimestre, setTrimestre] = useState("1");
   const [expandidoId, setExpandidoId] = useState(null);
 
   const desTrimestre = desempeno[trimestre] || {};
-  const promedio = promedioGeneral(materias, desTrimestre);
-  const estado = estadoAcademico(promedio);
   const cumplimiento = cumplimientoEntregas(materias, desTrimestre);
-  const aprobadas = materiasAprobadas(materias, desTrimestre);
-  const pendientes = rubrosPendientes(materias, desTrimestre);
+  const act = totalRubro(materias, desTrimestre, "actividades");
+  const tar = totalRubro(materias, desTrimestre, "tareas");
+  const rezago = materiasConRezago(materias, desTrimestre);
 
   return (
     <div>
@@ -64,27 +91,29 @@ const TabDesempeno = ({ materias, desempeno }) => {
         style={{ display: "flex", flexWrap: "wrap", gap: 12, marginBottom: 20 }}
       >
         <StatCard
-          label="Promedio general"
-          valor={promedio !== null ? promedio : "—"}
-          sub={
-            estado ? SEMAFORO_ACADEMICO[estado].label : "Sin calificaciones aún"
-          }
-          color={estado ? SEMAFORO_ACADEMICO[estado].color : undefined}
-        />
-        <StatCard
-          label="Cumplimiento de entregas"
+          label="Cumplimiento general"
           valor={cumplimiento !== null ? `${cumplimiento}%` : "—"}
           sub="Actividades y tareas"
+          color={cumplimiento !== null ? colorAvance(cumplimiento) : undefined}
         />
         <StatCard
-          label="Materias aprobadas"
-          valor={`${aprobadas} / ${materias.length}`}
-          sub="Con promedio ≥ 6.0"
+          label="Actividades"
+          valor={act.dejadas > 0 ? `${act.entregadas}/${act.dejadas}` : "—"}
+          sub="Entregadas / dejadas"
         />
         <StatCard
-          label="Rubros pendientes"
-          valor={pendientes}
-          sub="Sin calificar todavía"
+          label="Tareas"
+          valor={tar.dejadas > 0 ? `${tar.entregadas}/${tar.dejadas}` : "—"}
+          sub="Entregadas / dejadas"
+        />
+        <StatCard
+          label="Materias con rezago"
+          valor={
+            act.dejadas > 0 || tar.dejadas > 0
+              ? `${rezago} / ${materias.length}`
+              : "—"
+          }
+          sub="Con más de un pendiente"
         />
       </div>
 
@@ -100,7 +129,7 @@ const TabDesempeno = ({ materias, desempeno }) => {
         <div
           style={{
             display: "grid",
-            gridTemplateColumns: "26px 1.4fr 1fr 1fr 1fr 1fr 1fr 90px",
+            gridTemplateColumns: GRID_MATERIAS,
             gap: 8,
             padding: "10px 20px",
             background: "var(--surface-2)",
@@ -116,10 +145,7 @@ const TabDesempeno = ({ materias, desempeno }) => {
           <span>Materia</span>
           <span>{RUBROS.actividades.label}</span>
           <span>{RUBROS.tareas.label}</span>
-          <span>{RUBROS.proyecto.label}</span>
-          <span>{RUBROS.examen_parcial.label}</span>
-          <span>{RUBROS.examen_periodo.label}</span>
-          <span style={{ textAlign: "right" }}>Promedio</span>
+          <span style={{ textAlign: "right" }}>Cumplimiento</span>
         </div>
 
         {materias.map((materia) => (
@@ -127,6 +153,7 @@ const TabDesempeno = ({ materias, desempeno }) => {
             key={materia.id}
             materia={materia}
             registro={desTrimestre[materia.id] || {}}
+            trimestre={trimestre}
             expanded={expandidoId === materia.id}
             onToggle={() =>
               setExpandidoId((cur) => (cur === materia.id ? null : materia.id))

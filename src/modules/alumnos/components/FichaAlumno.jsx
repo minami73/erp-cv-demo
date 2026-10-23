@@ -1,9 +1,10 @@
 /* ─── FichaAlumno — header + pestañas ────────────────────────────────────────
    Mismo patrón que la ficha de Personal.jsx: header con avatar, chip de
-   estado académico, navegación anterior/siguiente dentro de la lista
-   filtrada, y barra de pestañas. El promedio del header usa el trimestre
-   más reciente con datos completos (2°) como referencia rápida; dentro de
-   la pestaña Desempeño se puede cambiar de trimestre. */
+   cumplimiento, navegación anterior/siguiente dentro de la lista filtrada,
+   y barra de pestañas. El chip usa el trimestre "1" como referencia rápida;
+   dentro de la pestaña Desempeño se puede cambiar de trimestre. Mide
+   cumplimiento (% de entregas), no calificación — la captura manual no
+   produce calificaciones todavía (ver constants.js). */
 
 const TabPendiente = ({ nombre }) => (
   <div
@@ -33,6 +34,7 @@ const FichaAlumno = ({
   tabInicial,
   onSelect,
   onBack,
+  onEditar,
 }) => {
   const [tabActivo, setTabActivo] = useState(tabInicial || "informacion");
 
@@ -41,9 +43,9 @@ const FichaAlumno = ({
   const nextAlumno =
     idx < listaNavegacion.length - 1 ? listaNavegacion[idx + 1] : null;
 
-  const desTrimestre = desempeno[alumno.id]?.["2"] || {};
-  const promedio = promedioGeneral(materias, desTrimestre);
-  const estado = estadoAcademico(promedio);
+  const desTrimestre = desempeno[alumno.id]?.["1"] || {};
+  const cumplimiento = cumplimientoEntregas(materias, desTrimestre);
+  const estado = estadoCumplimiento(cumplimiento);
 
   const TABS = [
     { id: "informacion", label: "Información" },
@@ -90,13 +92,13 @@ const FichaAlumno = ({
             }}
           >
             <span style={{ fontSize: 13, color: "var(--ink-3)" }}>
-              {alumno.grado}° {alumno.grupo} · Bachillerato
+              {etiquetaGrupo(alumno.grado, alumno.grupo)} · Bachillerato
             </span>
             <span style={{ fontSize: 13, color: "var(--ink-4)" }}>·</span>
             <span style={{ fontSize: 13, color: "var(--ink-3)" }}>
               {alumno.matricula}
             </span>
-            {promedio !== null && (
+            {cumplimiento !== null && (
               <>
                 <span style={{ fontSize: 13, color: "var(--ink-4)" }}>·</span>
                 <span
@@ -106,24 +108,28 @@ const FichaAlumno = ({
                     gap: 6,
                     fontSize: 13,
                     fontWeight: 600,
-                    color: SEMAFORO_ACADEMICO[estado]?.color,
+                    color: SEMAFORO_CUMPLIMIENTO[estado]?.color,
                   }}
                 >
-                  Promedio {promedio}
+                  Cumplimiento {cumplimiento}%
                   <span
                     style={{
                       width: 6,
                       height: 6,
                       borderRadius: 999,
-                      background: SEMAFORO_ACADEMICO[estado]?.color,
+                      background: SEMAFORO_CUMPLIMIENTO[estado]?.color,
                     }}
                   />
-                  {SEMAFORO_ACADEMICO[estado]?.label}
+                  {SEMAFORO_CUMPLIMIENTO[estado]?.label}
                 </span>
               </>
             )}
           </div>
         </div>
+
+        <Button variant="soft" size="sm" icon="edit" onClick={onEditar}>
+          Editar
+        </Button>
 
         {/* Navegación prev/next dentro de la lista filtrada */}
         <div style={{ display: "flex", alignItems: "center", gap: 4 }}>

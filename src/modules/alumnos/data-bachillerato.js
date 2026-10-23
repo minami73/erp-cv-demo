@@ -87,6 +87,86 @@ const ALUMNOS_BACH = [
     grado: 1,
     grupo: "A",
   },
+  {
+    id: "ba121",
+    nombre: "Mariana",
+    apP: "Cordero",
+    apM: "Paredes",
+    grado: 1,
+    grupo: "A",
+  },
+  {
+    id: "ba122",
+    nombre: "Diego",
+    apP: "Salcedo",
+    apM: "Ibarra",
+    grado: 1,
+    grupo: "A",
+  },
+  {
+    id: "ba123",
+    nombre: "Valentina",
+    apP: "Rangel",
+    apM: "Cueva",
+    grado: 1,
+    grupo: "A",
+  },
+  {
+    id: "ba124",
+    nombre: "Emilio",
+    apP: "Barragán",
+    apM: "Soto",
+    grado: 1,
+    grupo: "A",
+  },
+  {
+    id: "ba125",
+    nombre: "Paola",
+    apP: "Negrete",
+    apM: "Luna",
+    grado: 1,
+    grupo: "A",
+  },
+  {
+    id: "ba126",
+    nombre: "Joaquín",
+    apP: "Mejía",
+    apM: "Rentería",
+    grado: 1,
+    grupo: "A",
+  },
+  {
+    id: "ba127",
+    nombre: "Itzel",
+    apP: "Covarrubias",
+    apM: "Sáenz",
+    grado: 1,
+    grupo: "A",
+  },
+  {
+    id: "ba128",
+    nombre: "Rodrigo",
+    apP: "Anaya",
+    apM: "Peralta",
+    grado: 1,
+    grupo: "A",
+  },
+  {
+    id: "ba129",
+    nombre: "Luciana",
+    apP: "Benavides",
+    apM: "Montes",
+    grado: 1,
+    grupo: "A",
+  },
+  {
+    id: "ba130",
+    nombre: "Matías",
+    apP: "Carranza",
+    apM: "Osorio",
+    grado: 1,
+    grupo: "A",
+  },
   // 1°B
   {
     id: "ba111",
@@ -165,6 +245,86 @@ const ALUMNOS_BACH = [
     nombre: "Nayeli",
     apP: "Cotorruelo",
     apM: "Segura",
+    grado: 1,
+    grupo: "B",
+  },
+  {
+    id: "ba131",
+    nombre: "Ariadna",
+    apP: "Gallardo",
+    apM: "Montoya",
+    grado: 1,
+    grupo: "B",
+  },
+  {
+    id: "ba132",
+    nombre: "Sebastián",
+    apP: "Trejo",
+    apM: "Casillas",
+    grado: 1,
+    grupo: "B",
+  },
+  {
+    id: "ba133",
+    nombre: "Fernanda",
+    apP: "Olvera",
+    apM: "Serrano",
+    grado: 1,
+    grupo: "B",
+  },
+  {
+    id: "ba134",
+    nombre: "Gael",
+    apP: "Campuzano",
+    apM: "Rico",
+    grado: 1,
+    grupo: "B",
+  },
+  {
+    id: "ba135",
+    nombre: "Montserrat",
+    apP: "Zaragoza",
+    apM: "Núñez",
+    grado: 1,
+    grupo: "B",
+  },
+  {
+    id: "ba136",
+    nombre: "Ian",
+    apP: "Figueroa",
+    apM: "Delgadillo",
+    grado: 1,
+    grupo: "B",
+  },
+  {
+    id: "ba137",
+    nombre: "Abril",
+    apP: "Castañón",
+    apM: "Reséndiz",
+    grado: 1,
+    grupo: "B",
+  },
+  {
+    id: "ba138",
+    nombre: "Leonardo",
+    apP: "Pacheco",
+    apM: "Vilchis",
+    grado: 1,
+    grupo: "B",
+  },
+  {
+    id: "ba139",
+    nombre: "Zoe",
+    apP: "Hinojosa",
+    apM: "Carbajal",
+    grado: 1,
+    grupo: "B",
+  },
+  {
+    id: "ba140",
+    nombre: "Alexis",
+    apP: "Manríquez",
+    apM: "Soriano",
     grado: 1,
     grupo: "B",
   },
@@ -249,6 +409,86 @@ const ALUMNOS_BACH = [
     grado: 2,
     grupo: "A",
   },
+  {
+    id: "ba221",
+    nombre: "Natalia",
+    apP: "Bermúdez",
+    apM: "Orozco",
+    grado: 2,
+    grupo: "A",
+  },
+  {
+    id: "ba222",
+    nombre: "Cristian",
+    apP: "Arteaga",
+    apM: "Palomares",
+    grado: 2,
+    grupo: "A",
+  },
+  {
+    id: "ba223",
+    nombre: "Regina",
+    apP: "Loera",
+    apM: "Villagómez",
+    grado: 2,
+    grupo: "A",
+  },
+  {
+    id: "ba224",
+    nombre: "Octavio",
+    apP: "Sandí",
+    apM: "Fuentes",
+    grado: 2,
+    grupo: "A",
+  },
+  {
+    id: "ba225",
+    nombre: "Ximena",
+    apP: "Robledo",
+    apM: "Camacho",
+    grado: 2,
+    grupo: "A",
+  },
+  {
+    id: "ba226",
+    nombre: "Sergio",
+    apP: "Belmonte",
+    apM: "Quiroga",
+    grado: 2,
+    grupo: "A",
+  },
+  {
+    id: "ba227",
+    nombre: "Alondra",
+    apP: "Terrazas",
+    apM: "Macías",
+    grado: 2,
+    grupo: "A",
+  },
+  {
+    id: "ba228",
+    nombre: "Mauricio",
+    apP: "Calderón",
+    apM: "Villanueva",
+    grado: 2,
+    grupo: "A",
+  },
+  {
+    id: "ba229",
+    nombre: "Daniela",
+    apP: "Ocampo",
+    apM: "Berrones",
+    grado: 2,
+    grupo: "A",
+  },
+  {
+    id: "ba230",
+    nombre: "Esteban",
+    apP: "Guízar",
+    apM: "Montalvo",
+    grado: 2,
+    grupo: "A",
+  },
   // 2°B
   {
     id: "ba211",
@@ -327,6 +567,86 @@ const ALUMNOS_BACH = [
     nombre: "Karime",
     apP: "Aldana",
     apM: "Bocanegra",
+    grado: 2,
+    grupo: "B",
+  },
+  {
+    id: "ba231",
+    nombre: "Mía",
+    apP: "Larios",
+    apM: "Espino",
+    grado: 2,
+    grupo: "B",
+  },
+  {
+    id: "ba232",
+    nombre: "Rogelio",
+    apP: "Bautista",
+    apM: "Cervantes",
+    grado: 2,
+    grupo: "B",
+  },
+  {
+    id: "ba233",
+    nombre: "Jimena",
+    apP: "Albarrán",
+    apM: "Torres",
+    grado: 2,
+    grupo: "B",
+  },
+  {
+    id: "ba234",
+    nombre: "Iker",
+    apP: "Garduño",
+    apM: "Villalpando",
+    grado: 2,
+    grupo: "B",
+  },
+  {
+    id: "ba235",
+    nombre: "Perla",
+    apP: "Sarabia",
+    apM: "Noriega",
+    grado: 2,
+    grupo: "B",
+  },
+  {
+    id: "ba236",
+    nombre: "Dante",
+    apP: "Figueroa",
+    apM: "Valdovinos",
+    grado: 2,
+    grupo: "B",
+  },
+  {
+    id: "ba237",
+    nombre: "Catalina",
+    apP: "Montaño",
+    apM: "Espitia",
+    grado: 2,
+    grupo: "B",
+  },
+  {
+    id: "ba238",
+    nombre: "Bruno",
+    apP: "Medrano",
+    apM: "Olguín",
+    grado: 2,
+    grupo: "B",
+  },
+  {
+    id: "ba239",
+    nombre: "Victoria",
+    apP: "Salgado",
+    apM: "Treviño",
+    grado: 2,
+    grupo: "B",
+  },
+  {
+    id: "ba240",
+    nombre: "Emiliano",
+    apP: "Zavala",
+    apM: "Cordero",
     grado: 2,
     grupo: "B",
   },
@@ -411,6 +731,86 @@ const ALUMNOS_BACH = [
     grado: 3,
     grupo: "A",
   },
+  {
+    id: "ba321",
+    nombre: "Alejandra",
+    apP: "Nieto",
+    apM: "Barajas",
+    grado: 3,
+    grupo: "A",
+  },
+  {
+    id: "ba322",
+    nombre: "Tomás",
+    apP: "Frías",
+    apM: "Rosado",
+    grado: 3,
+    grupo: "A",
+  },
+  {
+    id: "ba323",
+    nombre: "Sofía",
+    apP: "Treviño",
+    apM: "Cabrera",
+    grado: 3,
+    grupo: "A",
+  },
+  {
+    id: "ba324",
+    nombre: "Gerardo",
+    apP: "Palafox",
+    apM: "Mondragón",
+    grado: 3,
+    grupo: "A",
+  },
+  {
+    id: "ba325",
+    nombre: "Carolina",
+    apP: "Betancourt",
+    apM: "Loza",
+    grado: 3,
+    grupo: "A",
+  },
+  {
+    id: "ba326",
+    nombre: "Iván",
+    apP: "Zúñiga",
+    apM: "Marroquín",
+    grado: 3,
+    grupo: "A",
+  },
+  {
+    id: "ba327",
+    nombre: "Melissa",
+    apP: "Quijano",
+    apM: "Santoyo",
+    grado: 3,
+    grupo: "A",
+  },
+  {
+    id: "ba328",
+    nombre: "Jorge",
+    apP: "Villaseñor",
+    apM: "Padilla",
+    grado: 3,
+    grupo: "A",
+  },
+  {
+    id: "ba329",
+    nombre: "Ainara",
+    apP: "Robledo",
+    apM: "Cortés",
+    grado: 3,
+    grupo: "A",
+  },
+  {
+    id: "ba330",
+    nombre: "Maximiliano",
+    apP: "Soto",
+    apM: "Galarza",
+    grado: 3,
+    grupo: "A",
+  },
   // 3°B
   {
     id: "ba311",
@@ -492,6 +892,86 @@ const ALUMNOS_BACH = [
     grado: 3,
     grupo: "B",
   },
+  {
+    id: "ba331",
+    nombre: "Fabiola",
+    apP: "Reséndez",
+    apM: "Mota",
+    grado: 3,
+    grupo: "B",
+  },
+  {
+    id: "ba332",
+    nombre: "Ricardo",
+    apP: "Villalobos",
+    apM: "Enríquez",
+    grado: 3,
+    grupo: "B",
+  },
+  {
+    id: "ba333",
+    nombre: "Ángela",
+    apP: "Puente",
+    apM: "Corona",
+    grado: 3,
+    grupo: "B",
+  },
+  {
+    id: "ba334",
+    nombre: "Samuel",
+    apP: "Baeza",
+    apM: "Montoya",
+    grado: 3,
+    grupo: "B",
+  },
+  {
+    id: "ba335",
+    nombre: "Lorena",
+    apP: "Vallejo",
+    apM: "Esparza",
+    grado: 3,
+    grupo: "B",
+  },
+  {
+    id: "ba336",
+    nombre: "Christopher",
+    apP: "Narváez",
+    apM: "Olmedo",
+    grado: 3,
+    grupo: "B",
+  },
+  {
+    id: "ba337",
+    nombre: "Ivanna",
+    apP: "Casas",
+    apM: "Berumen",
+    grado: 3,
+    grupo: "B",
+  },
+  {
+    id: "ba338",
+    nombre: "Julián",
+    apP: "Portillo",
+    apM: "Ramírez",
+    grado: 3,
+    grupo: "B",
+  },
+  {
+    id: "ba339",
+    nombre: "Renata",
+    apP: "Camarillo",
+    apM: "Siller",
+    grado: 3,
+    grupo: "B",
+  },
+  {
+    id: "ba340",
+    nombre: "Adrián",
+    apP: "Cedillo",
+    apM: "Vargas",
+    grado: 3,
+    grupo: "B",
+  },
 ];
 
 // Datos del expediente que no dependen del rendimiento académico
@@ -536,15 +1016,19 @@ ALUMNOS_BACH.forEach((a) => {
 // Catálogo PROVISIONAL — pendiente de confirmar con dirección
 // (docs/contexto-modulo-personal-alumnos.md §4.1). Ponderación
 // distinta por materia, según lo indicado por John.
+// Todas las materias usan actividades Y tareas (además de sus rubros de
+// calificación) para que el reporte semanal de cumplimiento tenga datos en
+// ambas columnas en las 8 materias, no solo en las que antes las usaban.
 const MATERIAS_BACH = [
   {
     id: "matematicas",
     nombre: "Matemáticas",
     docente: "Prof. Raúl Tovar",
     ponderacion: [
-      { rubro: "actividades", peso: 40 },
+      { rubro: "actividades", peso: 30 },
+      { rubro: "tareas", peso: 15 },
       { rubro: "examen_periodo", peso: 40 },
-      { rubro: "proyecto", peso: 20 },
+      { rubro: "proyecto", peso: 15 },
     ],
   },
   {
@@ -552,7 +1036,8 @@ const MATERIAS_BACH = [
     nombre: "Química",
     docente: "Profa. Mónica Serrano",
     ponderacion: [
-      { rubro: "actividades", peso: 40 },
+      { rubro: "actividades", peso: 30 },
+      { rubro: "tareas", peso: 10 },
       { rubro: "proyecto", peso: 10 },
       { rubro: "examen_parcial", peso: 25 },
       { rubro: "examen_periodo", peso: 25 },
@@ -573,9 +1058,10 @@ const MATERIAS_BACH = [
     nombre: "Historia Universal",
     docente: "Prof. Ignacio Reyna",
     ponderacion: [
-      { rubro: "tareas", peso: 30 },
-      { rubro: "examen_parcial", peso: 30 },
-      { rubro: "examen_periodo", peso: 40 },
+      { rubro: "actividades", peso: 15 },
+      { rubro: "tareas", peso: 25 },
+      { rubro: "examen_parcial", peso: 25 },
+      { rubro: "examen_periodo", peso: 35 },
     ],
   },
   {
@@ -594,8 +1080,9 @@ const MATERIAS_BACH = [
     nombre: "Física",
     docente: "Prof. Raúl Tovar",
     ponderacion: [
-      { rubro: "actividades", peso: 35 },
-      { rubro: "examen_parcial", peso: 30 },
+      { rubro: "actividades", peso: 25 },
+      { rubro: "tareas", peso: 15 },
+      { rubro: "examen_parcial", peso: 25 },
       { rubro: "examen_periodo", peso: 35 },
     ],
   },
@@ -604,8 +1091,9 @@ const MATERIAS_BACH = [
     nombre: "Filosofía",
     docente: "Profa. Ana Belén Ríos",
     ponderacion: [
-      { rubro: "actividades", peso: 30 },
-      { rubro: "proyecto", peso: 30 },
+      { rubro: "actividades", peso: 20 },
+      { rubro: "tareas", peso: 15 },
+      { rubro: "proyecto", peso: 25 },
       { rubro: "examen_periodo", peso: 40 },
     ],
   },
@@ -614,180 +1102,12 @@ const MATERIAS_BACH = [
     nombre: "Educación Física",
     docente: "Prof. David Coronado",
     ponderacion: [
-      { rubro: "actividades", peso: 70 },
+      { rubro: "actividades", peso: 50 },
+      { rubro: "tareas", peso: 20 },
       { rubro: "examen_periodo", peso: 30 },
     ],
   },
 ];
-
-// Total base por rubro y trimestre (t3 recién inicia → menos entregas aún)
-const TOTAL_BASE = {
-  actividades: { 1: 12, 2: 10, 3: 4 },
-  tareas: { 1: 8, 2: 8, 3: 3 },
-};
-const MAX_PENDIENTE = { 1: 1, 2: 3, 3: 1 };
-
-const TAREAS_MUESTRA = {
-  actividades: [
-    "Ejercicios de práctica",
-    "Resumen de lectura",
-    "Mapa conceptual",
-    "Cuestionario en clase",
-    "Análisis de caso",
-  ],
-  tareas: [
-    "Investigación en casa",
-    "Reporte de laboratorio",
-    "Ensayo corto",
-    "Ficha bibliográfica",
-    "Guía de estudio",
-  ],
-};
-
-// Nivel académico del alumno: un sesgo estable que se aplica a TODAS sus
-// calificaciones, para que un alumno rezagado se vea rezagado en varias
-// materias (no ruido puramente independiente, que promedia a la mitad y
-// no deja a nadie en riesgo). Distribución aproximada: 18% bajo, 55%
-// medio, 27% alto.
-const nivelAlumno = (alumno) => {
-  const h = hashAlumnos(`nivel-${alumno.id}`);
-  const r = h % 100;
-  if (r < 18) return -3.2 + (h % 10) / 10; // bajo: sesgo ≈ -3.2 a -2.3
-  if (r < 73) return -0.6 + (h % 12) / 10; // medio: sesgo ≈ -0.6 a +0.5
-  return 1.0 + (h % 10) / 10; // alto: sesgo ≈ +1.0 a +1.9
-};
-
-const clamp10 = (n) => Math.min(10, Math.max(4, n));
-
-const construirRubroConteo = (tipo, alumno, materiaId, trimestre) => {
-  const h1 = hashAlumnos(`${tipo}-${trimestre}-${materiaId}-${alumno.id}`);
-  const total = Math.max(3, TOTAL_BASE[tipo][trimestre] - 1 + (h1 % 3));
-  const pendientes = h1 % (MAX_PENDIENTE[trimestre] + 1);
-  const entregadas = Math.max(0, total - pendientes);
-  const h2 = hashAlumnos(`${tipo}-cal-${trimestre}-${materiaId}-${alumno.id}`);
-  const base = 7.5 + (h2 % 26) / 10; // 7.5–10.0 antes del sesgo
-  const promedio = entregadas > 0 ? clamp10(base + nivelAlumno(alumno)) : null;
-
-  const detalle = [];
-  for (let i = 0; i < total; i++) {
-    const nombreBase = TAREAS_MUESTRA[tipo][i % TAREAS_MUESTRA[tipo].length];
-    const hi = hashAlumnos(
-      `${tipo}-item-${trimestre}-${materiaId}-${alumno.id}-${i}`,
-    );
-    const esEntregada = i < entregadas;
-    const esTarde = esEntregada && hi % 5 === 0;
-    detalle.push({
-      id: `${materiaId}-${tipo}-${trimestre}-${i}`,
-      tipo,
-      titulo: `${nombreBase} ${i + 1}`,
-      fechaLimite: `2026-${String(1 + ((trimestre - 1) * 3 + (i % 3))).padStart(2, "0")}-${String(3 + ((i * 4) % 25)).padStart(2, "0")}`,
-      estado: !esEntregada ? "pendiente" : esTarde ? "tarde" : "entregada",
-      calificacion: esEntregada
-        ? Math.round(clamp10(7 + (hi % 26) / 10 + nivelAlumno(alumno)) * 10) /
-          10
-        : null,
-    });
-  }
-
-  return {
-    total,
-    entregadas,
-    promedio: promedio !== null ? Math.round(promedio * 10) / 10 : null,
-    detalle,
-  };
-};
-
-const construirRubroEntrega = (alumno, materiaId, trimestre) => {
-  const h = hashAlumnos(`proyecto-${trimestre}-${materiaId}-${alumno.id}`);
-  // t3 recién arranca: casi nadie ha entregado proyecto todavía
-  const probEntregado = trimestre === "3" ? 0.15 : 0.85;
-  const entregado = (h % 100) / 100 < probEntregado;
-  return {
-    entregado,
-    calificacion: entregado
-      ? Math.round(clamp10(7.5 + (h % 26) / 10 + nivelAlumno(alumno)) * 10) / 10
-      : null,
-  };
-};
-
-const construirRubroCalificacion = (rubroId, alumno, materiaId, trimestre) => {
-  const h = hashAlumnos(`${rubroId}-${trimestre}-${materiaId}-${alumno.id}`);
-  // el examen de periodo cierra el trimestre: en t3 casi nunca ha ocurrido
-  const probPresentado =
-    rubroId === "examen_periodo" ? (trimestre === "3" ? 0.1 : 0.9) : 0.75;
-  const presentado = (h % 100) / 100 < probPresentado;
-  return {
-    presentado,
-    calificacion: presentado
-      ? Math.round(clamp10(7 + (h % 26) / 10 + nivelAlumno(alumno)) * 10) / 10
-      : null,
-  };
-};
-
-const construirDesempeno = () => {
-  const data = {};
-  for (const alumno of ALUMNOS_BACH) {
-    data[alumno.id] = { 1: {}, 2: {}, 3: {} };
-    for (const trimestre of ["1", "2", "3"]) {
-      for (const materia of MATERIAS_BACH) {
-        const usaRubro = (id) =>
-          materia.ponderacion.some((p) => p.rubro === id);
-        const registro = {};
-        if (usaRubro("actividades")) {
-          const { detalle, ...resto } = construirRubroConteo(
-            "actividades",
-            alumno,
-            materia.id,
-            trimestre,
-          );
-          registro.actividades = resto;
-          registro._detalleActividades = detalle;
-        }
-        if (usaRubro("tareas")) {
-          const { detalle, ...resto } = construirRubroConteo(
-            "tareas",
-            alumno,
-            materia.id,
-            trimestre,
-          );
-          registro.tareas = resto;
-          registro._detalleTareas = detalle;
-        }
-        if (usaRubro("proyecto")) {
-          registro.proyecto = construirRubroEntrega(
-            alumno,
-            materia.id,
-            trimestre,
-          );
-        }
-        if (usaRubro("examen_parcial")) {
-          registro.examen_parcial = construirRubroCalificacion(
-            "examen_parcial",
-            alumno,
-            materia.id,
-            trimestre,
-          );
-        }
-        if (usaRubro("examen_periodo")) {
-          registro.examen_periodo = construirRubroCalificacion(
-            "examen_periodo",
-            alumno,
-            materia.id,
-            trimestre,
-          );
-        }
-        registro.detalle = [
-          ...(registro._detalleActividades || []),
-          ...(registro._detalleTareas || []),
-        ].sort((a, b) => a.fechaLimite.localeCompare(b.fechaLimite));
-        delete registro._detalleActividades;
-        delete registro._detalleTareas;
-        data[alumno.id][trimestre][materia.id] = registro;
-      }
-    }
-  }
-  return data;
-};
 
 const TABS_BACH = [
   { id: "informacion", label: "Información" },
@@ -800,6 +1120,7 @@ window.CV_ALUMNOS = window.CV_ALUMNOS || {};
 window.CV_ALUMNOS.bachillerato = {
   ALUMNOS: ALUMNOS_BACH,
   MATERIAS: MATERIAS_BACH,
-  DESEMPENO: construirDesempeno(),
+  // Nace vacío: el desempeño se alimenta solo desde la pestaña Captura.
+  DESEMPENO: {},
   TABS: TABS_BACH,
 };

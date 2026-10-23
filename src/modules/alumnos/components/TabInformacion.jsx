@@ -1,8 +1,10 @@
 /* ─── TabInformacion — expediente del alumno ────────────────────────────────
    Campos según docs/contexto-modulo-personal-alumnos.md §3.2: nombre
    completo, edad, fecha de nacimiento, tutor y su teléfono, más "otras
-   indicaciones" — ese último campo sigue sin definirse con dirección
-   (§4.2), así que se muestra como pendiente en vez de inventar contenido. */
+   indicaciones". El schema real de ese último campo sigue sin definirse con
+   dirección (§4.2) — aquí se captura como texto libre (ver
+   ExpedienteAlumnoModal.jsx) para no inventar una estructura que luego haya
+   que rehacer; edición vía botón "Editar" en el header de FichaAlumno. */
 
 const InfoField = ({ label, valor }) => (
   <div>
@@ -55,7 +57,7 @@ const TabInformacion = ({ alumno }) => (
         <InfoField label="Matrícula" valor={alumno.matricula} />
         <InfoField
           label="Grado y grupo"
-          valor={`${alumno.grado}° ${alumno.grupo} — Bachillerato`}
+          valor={`${etiquetaGrupo(alumno.grado, alumno.grupo)} — Bachillerato`}
         />
         <InfoField label="Edad" valor={`${alumno.edad} años`} />
         <InfoField label="Fecha de nacimiento" valor={alumno.fechaNacimiento} />
@@ -113,19 +115,34 @@ const TabInformacion = ({ alumno }) => (
         >
           Otras indicaciones
         </div>
-        <div
-          style={{
-            fontSize: 12.5,
-            color: "var(--ink-4)",
-            fontStyle: "italic",
-            background: "var(--bg-sunk)",
-            borderRadius: 8,
-            padding: "10px 12px",
-          }}
-        >
-          Campo pendiente de definir con dirección (alergias, contacto de
-          emergencia, tipo de sangre u otros candidatos a evaluar).
-        </div>
+        {alumno.otrasIndicaciones ? (
+          <div
+            style={{
+              fontSize: 12.5,
+              color: "var(--ink)",
+              whiteSpace: "pre-wrap",
+              background: "var(--bg-sunk)",
+              borderRadius: 8,
+              padding: "10px 12px",
+            }}
+          >
+            {alumno.otrasIndicaciones}
+          </div>
+        ) : (
+          <div
+            style={{
+              fontSize: 12.5,
+              color: "var(--ink-4)",
+              fontStyle: "italic",
+              background: "var(--bg-sunk)",
+              borderRadius: 8,
+              padding: "10px 12px",
+            }}
+          >
+            Sin indicaciones registradas — se captura al editar el
+            expediente.
+          </div>
+        )}
       </div>
     </div>
   </div>
