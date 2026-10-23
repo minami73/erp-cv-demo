@@ -184,7 +184,8 @@ const EntrevistaCard = ({ ent, onToggleCompromiso, onFirmarTutor, onCorregir }) 
         }}
       >
         <span>
-          Coach: {ent.firmaCoach.firmado ? `firmado por ${ent.firmaCoach.nombre}` : "sin firmar"}
+          Docente Titular:{" "}
+          {ent.firmaCoach.firmado ? `firmado por ${ent.firmaCoach.nombre}` : "sin firmar"}
         </span>
         {ent.firmaTutor.firmado ? (
           <span>Tutor: firmado por {ent.firmaTutor.nombre}</span>

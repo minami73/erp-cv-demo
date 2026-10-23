@@ -120,6 +120,12 @@ const Alumnos = ({ config }) => {
   const [entrevistas, setEntrevistas] = useState(() =>
     semillaEntrevistas(config.ALUMNOS),
   );
+  // Array plano (no { [alumnoId]: [] }): una incidencia es UN registro con N
+  // participantes (ver incidencias.js) — un alumno de otro grupo puede
+  // compartir el mismo registro sin duplicarlo.
+  const [incidencias, setIncidencias] = useState(() =>
+    semillaIncidencias(config.ALUMNOS),
+  );
 
   // Reset al cambiar de sección — hoy solo bachillerato, pero Alumnos es
   // genérico por sección (ver header del archivo).
@@ -132,6 +138,7 @@ const Alumnos = ({ config }) => {
     setSeleccionado(null);
     setCapturas(semillaCapturas(config.ALUMNOS, config.MATERIAS));
     setEntrevistas(semillaEntrevistas(config.ALUMNOS));
+    setIncidencias(semillaIncidencias(config.ALUMNOS));
   }
 
   const ALUMNOS = useMemo(
@@ -293,6 +300,42 @@ const Alumnos = ({ config }) => {
     });
   };
 
+  // Incidencias: mismo molde funcional-inmutable que entrevistas, pero sobre
+  // un array plano — guardarIncidencia agrega al frente, el resto solo toca
+  // campos pensados para cambiar después (resolución, nota de corrección).
+  const guardarIncidencia = (form) => {
+    setIncidencias((prev) => {
+      const idNueva = Math.max(0, ...prev.map((i) => i.id)) + 1;
+      return [construirIncidencia(form, idNueva), ...prev];
+    });
+  };
+
+  const actualizarIncidencia = (incidenciaId, cambios) => {
+    setIncidencias((prev) =>
+      prev.map((i) => (i.id === incidenciaId ? { ...i, ...cambios } : i)),
+    );
+  };
+
+  const resolverIncidencia = (incidenciaId, texto) => {
+    actualizarIncidencia(incidenciaId, {
+      resolucion: texto,
+      resueltaEl: new Date().toISOString().slice(0, 10),
+    });
+  };
+
+  const corregirIncidencia = (incidenciaId, motivo) => {
+    const id = Number(localStorage.getItem("cv_user_id")) || 1;
+    const usuario =
+      window.CV_DATA.USERS.find((u) => u.id === id) || window.CV_DATA.USERS[0];
+    actualizarIncidencia(incidenciaId, {
+      correccion: {
+        motivo,
+        por: usuario.name,
+        fecha: new Date().toISOString().slice(0, 10),
+      },
+    });
+  };
+
   if (alumnoSel) {
     return (
       <>
@@ -316,6 +359,11 @@ const Alumnos = ({ config }) => {
           onCorregirEntrevista={(entId, motivo) =>
             corregirEntrevista(alumnoSel.id, entId, motivo)
           }
+          incidencias={incidenciasDeAlumno(incidencias, alumnoSel.id)}
+          alumnosGrupoIncidencias={alumnosGrupo}
+          onNuevaIncidencia={guardarIncidencia}
+          onResolverIncidencia={resolverIncidencia}
+          onCorregirIncidencia={corregirIncidencia}
         />
         {modal?.modo === "edicion" && modal.id === alumnoSel.id && (
           <ExpedienteAlumnoModal

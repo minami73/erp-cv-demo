@@ -6,26 +6,6 @@
    cumplimiento (% de entregas), no calificación — la captura manual no
    produce calificaciones todavía (ver constants.js). */
 
-const TabPendiente = ({ nombre }) => (
-  <div
-    style={{
-      padding: "40px 24px",
-      textAlign: "center",
-      background: "var(--surface)",
-      border: "1px dashed var(--line-strong)",
-      borderRadius: 10,
-      color: "var(--ink-4)",
-      fontSize: 13.5,
-    }}
-  >
-    {nombre} — en construcción. Vive en{" "}
-    <code style={{ fontSize: 12 }}>
-      docs/contexto-modulo-personal-alumnos.md
-    </code>{" "}
-    como parte del módulo Alumnos, se maqueta en un paso posterior.
-  </div>
-);
-
 const FichaAlumno = ({
   alumno,
   listaNavegacion,
@@ -40,6 +20,11 @@ const FichaAlumno = ({
   onToggleCompromiso,
   onFirmarTutor,
   onCorregirEntrevista,
+  incidencias,
+  alumnosGrupoIncidencias,
+  onNuevaIncidencia,
+  onResolverIncidencia,
+  onCorregirIncidencia,
 }) => {
   const [tabActivo, setTabActivo] = useState(tabInicial || "informacion");
 
@@ -239,7 +224,14 @@ const FichaAlumno = ({
         />
       )}
       {tabActivo === "incidencias" && (
-        <TabPendiente nombre="Pestaña Incidencias" />
+        <TabIncidencias
+          incidencias={incidencias}
+          alumnoFicha={alumno}
+          alumnosGrupo={alumnosGrupoIncidencias}
+          onNueva={onNuevaIncidencia}
+          onResolver={onResolverIncidencia}
+          onCorregir={onCorregirIncidencia}
+        />
       )}
     </div>
   );

@@ -193,7 +193,7 @@ const EntrevistaModal = ({ coachInicial, onSave, onClose }) => {
             {errors.fecha && <div style={err}>{errors.fecha}</div>}
           </div>
           <div>
-            <label style={lbl}>Coach *</label>
+            <label style={lbl}>Docente Titular *</label>
             <input
               type="text"
               placeholder="Ej. Lic. Renata Campos"
@@ -412,7 +412,7 @@ const EntrevistaModal = ({ coachInicial, onSave, onClose }) => {
           >
             {form.firmaCoach && <Icon name="check" size={11} />}
           </span>
-          Firmado por el coach
+          Firmado por el Docente Titular
         </label>
         <div style={{ fontSize: 11.5, color: "var(--ink-4)", marginTop: 6, marginLeft: 26 }}>
           La firma del padre, madre o tutor (cuando corresponda) se sella después, desde la
