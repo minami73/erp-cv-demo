@@ -1,71 +1,116 @@
 /* ─── PaseEntregasModal — quién entregó, de una semana ya capturada ────────
    Segundo acto de la captura (ver SemanaCapturaModal): la planeación ya
-   dejó fijos los items (A1..An, T1..Tn) de la semana; aquí se marca, por
-   alumno, qué entregó. Matriz alumnos × items — una pasada por semana en
-   vez de abrir la ficha de cada alumno 30 veces.
+   dejó fijos los totales (actividades/tareas) de la semana; aquí se marca,
+   por alumno, CUÁNTAS entregó de cada tipo — no cuál. Conteo, no matriz: con
+   semanas de varias actividades la matriz de checkboxes era ilegible y lenta
+   de capturar, el titular piensa en "cuántas entregó", no en "cuál entregó".
 
-   Estado local, se confirma hasta "Guardar" (Cancelar no deja rastro),
-   igual que los demás modales del módulo. */
+   El shape de persistencia (`entregas[alumnoId]` = array de ids de item) no
+   cambia — lo consumen mezclarCaptura/agregadosDesdeDetalle/TabDesempeno/
+   etc. en constants.js. Aquí solo se traduce: N actividades = los primeros N
+   ids de tipo "actividades" que genera itemsDeCaptura, mismo criterio para
+   tareas. Se pierde la identidad de CUÁL actividad entregó cada quien — es
+   justo el nivel de detalle que se pidió (ver plan de esta tarea).
+
+   Estado local, se confirma hasta "Guardar" (Cancelar no deja rastro), igual
+   que los demás modales del módulo. */
 
 const PaseEntregasModal = ({ alumnos, materiaNombre, captura, onSave, onClose }) => {
   const items = itemsDeCaptura(captura, captura.materiaId);
+  const itemsPorTipo = {
+    actividades: items.filter((it) => it.tipo === "actividades"),
+    tareas: items.filter((it) => it.tipo === "tareas"),
+  };
+
   const [busqueda, setBusqueda] = useState("");
-  const [entregas, setEntregas] = useState(() => {
+  const [conteos, setConteos] = useState(() => {
     const inicial = {};
-    for (const a of alumnos) inicial[a.id] = [...(captura.entregas[a.id] || [])];
+    for (const a of alumnos) {
+      const entregados = captura.entregas[a.id] || [];
+      inicial[a.id] = {
+        actividades: itemsPorTipo.actividades.filter((it) =>
+          entregados.includes(it.id),
+        ).length,
+        tareas: itemsPorTipo.tareas.filter((it) => entregados.includes(it.id))
+          .length,
+      };
+    }
     return inicial;
   });
 
-  const marcado = (alumnoId, itemId) =>
-    (entregas[alumnoId] || []).includes(itemId);
+  const maximos = { actividades: captura.actividades, tareas: captura.tareas };
 
-  const toggle = (alumnoId, itemId) => {
-    setEntregas((prev) => {
-      const actuales = prev[alumnoId] || [];
-      const siguientes = actuales.includes(itemId)
-        ? actuales.filter((id) => id !== itemId)
-        : [...actuales, itemId];
-      return { ...prev, [alumnoId]: siguientes };
-    });
+  const setConteo = (alumnoId, tipo, valor) => {
+    const max = maximos[tipo];
+    const n = Number.isFinite(valor) ? Math.max(0, Math.min(max, valor)) : 0;
+    setConteos((prev) => ({
+      ...prev,
+      [alumnoId]: { ...prev[alumnoId], [tipo]: n },
+    }));
   };
 
-  const columnaCompleta = (itemId) =>
-    alumnos.every((a) => marcado(a.id, itemId));
-
-  const toggleColumna = (itemId) => {
-    const completa = columnaCompleta(itemId);
-    setEntregas((prev) => {
+  const marcarTodos = (tipo) => {
+    const max = maximos[tipo];
+    setConteos((prev) => {
       const next = { ...prev };
       for (const a of alumnos) {
-        const actuales = next[a.id] || [];
-        next[a.id] = completa
-          ? actuales.filter((id) => id !== itemId)
-          : actuales.includes(itemId)
-            ? actuales
-            : [...actuales, itemId];
+        next[a.id] = { ...next[a.id], [tipo]: max };
       }
       return next;
     });
   };
-
-  const totalColumna = (itemId) =>
-    alumnos.filter((a) => marcado(a.id, itemId)).length;
 
   const alumnosFiltrados = alumnos.filter(
     (a) =>
       !busqueda || a.nombreCompleto.toLowerCase().includes(busqueda.toLowerCase()),
   );
 
-  const colNombre = 180;
-  const colItem = 56;
-  const gridCols = `${colNombre}px ${items.map(() => `${colItem}px`).join(" ")}`;
+  const totalTipo = (tipo) =>
+    alumnos.reduce((acum, a) => acum + (conteos[a.id]?.[tipo] || 0), 0);
 
-  const etiquetaCorta = (item, i, lista) => {
-    const prefijo = item.tipo === "actividades" ? "A" : "T";
-    const mismosTipo = lista.filter((it) => it.tipo === item.tipo);
-    const pos = mismosTipo.indexOf(item) + 1;
-    return `${prefijo}${pos}`;
+  const gridCols = "minmax(200px, 1fr) 120px 120px";
+
+  const guardar = () => {
+    const entregas = {};
+    for (const a of alumnos) {
+      const { actividades = 0, tareas = 0 } = conteos[a.id] || {};
+      entregas[a.id] = [
+        ...itemsPorTipo.actividades.slice(0, actividades).map((it) => it.id),
+        ...itemsPorTipo.tareas.slice(0, tareas).map((it) => it.id),
+      ];
+    }
+    onSave(entregas);
   };
+
+  const columnaHeader = (tipo, label) => (
+    <div
+      style={{
+        padding: "8px 4px",
+        display: "flex",
+        flexDirection: "column",
+        alignItems: "center",
+        gap: 3,
+      }}
+    >
+      <span style={{ fontSize: 11, fontWeight: 600, color: "var(--ink-3)" }}>
+        {label} · /{maximos[tipo]}
+      </span>
+      <button
+        onClick={() => marcarTodos(tipo)}
+        title={`Marcar ${maximos[tipo]} a todos`}
+        style={{
+          background: "none",
+          border: "none",
+          cursor: "pointer",
+          fontSize: 10.5,
+          color: "var(--brand)",
+          padding: 0,
+        }}
+      >
+        Todos
+      </button>
+    </div>
+  );
 
   return (
     <div
@@ -84,7 +129,7 @@ const PaseEntregasModal = ({ alumnos, materiaNombre, captura, onSave, onClose })
         style={{
           background: "var(--surface)",
           borderRadius: 12,
-          width: 760,
+          width: 560,
           maxWidth: "calc(100vw - 32px)",
           maxHeight: "calc(100vh - 64px)",
           overflow: "hidden",
@@ -166,7 +211,7 @@ const PaseEntregasModal = ({ alumnos, materiaNombre, captura, onSave, onClose })
             borderRadius: "var(--radius-lg)",
           }}
         >
-          <div style={{ minWidth: colNombre + items.length * colItem }}>
+          <div style={{ minWidth: 440 }}>
             {/* Header */}
             <div
               style={{
@@ -181,59 +226,20 @@ const PaseEntregasModal = ({ alumnos, materiaNombre, captura, onSave, onClose })
             >
               <div
                 style={{
-                  position: "sticky",
-                  left: 0,
-                  background: "var(--surface-2)",
                   padding: "8px 12px",
                   fontSize: 11,
                   fontWeight: 600,
                   color: "var(--ink-4)",
                   textTransform: "uppercase",
                   letterSpacing: ".05em",
+                  display: "flex",
+                  alignItems: "center",
                 }}
               >
                 Alumno
               </div>
-              {items.map((item, i) => (
-                <button
-                  key={item.id}
-                  title={item.titulo}
-                  onClick={() => toggleColumna(item.id)}
-                  style={{
-                    background: "none",
-                    border: "none",
-                    cursor: "pointer",
-                    padding: "8px 4px",
-                    display: "flex",
-                    flexDirection: "column",
-                    alignItems: "center",
-                    gap: 2,
-                  }}
-                >
-                  <span
-                    style={{ fontSize: 11, fontWeight: 600, color: "var(--ink-3)" }}
-                  >
-                    {etiquetaCorta(item, i, items)}
-                  </span>
-                  <span
-                    style={{
-                      width: 14,
-                      height: 14,
-                      borderRadius: 3,
-                      border: "1px solid var(--line-strong)",
-                      background: columnaCompleta(item.id)
-                        ? "var(--brand)"
-                        : "var(--surface)",
-                      display: "flex",
-                      alignItems: "center",
-                      justifyContent: "center",
-                      color: "var(--brand-ink)",
-                    }}
-                  >
-                    {columnaCompleta(item.id) && <Icon name="check" size={10} />}
-                  </span>
-                </button>
-              ))}
+              {columnaHeader("actividades", "Actividades")}
+              {columnaHeader("tareas", "Tareas")}
             </div>
 
             {/* Filas */}
@@ -243,6 +249,7 @@ const PaseEntregasModal = ({ alumnos, materiaNombre, captura, onSave, onClose })
                 style={{
                   display: "grid",
                   gridTemplateColumns: gridCols,
+                  alignItems: "center",
                   borderBottom:
                     i < alumnosFiltrados.length - 1
                       ? "1px solid var(--line)"
@@ -251,9 +258,6 @@ const PaseEntregasModal = ({ alumnos, materiaNombre, captura, onSave, onClose })
               >
                 <div
                   style={{
-                    position: "sticky",
-                    left: 0,
-                    background: "var(--surface)",
                     padding: "8px 12px",
                     fontSize: 12.5,
                     color: "var(--ink)",
@@ -264,23 +268,36 @@ const PaseEntregasModal = ({ alumnos, materiaNombre, captura, onSave, onClose })
                 >
                   {a.nombreCompleto}
                 </div>
-                {items.map((item) => (
-                  <label
-                    key={item.id}
+                {["actividades", "tareas"].map((tipo) => (
+                  <div
+                    key={tipo}
                     style={{
                       display: "flex",
-                      alignItems: "center",
                       justifyContent: "center",
-                      cursor: "pointer",
+                      padding: "6px 4px",
                     }}
                   >
                     <input
-                      type="checkbox"
-                      checked={marcado(a.id, item.id)}
-                      onChange={() => toggle(a.id, item.id)}
-                      style={{ cursor: "pointer" }}
+                      type="number"
+                      min={0}
+                      max={maximos[tipo]}
+                      value={conteos[a.id]?.[tipo] ?? 0}
+                      onChange={(e) =>
+                        setConteo(a.id, tipo, parseInt(e.target.value, 10))
+                      }
+                      style={{
+                        width: 56,
+                        height: 30,
+                        textAlign: "center",
+                        fontSize: 13,
+                        border: "1px solid var(--line)",
+                        borderRadius: 6,
+                        background: "var(--surface)",
+                        color: "var(--ink)",
+                        outline: "none",
+                      }}
                     />
-                  </label>
+                  </div>
                 ))}
               </div>
             ))}
@@ -311,9 +328,6 @@ const PaseEntregasModal = ({ alumnos, materiaNombre, captura, onSave, onClose })
             >
               <div
                 style={{
-                  position: "sticky",
-                  left: 0,
-                  background: "var(--surface-2)",
                   padding: "8px 12px",
                   fontSize: 11.5,
                   fontWeight: 600,
@@ -322,20 +336,28 @@ const PaseEntregasModal = ({ alumnos, materiaNombre, captura, onSave, onClose })
               >
                 Entregaron
               </div>
-              {items.map((item) => (
-                <div
-                  key={item.id}
-                  style={{
-                    textAlign: "center",
-                    padding: "8px 4px",
-                    fontSize: 12.5,
-                    fontWeight: 600,
-                    color: "var(--ink-2)",
-                  }}
-                >
-                  {totalColumna(item.id)}/{alumnos.length}
-                </div>
-              ))}
+              <div
+                style={{
+                  textAlign: "center",
+                  padding: "8px 4px",
+                  fontSize: 12.5,
+                  fontWeight: 600,
+                  color: "var(--ink-2)",
+                }}
+              >
+                {totalTipo("actividades")}/{alumnos.length * maximos.actividades}
+              </div>
+              <div
+                style={{
+                  textAlign: "center",
+                  padding: "8px 4px",
+                  fontSize: 12.5,
+                  fontWeight: 600,
+                  color: "var(--ink-2)",
+                }}
+              >
+                {totalTipo("tareas")}/{alumnos.length * maximos.tareas}
+              </div>
             </div>
           </div>
         </div>
@@ -363,7 +385,7 @@ const PaseEntregasModal = ({ alumnos, materiaNombre, captura, onSave, onClose })
             Cancelar
           </button>
           <button
-            onClick={() => onSave(entregas)}
+            onClick={guardar}
             style={{
               padding: "8px 16px",
               borderRadius: 7,

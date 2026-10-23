@@ -35,6 +35,11 @@ const FichaAlumno = ({
   onSelect,
   onBack,
   onEditar,
+  entrevistas,
+  onNuevaEntrevista,
+  onToggleCompromiso,
+  onFirmarTutor,
+  onCorregirEntrevista,
 }) => {
   const [tabActivo, setTabActivo] = useState(tabInicial || "informacion");
 
@@ -225,7 +230,13 @@ const FichaAlumno = ({
         />
       )}
       {tabActivo === "entrevistas" && (
-        <TabPendiente nombre="Pestaña Entrevistas" />
+        <TabEntrevistas
+          entrevistas={entrevistas}
+          onNueva={onNuevaEntrevista}
+          onToggleCompromiso={onToggleCompromiso}
+          onFirmarTutor={onFirmarTutor}
+          onCorregir={onCorregirEntrevista}
+        />
       )}
       {tabActivo === "incidencias" && (
         <TabPendiente nombre="Pestaña Incidencias" />

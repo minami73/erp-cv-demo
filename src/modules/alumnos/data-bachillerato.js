@@ -1109,12 +1109,8 @@ const MATERIAS_BACH = [
   },
 ];
 
-const TABS_BACH = [
-  { id: "informacion", label: "Información" },
-  { id: "desempeno", label: "Desempeño" },
-  { id: "entrevistas", label: "Entrevistas" },
-  { id: "incidencias", label: "Incidencias" },
-];
+// (Las pestañas de la ficha viven en FichaAlumno.jsx — TABS_BACH era código
+// muerto, FichaAlumno nunca leyó config.TABS. Se retira aquí.)
 
 window.CV_ALUMNOS = window.CV_ALUMNOS || {};
 window.CV_ALUMNOS.bachillerato = {
@@ -1122,5 +1118,4 @@ window.CV_ALUMNOS.bachillerato = {
   MATERIAS: MATERIAS_BACH,
   // Nace vacío: el desempeño se alimenta solo desde la pestaña Captura.
   DESEMPENO: {},
-  TABS: TABS_BACH,
 };

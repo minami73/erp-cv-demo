@@ -114,6 +114,12 @@ const Alumnos = ({ config }) => {
   const [capturas, setCapturas] = useState(() =>
     semillaCapturas(config.ALUMNOS, config.MATERIAS),
   );
+  // { [alumnoId]: entrevista[] }, más reciente primero. Vive en memoria por
+  // el mismo motivo que `capturas` (ver constants.js) — se compensa con
+  // semillaEntrevistas (entrevistas.js).
+  const [entrevistas, setEntrevistas] = useState(() =>
+    semillaEntrevistas(config.ALUMNOS),
+  );
 
   // Reset al cambiar de sección — hoy solo bachillerato, pero Alumnos es
   // genérico por sección (ver header del archivo).
@@ -125,6 +131,7 @@ const Alumnos = ({ config }) => {
     setGrupoSel(null);
     setSeleccionado(null);
     setCapturas(semillaCapturas(config.ALUMNOS, config.MATERIAS));
+    setEntrevistas(semillaEntrevistas(config.ALUMNOS));
   }
 
   const ALUMNOS = useMemo(
@@ -217,6 +224,75 @@ const Alumnos = ({ config }) => {
     setModal(null);
   };
 
+  // Entrevistas: write-once (ver entrevistas.js). guardarEntrevista es el
+  // único punto que crea una entrevista; el resto de handlers solo tocan
+  // campos pensados para cambiar después de guardada (compromisos, firma
+  // del tutor, nota de corrección) — nunca el texto original.
+  const entrevistasAlumno = (alumnoId) => entrevistas[alumnoId] || [];
+
+  const guardarEntrevista = (alumnoId, form) => {
+    setEntrevistas((prev) => {
+      const existentes = prev[alumnoId] || [];
+      const idNueva =
+        Math.max(0, ...Object.values(prev).flat().map((e) => e.id)) + 1;
+      return {
+        ...prev,
+        [alumnoId]: [construirEntrevista(form, idNueva), ...existentes],
+      };
+    });
+  };
+
+  const actualizarEntrevista = (alumnoId, entrevistaId, cambios) => {
+    setEntrevistas((prev) => ({
+      ...prev,
+      [alumnoId]: (prev[alumnoId] || []).map((e) =>
+        e.id === entrevistaId ? { ...e, ...cambios } : e,
+      ),
+    }));
+  };
+
+  const toggleCompromiso = (alumnoId, entrevistaId, compromisoId) => {
+    setEntrevistas((prev) => ({
+      ...prev,
+      [alumnoId]: (prev[alumnoId] || []).map((e) =>
+        e.id !== entrevistaId
+          ? e
+          : {
+              ...e,
+              compromisos: e.compromisos.map((c) =>
+                c.id === compromisoId ? { ...c, cumplido: !c.cumplido } : c,
+              ),
+            },
+      ),
+    }));
+  };
+
+  const firmarTutor = (alumnoId, entrevistaId) => {
+    const ent = entrevistasAlumno(alumnoId).find((e) => e.id === entrevistaId);
+    if (!ent) return;
+    const alumno = ALUMNOS.find((a) => a.id === alumnoId);
+    actualizarEntrevista(alumnoId, entrevistaId, {
+      firmaTutor: {
+        firmado: true,
+        nombre: alumno?.tutor || "Padre/madre o tutor",
+        fecha: new Date().toISOString().slice(0, 10),
+      },
+    });
+  };
+
+  const corregirEntrevista = (alumnoId, entrevistaId, motivo) => {
+    const id = Number(localStorage.getItem("cv_user_id")) || 1;
+    const usuario =
+      window.CV_DATA.USERS.find((u) => u.id === id) || window.CV_DATA.USERS[0];
+    actualizarEntrevista(alumnoId, entrevistaId, {
+      correccion: {
+        motivo,
+        por: usuario.name,
+        fecha: new Date().toISOString().slice(0, 10),
+      },
+    });
+  };
+
   if (alumnoSel) {
     return (
       <>
@@ -231,6 +307,15 @@ const Alumnos = ({ config }) => {
           }
           onBack={() => setSeleccionado(null)}
           onEditar={() => setModal({ modo: "edicion", id: alumnoSel.id })}
+          entrevistas={entrevistasAlumno(alumnoSel.id)}
+          onNuevaEntrevista={(form) => guardarEntrevista(alumnoSel.id, form)}
+          onToggleCompromiso={(entId, compId) =>
+            toggleCompromiso(alumnoSel.id, entId, compId)
+          }
+          onFirmarTutor={(entId) => firmarTutor(alumnoSel.id, entId)}
+          onCorregirEntrevista={(entId, motivo) =>
+            corregirEntrevista(alumnoSel.id, entId, motivo)
+          }
         />
         {modal?.modo === "edicion" && modal.id === alumnoSel.id && (
           <ExpedienteAlumnoModal
