@@ -11,9 +11,6 @@ const Version2Modal = ({ docente2Name, onClose, onSave }) => {
         alignItems: "center",
         justifyContent: "center",
       }}
-      onClick={(e) => {
-        if (e.target === e.currentTarget) onClose();
-      }}
     >
       <div
         style={{

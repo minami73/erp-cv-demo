@@ -89,9 +89,6 @@ const NuevaIncidenciaModal = ({ teachers, onClose, onSave }) => {
         alignItems: "center",
         justifyContent: "center",
       }}
-      onClick={(e) => {
-        if (e.target === e.currentTarget) onClose();
-      }}
     >
       <div
         style={{

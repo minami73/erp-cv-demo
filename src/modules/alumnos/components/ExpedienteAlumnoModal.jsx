@@ -19,6 +19,8 @@ const ExpedienteAlumnoModal = ({ alumno, grado, grupo, onSave, onClose }) => {
     grado: String(alumno?.grado ?? grado),
     grupo: alumno?.grupo || grupo,
     fechaNacimiento: alumno?.fechaNacimiento || "",
+    sexo: alumno?.sexo || "",
+    curp: alumno?.curp || "",
     correo: alumno?.correo || "",
     tutor: alumno?.tutor || "",
     telTutor: alumno?.telTutor || "",
@@ -37,6 +39,9 @@ const ExpedienteAlumnoModal = ({ alumno, grado, grupo, onSave, onClose }) => {
     if (!form.apP.trim()) e.apP = "Requerido";
     if (!form.apM.trim()) e.apM = "Requerido";
     if (!form.fechaNacimiento) e.fechaNacimiento = "Requerido";
+    if (!form.sexo) e.sexo = "Requerido";
+    if (form.curp && form.curp.length !== 18)
+      e.curp = "Debe tener 18 caracteres";
     if (!form.tutor.trim()) e.tutor = "Requerido";
     if (!form.telTutor.trim()) e.telTutor = "Requerido";
     if (Object.keys(e).length) {
@@ -86,7 +91,6 @@ const ExpedienteAlumnoModal = ({ alumno, grado, grupo, onSave, onClose }) => {
         justifyContent: "center",
         zIndex: 1000,
       }}
-      onClick={(e) => e.target === e.currentTarget && onClose()}
     >
       <div
         style={{
@@ -220,6 +224,35 @@ const ExpedienteAlumnoModal = ({ alumno, grado, grupo, onSave, onClose }) => {
               {errors.fechaNacimiento && (
                 <div style={err}>{errors.fechaNacimiento}</div>
               )}
+            </div>
+          </div>
+          <div
+            style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 12 }}
+          >
+            <div>
+              <label style={lbl}>Sexo *</label>
+              <select
+                value={form.sexo}
+                onChange={(e) => set("sexo", e.target.value)}
+                style={inp(errors.sexo)}
+              >
+                <option value="">Selecciona…</option>
+                <option value="F">Mujer</option>
+                <option value="M">Hombre</option>
+              </select>
+              {errors.sexo && <div style={err}>{errors.sexo}</div>}
+            </div>
+            <div>
+              <label style={lbl}>CURP</label>
+              <input
+                type="text"
+                placeholder="18 caracteres"
+                maxLength={18}
+                value={form.curp}
+                onChange={(e) => set("curp", e.target.value.toUpperCase())}
+                style={inp(errors.curp)}
+              />
+              {errors.curp && <div style={err}>{errors.curp}</div>}
             </div>
           </div>
           <div>

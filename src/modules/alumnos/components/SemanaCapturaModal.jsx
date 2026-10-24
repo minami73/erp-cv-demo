@@ -90,7 +90,6 @@ const SemanaCapturaModal = ({ materiaNombre, trimestre, captura, onSave, onClose
         justifyContent: "center",
         zIndex: 1000,
       }}
-      onClick={(e) => e.target === e.currentTarget && onClose()}
     >
       <div
         style={{

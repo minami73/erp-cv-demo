@@ -1,10 +1,12 @@
 /* ─── TabInformacion — expediente del alumno ────────────────────────────────
    Campos según docs/contexto-modulo-personal-alumnos.md §3.2: nombre
-   completo, edad, fecha de nacimiento, tutor y su teléfono, más "otras
-   indicaciones". El schema real de ese último campo sigue sin definirse con
-   dirección (§4.2) — aquí se captura como texto libre (ver
-   ExpedienteAlumnoModal.jsx) para no inventar una estructura que luego haya
-   que rehacer; edición vía botón "Editar" en el header de FichaAlumno. */
+   completo, sexo, CURP, edad, fecha de nacimiento, tutor y su teléfono, más
+   "otras indicaciones". CURP se captura en texto plano (sin cifrar, a
+   diferencia de Personal.curp — ver docs/deuda.md). El schema real de
+   "otras indicaciones" sigue sin definirse con dirección (§4.2) — aquí se
+   captura como texto libre (ver ExpedienteAlumnoModal.jsx) para no inventar
+   una estructura que luego haya que rehacer; edición vía botón "Editar" en
+   el header de FichaAlumno. */
 
 const InfoField = ({ label, valor }) => (
   <div>
@@ -59,6 +61,13 @@ const TabInformacion = ({ alumno }) => (
           label="Grado y grupo"
           valor={`${etiquetaGrupo(alumno.grado, alumno.grupo)} — Bachillerato`}
         />
+        <InfoField
+          label="Sexo"
+          valor={
+            alumno.sexo === "F" ? "Mujer" : alumno.sexo === "M" ? "Hombre" : ""
+          }
+        />
+        <InfoField label="CURP" valor={alumno.curp} />
         <InfoField label="Edad" valor={`${alumno.edad} años`} />
         <InfoField label="Fecha de nacimiento" valor={alumno.fechaNacimiento} />
         <InfoField label="Correo" valor={alumno.correo} />

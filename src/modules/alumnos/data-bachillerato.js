@@ -1002,12 +1002,48 @@ const TUTORES_APELLIDO = [
   "Mata",
 ];
 
+// Sexo NO sale del hash: se lee del nombre de pila real de cada registro
+// (grupos A/B de bachillerato son mixtos, no por género — dominio.md), para
+// que la demo no muestre "Diego → Mujer" frente a dirección.
+const NOMBRES_MUJER = new Set([
+  "Ximena", "Renata", "Camila", "Fernanda", "Melany", "Mariana", "Valentina",
+  "Paola", "Itzel", "Luciana", "Regina", "Alondra", "Wendy", "Nayeli",
+  "Ariadna", "Montserrat", "Abril", "Zoe", "Perla", "Brisa", "Ashley",
+  "Naomi", "Dulce", "Natalia", "Daniela", "Mildred", "Yaretzi", "Karime",
+  "Mía", "Jimena", "Catalina", "Victoria", "Salma", "Yolanda", "Frida",
+  "Marysol", "Cecilia", "Alejandra", "Sofía", "Carolina", "Melissa",
+  "Ainara", "Genesis", "Paulina", "Dafne", "Fabiola", "Ángela", "Lorena",
+  "Ivanna",
+]);
+
+// CURP determinística — texto plano a propósito (ver docs/deuda.md): a
+// diferencia de Personal.curp (cifrado AES-256-GCM), la del alumno se
+// decidió sin cifrar para poder buscarla/filtrarla en SQL. Formato: 4
+// letras de apellidos/nombre + AAMMDD de nacimiento + sexo (H/M) + "PL"
+// (Puebla) + 3 consonantes + 2 de homoclave, todo desde datos ya derivados.
+const CONSONANTES = "BCDFGHJKLMNPQRSTVWXYZ";
+const curpDeterminista = (a, h) => {
+  const sinAcentos = (s) => s.toUpperCase().normalize("NFD").replace(/[̀-ͯ]/g, "");
+  const letra = (s, i) => sinAcentos(s).replace(/[^A-Z]/g, "")[i] || "X";
+  const inicio = `${letra(a.apP, 0)}${letra(a.apP, 1)}${letra(a.apM, 0)}${letra(a.nombre, 0)}`;
+  const fecha = a.fechaNacimiento.slice(2).replace(/-/g, ""); // AAMMDD
+  const sexoLetra = a.sexo === "F" ? "M" : "H"; // CURP usa H=Hombre/M=Mujer; nuestro catálogo usa F/M
+  const consonantes = `${letra(a.apP, 1)}${letra(a.apM, 1)}${letra(a.nombre, 1)}`
+    .split("")
+    .map((c) => (CONSONANTES.includes(c) ? c : CONSONANTES[h % CONSONANTES.length]))
+    .join("");
+  const homoclave = String(h % 100).padStart(2, "0");
+  return `${inicio}${fecha}${sexoLetra}PL${consonantes}${homoclave}`;
+};
+
 ALUMNOS_BACH.forEach((a) => {
   const h = hashAlumnos(a.id);
   a.nombreCompleto = `${a.nombre} ${a.apP} ${a.apM}`;
   a.matricula = `CV-BA-${a.id.slice(2)}`;
   a.edad = 15 + a.grado + (h % 2); // 1°≈16, 2°≈17, 3°≈18, con variación
   a.fechaNacimiento = `20${11 - a.grado}-${String(1 + (h % 12)).padStart(2, "0")}-${String(1 + (h % 27)).padStart(2, "0")}`;
+  a.sexo = NOMBRES_MUJER.has(a.nombre) ? "F" : "M";
+  a.curp = curpDeterminista(a, h);
   a.tutor = `${TUTORES_NOMBRE[h % TUTORES_NOMBRE.length]} ${TUTORES_APELLIDO[(h >> 3) % TUTORES_APELLIDO.length]}`;
   a.telTutor = `221 ${100 + (h % 900)} ${1000 + (h % 9000)}`;
   a.correo = `${a.nombre.toLowerCase().normalize("NFD").replace(/[̀-ͯ]/g, "")}.${a.apP.toLowerCase().normalize("NFD").replace(/[̀-ͯ]/g, "")}@colegiovictoria.edu.mx`;

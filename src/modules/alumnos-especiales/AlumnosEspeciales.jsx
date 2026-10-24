@@ -806,7 +806,6 @@ const AlumnosEspeciales = () => {
             justifyContent: "center",
             zIndex: 1000,
           }}
-          onClick={(e) => e.target === e.currentTarget && setShowModal(false)}
         >
           <div
             style={{
